@@ -6,8 +6,10 @@ import candidatosRoutes from './src/routes/candidatos.routes.js'
 import cursosRoutes from './src/routes/cursos.routes.js' // NUEVO
 import evaluacionesRoutes from './src/routes/evaluaciones.routes.js' // NUEVO
 import progresoRoutes from './src/routes/progreso.routes.js' // NUEVO
-
+import conectarDB from './src/config/db.js'
 dotenv.config()
+
+conectarDB()
 
 const app = express()
 
