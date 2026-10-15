@@ -50,7 +50,7 @@ export default function Navbar() {
               href="/login"
               className="rounded-full bg-purple-300 px-8 py-3 text-lg font-bold text-black hover:bg-purple-400 transition-colors"
             >
-              inicia sesion
+              Inicia sesión
             </a>
           </li>
         </ul>
