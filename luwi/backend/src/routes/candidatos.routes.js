@@ -1,6 +1,14 @@
 import { Router } from "express";
+import { verifyToken } from "../middlewares/auth.middleware.js";
+import { obtenerDashboard, guardarActividad } from "../controllers/dashboard.controller.js";
 
 const router = Router();
+
+// GET /api/candidatos/me/dashboard - Datos del dashboard del candidato autenticado
+router.get("/me/dashboard", verifyToken, obtenerDashboard);
+
+// POST /api/candidatos/me/actividad - Registrar minutos de estudio del día
+router.post("/me/actividad", verifyToken, guardarActividad);
 
 // GET /api/candidatos - Obtener todos los candidatos
 router.get("/", (req, res) => {
