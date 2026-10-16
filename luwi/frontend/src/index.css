@@ -1,9 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-luwi-navy: #12306e;
+  --color-luwi-blue: #2f6bff;
+  --color-luwi-purple: #8b5cf6;
+  --color-luwi-teal: #14c9a5;
+  --color-luwi-ink: #1e2a4a;
+  --color-luwi-muted: #7a869f;
+  --color-luwi-border: #dfe6f3;
+  --color-luwi-bg: #f4f7fe;
+}
+
 @layer base {
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
+}
+
+body {
+  @apply bg-luwi-bg font-sans text-luwi-ink antialiased;
 }
