@@ -11,6 +11,8 @@
   --color-luwi-muted: #7a869f;
   --color-luwi-border: #dfe6f3;
   --color-luwi-bg: #f4f7fe;
+
+  --shadow-card: 0 10px 30px -12px rgb(18 48 110 / 0.18);
 }
 
 @layer base {
