@@ -5,19 +5,23 @@ const empresaSchema = new mongoose.Schema(
     nombre: {
       type: String,
       required: true,
+      trim: true,
     },
     sector: {
       type: String,
-      required: false,
+      default: "No especificado",
     },
     correo: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
       type: String,
       required: true,
+      select: false, // No incluir el password en las consultas por defecto
     },
     puestos: [
       {
@@ -28,7 +32,7 @@ const empresaSchema = new mongoose.Schema(
   },
   {
     timestamps: true, // agrega createdAt y updatedAt automáticamente
-  }
+  },
 );
 
 const Empresa = mongoose.model("Empresa", empresaSchema);
