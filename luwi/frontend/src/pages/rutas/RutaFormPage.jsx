@@ -128,7 +128,7 @@ export default function RutaFormPage({ mode }) {
       };
       if (mode === "edit") await rutasService.update(id, form);
       else await rutasService.create(form);
-      navigate("/rutas", {
+      navigate("/dashboard/rutas", {
         state: {
           message:
             mode === "edit"
@@ -147,7 +147,7 @@ export default function RutaFormPage({ mode }) {
   return (
     <div className="max-w-3xl">
       <Link
-        to="/rutas"
+        to="/dashboard/rutas"
         className="inline-flex items-center gap-2 text-sm font-semibold text-admin-ink hover:text-admin-blue"
       >
         <Icon name="arrowLeft" className="h-4 w-4 text-admin-blue" />
@@ -331,15 +331,15 @@ export default function RutaFormPage({ mode }) {
           <div className="flex justify-end gap-3 pt-3">
             {readOnly ? (
               <>
-                <ActionButton to="/rutas">Volver</ActionButton>
-                <ActionButton variant="edit" to={`/rutas/${id}/editar`}>
+                <ActionButton to="/dashboard/rutas">Volver</ActionButton>
+                <ActionButton variant="edit" to={`/dashboard/rutas/${id}/editar`}>
                   <Icon name="pencil" className="h-4 w-4" />
                   Editar
                 </ActionButton>
               </>
             ) : (
               <>
-                <ActionButton to="/rutas">Cancelar</ActionButton>
+                <ActionButton to="/dashboard/rutas">Cancelar</ActionButton>
                 <ActionButton variant="primary" type="submit" disabled={saving}>
                   <Icon name="check" className="h-4 w-4" />
                   {saving ? "Guardando..." : "Guardar"}

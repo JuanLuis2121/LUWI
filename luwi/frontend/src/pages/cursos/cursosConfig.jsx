@@ -3,7 +3,7 @@ import Icon from "../../components/Icon";
 import { Badge, Bubble } from "../../components/AdminUI";
 
 export const cursosConfig = {
-  basePath: "/cursos",
+  basePath: "/dashboard/cursos",
   title: "Cursos",
   subtitle: "Administra los cursos disponibles para capacitación.",
   newLabel: "Nuevo curso",

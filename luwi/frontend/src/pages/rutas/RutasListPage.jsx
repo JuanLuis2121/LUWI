@@ -61,7 +61,7 @@ export default function RutasListPage() {
             Administra las rutas de capacitación de cada puesto.
           </p>
         </div>
-        <ActionButton variant="primary" to="/rutas/nuevo">
+        <ActionButton variant="primary" to="/dashboard/rutas/nuevo">
           <Icon name="plus" className="h-4 w-4" />
           Nueva ruta
         </ActionButton>
@@ -139,11 +139,11 @@ export default function RutasListPage() {
                     <td className="px-6 py-3 font-medium">{r.duracionTotalHoras} h</td>
                     <td className="px-6 py-3">
                       <div className="flex justify-end gap-2">
-                        <ActionButton size="sm" to={`/rutas/${r.id}`}>
+                        <ActionButton size="sm" to={`/dashboard/rutas/${r.id}`}>
                           <Icon name="eye" className="h-3.5 w-3.5" />
                           Ver
                         </ActionButton>
-                        <ActionButton size="sm" variant="edit" to={`/rutas/${r.id}/editar`}>
+                        <ActionButton size="sm" variant="edit" to={`/dashboard/rutas/${r.id}/editar`}>
                           <Icon name="pencil" className="h-3.5 w-3.5" />
                           Editar
                         </ActionButton>

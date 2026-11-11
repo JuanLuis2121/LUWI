@@ -24,6 +24,8 @@
   --color-admin-line: #c7d2fe;
   --color-admin-danger: #b42318;
 
+  --shadow-card: 0 10px 30px -12px rgb(18 48 110 / 0.18);
+
   /* Nueva paleta de la landing */
   --color-fondo: #16131f;
   --color-superficie: #221e30;

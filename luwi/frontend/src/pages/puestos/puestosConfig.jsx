@@ -7,7 +7,7 @@ const empresaNombre = (i, lookups) =>
   lookups.empresas?.find((e) => e.id === i.empresaId)?.nombre ?? "—";
 
 export const puestosConfig = {
-  basePath: "/puestos",
+  basePath: "/dashboard/puestos",
   title: "Puestos",
   subtitle: "Administra los puestos de trabajo publicados por cada empresa.",
   newLabel: "Nuevo puesto",

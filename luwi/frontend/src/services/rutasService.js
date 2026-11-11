@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api, errMsg } from "./api";
 
 const BASE = "/rutas-aprendizaje";
 const unwrap = (res) => res.data?.data ?? res.data;
@@ -29,6 +29,16 @@ const toPayload = ({ nombre, descripcion, puestoId, cursoIds }) => ({
   puesto: puestoId,
   cursos: cursoIds,
 });
+
+// Usado por el dashboard: devuelve la lista cruda tal como llega del backend.
+export async function getRutas() {
+  try {
+    const data = unwrap(await api.get(BASE));
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    throw new Error(errMsg(e, "No se pudieron cargar las rutas"));
+  }
+}
 
 export const rutasService = {
   async list() {

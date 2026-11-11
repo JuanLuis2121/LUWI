@@ -2,7 +2,7 @@ import { empresasService } from "../../services/empresasService";
 import { Badge, Bubble } from "../../components/AdminUI";
 
 export const empresasConfig = {
-  basePath: "/empresas",
+  basePath: "/dashboard/empresas",
   title: "Empresas",
   subtitle: "Administra las empresas registradas en la plataforma.",
   newLabel: "Nueva empresa",

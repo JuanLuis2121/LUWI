@@ -13,7 +13,9 @@ export function AuthProvider({ children }) {
 
   const register = useCallback((payload) => registerUser(payload), []);
 
-  const value = useMemo(() => ({ user, login, register }), [user, login, register]);
+  const logout = useCallback(() => setUser(null), []);
+
+  const value = useMemo(() => ({ user, login, register, logout }), [user, login, register, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
