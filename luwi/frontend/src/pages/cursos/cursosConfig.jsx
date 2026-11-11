@@ -1,6 +1,30 @@
-import { cursosService } from "../../services/cursosService";
+import {
+  NIVELES,
+  getCursos,
+  getCurso,
+  crearCurso,
+  actualizarCurso,
+  eliminarCurso,
+} from "../../services/cursosService";
 import Icon from "../../components/Icon";
 import { Badge, Bubble } from "../../components/AdminUI";
+
+// Adaptador: el servicio de Marlon usa _id; las pantallas usan id.
+const withId = (c) => ({ ...c, id: c._id });
+const toPayload = (d) => ({ ...d, duracionHoras: Number(d.duracionHoras) });
+
+const cursosService = {
+  async list() {
+    return (await getCursos()).map(withId);
+  },
+  async get(id) {
+    const c = await getCurso(id);
+    return c ? withId(c) : null;
+  },
+  create: (d) => crearCurso(toPayload(d)),
+  update: (id, d) => actualizarCurso(id, toPayload(d)),
+  remove: (id) => eliminarCurso(id),
+};
 
 export const cursosConfig = {
   basePath: "/dashboard/cursos",
@@ -8,7 +32,7 @@ export const cursosConfig = {
   subtitle: "Administra los cursos disponibles para capacitación.",
   newLabel: "Nuevo curso",
   backLabel: "Volver a Cursos",
-  searchPlaceholder: "Buscar por título, descripción o nivel",
+  searchPlaceholder: "Buscar por título, competencia o nivel",
   countWords: ["curso", "cursos"],
   formTitles: {
     create: "Nuevo curso",
@@ -16,7 +40,7 @@ export const cursosConfig = {
     view: "Detalle del curso",
   },
   service: cursosService,
-  searchText: (i) => `${i.titulo} ${i.descripcion} ${i.nivel}`,
+  searchText: (i) => `${i.titulo} ${i.descripcion} ${i.competencia} ${i.nivel}`,
   deleteText: (i) =>
     `¿Seguro que quieres eliminar el curso "${i.titulo}"? Esta acción no se puede deshacer.`,
   columns: [
@@ -35,8 +59,21 @@ export const cursosConfig = {
         </div>
       ),
     },
-    { key: "nivel", label: "Nivel", render: (i) => <Badge>{i.nivel}</Badge> },
-    { key: "duracion", label: "Duración", render: (i) => <span className="font-medium">{i.duracion}</span> },
+    { key: "competencia", label: "Competencia", render: (i) => i.competencia },
+    {
+      key: "nivel",
+      label: "Nivel",
+      render: (i) => (
+        <span className="capitalize">
+          <Badge>{i.nivel}</Badge>
+        </span>
+      ),
+    },
+    {
+      key: "duracion",
+      label: "Duración",
+      render: (i) => <span className="font-medium">{i.duracionHoras} h</span>,
+    },
   ],
   fields: [
     {
@@ -56,22 +93,30 @@ export const cursosConfig = {
       requiredMsg: "Escribe una descripción del curso.",
     },
     {
+      name: "competencia",
+      label: "Competencia",
+      type: "text",
+      placeholder: "Ej. React",
+      required: true,
+      requiredMsg: "Indica la competencia que desarrolla el curso.",
+    },
+    {
       name: "nivel",
       label: "Nivel",
       type: "select",
       placeholder: "Selecciona un nivel",
-      options: ["Básico", "Intermedio", "Avanzado"],
+      options: NIVELES.map((n) => ({ value: n, label: n.charAt(0).toUpperCase() + n.slice(1) })),
       required: true,
       requiredMsg: "Selecciona el nivel del curso.",
       half: true,
     },
     {
-      name: "duracion",
-      label: "Duración",
-      type: "text",
-      placeholder: "Ej. 8 horas",
+      name: "duracionHoras",
+      label: "Duración (horas)",
+      type: "number",
+      placeholder: "Ej. 8",
       required: true,
-      requiredMsg: "Indica la duración del curso.",
+      requiredMsg: "Indica la duración en horas.",
       half: true,
     },
     {

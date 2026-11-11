@@ -1,30 +1,36 @@
 import { Router } from "express";
+import { requireAuth } from "../middlewares/auth.middleware.js";
+import {
+  listarProgreso,
+  progresoDelCandidato,
+  consultaDelCandidato,
+  obtenerProgreso,
+  actualizarAvance,
+} from "../controllers/progreso.controller.js";
 
 const router = Router();
 
-// GET /api/progreso - Obtener todos los registros de progreso
-router.get("/", (req, res) => {
-  res.json({ mensaje: "Módulo de Progreso en construcción - GET todos" });
-});
+router.use(requireAuth);
 
-// GET /api/progreso/:id - Obtener un registro de progreso por ID
-router.get("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Progreso en construcción - GET progreso ${req.params.id}` });
-});
+// Consultas por candidato (van antes de "/:id" para que no se confundan)
+router.get("/candidato/:candidatoId", progresoDelCandidato);
+router.get("/candidato/:candidatoId/asignados", consultaDelCandidato("asignados"));
+router.get("/candidato/:candidatoId/completados", consultaDelCandidato("completados"));
+router.get("/candidato/:candidatoId/resumen", consultaDelCandidato("resumen"));
 
-// POST /api/progreso - Crear un nuevo registro de progreso
+router.get("/", listarProgreso);
+router.get("/:id", obtenerProgreso);
+
+// Seguimiento: actualizar el porcentaje de avance de un curso asignado
+router.put("/:id", actualizarAvance);
+
+// Asignar / desasignar cursos (POST, DELETE) y las evaluaciones los trabaja Dominic.
 router.post("/", (req, res) => {
-  res.json({ mensaje: "Módulo de Progreso en construcción - POST crear" });
+  res.json({ mensaje: "Asignación de cursos en construcción (Dominic)" });
 });
 
-// PUT /api/progreso/:id - Actualizar un registro de progreso
-router.put("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Progreso en construcción - PUT actualizar ${req.params.id}` });
-});
-
-// DELETE /api/progreso/:id - Eliminar un registro de progreso
 router.delete("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Progreso en construcción - DELETE ${req.params.id}` });
+  res.json({ mensaje: "Desasignación de cursos en construcción (Dominic)" });
 });
 
 export default router;

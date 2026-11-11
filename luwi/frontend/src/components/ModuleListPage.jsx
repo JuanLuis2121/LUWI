@@ -54,8 +54,8 @@ export default function ModuleListPage({ config }) {
       await service.remove(toDelete.id);
       setItems((prev) => prev.filter((i) => i.id !== toDelete.id));
       setNotice("Eliminado correctamente.");
-    } catch {
-      setError("No se pudo eliminar. Intenta de nuevo.");
+    } catch (e) {
+      setError(e?.message || "No se pudo eliminar. Intenta de nuevo.");
     } finally {
       setDeleting(false);
       setToDelete(null);

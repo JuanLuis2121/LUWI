@@ -37,6 +37,7 @@ function getOptions(field, lookups) {
     }));
   }
   return (field.options || []).map((o) => ({ value: o, label: o }));
+  typeof o === "object" ? o : { value: o, label: o }
 }
 
 export default function ModuleFormPage({ config, mode }) {
