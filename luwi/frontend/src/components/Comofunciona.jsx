@@ -70,32 +70,32 @@ export default function ComoFunciona() {
   return (
     <section
       id="como-funciona"
-      className="bg-[#DBB4FD] px-4 py-20 sm:px-8"
+      className="bg-lila px-4 py-20 sm:px-8"
       aria-labelledby="como-funciona-titulo"
     >
       <div className="mx-auto max-w-6xl">
         <h2
           id="como-funciona-titulo"
-          className="text-center text-4xl font-black tracking-tight text-black sm:text-6xl"
+          className="text-center text-4xl font-black tracking-tight text-tinta sm:text-6xl"
         >
           Cómo{" "}
-          <span className="relative isolate ml-1 inline-block px-4 text-black">
+          <span className="relative isolate ml-1 inline-block px-4 text-tinta">
             <svg
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
-              className="absolute inset-0 -z-10 h-full w-full"
+              className="absolute inset-0 -z-10 h-full w-full text-teal"
               aria-hidden="true"
             >
               <polygon
                 points="0,10 2,3 100,0 98,86 100,96 3,100 1,90"
-                fill="#00B9A9"
+                fill="currentColor"
               />
             </svg>
             funciona
           </span>
         </h2>
 
-        <p className="mx-auto mt-6 max-w-2xl text-center text-lg text-black/75">
+        <p className="mx-auto mt-6 max-w-2xl text-center text-lg text-tinta/75">
           Del registro del puesto a la formación del candidato, en cinco pasos.
         </p>
 
@@ -105,16 +105,16 @@ export default function ComoFunciona() {
               key={step.title}
               className="flex w-full flex-col items-center rounded-3xl bg-white px-8 py-10 text-center shadow-[0_8px_24px_-8px_rgba(60,20,110,0.25)] transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
             >
-              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#00B9A9] text-black">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-teal text-tinta">
                 {step.icon}
               </span>
-              <span className="mt-6 text-sm font-bold uppercase tracking-widest text-black/50">
+              <span className="mt-6 text-sm font-bold uppercase tracking-widest text-tinta/50">
                 Paso {i + 1}
               </span>
-              <h3 className="mt-2 text-xl font-extrabold leading-snug tracking-tight text-black sm:text-2xl">
+              <h3 className="mt-2 text-xl font-extrabold leading-snug tracking-tight text-tinta sm:text-2xl">
                 {step.title}
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-black/70">
+              <p className="mt-3 text-base leading-relaxed text-tinta/70">
                 {step.text}
               </p>
             </li>
