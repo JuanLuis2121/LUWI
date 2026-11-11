@@ -1,10 +1,19 @@
 import Icon from "./Icon";
 
-export default function FormField({ field, value, error, options = [], disabled, onChange }) {
+export default function FormField({
+  field,
+  value,
+  error,
+  options = [],
+  disabled,
+  onChange,
+}) {
   const id = `field-${field.name}`;
 
   const base = `w-full rounded-2xl border-2 bg-admin-bg px-4 py-3 text-sm text-admin-ink outline-none transition placeholder:text-admin-muted focus:ring-4 focus:ring-admin-blue/10 disabled:cursor-default disabled:opacity-80 ${
-    error ? "border-admin-danger" : "border-admin-line focus:border-admin-blue"
+    error
+      ? "border-admin-danger"
+      : "border-admin-line focus:border-admin-blue"
   }`;
 
   const common = {
@@ -18,10 +27,12 @@ export default function FormField({ field, value, error, options = [], disabled,
   };
 
   let control;
+
   if (field.type === "select") {
     control = (
       <select {...common} className={base}>
         <option value="">{field.placeholder}</option>
+
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
@@ -51,13 +62,24 @@ export default function FormField({ field, value, error, options = [], disabled,
 
   return (
     <div className={field.half ? "" : "sm:col-span-2"}>
-      <label htmlFor={id} className="mb-1.5 block text-xs font-bold text-admin-ink">
+      <label
+        htmlFor={id}
+        className="mb-1.5 block text-xs font-bold text-admin-ink"
+      >
         {field.label}
-        {field.required && !disabled && <span className="text-admin-danger"> *</span>}
+
+        {field.required && !disabled && (
+          <span className="text-admin-danger"> *</span>
+        )}
       </label>
+
       {control}
+
       {error && (
-        <p id={`${id}-error`} className="mt-1.5 flex items-center gap-1.5 text-xs text-admin-danger">
+        <p
+          id={`${id}-error`}
+          className="mt-1.5 flex items-center gap-1.5 text-xs text-admin-danger"
+        >
           <Icon name="alert" className="h-3.5 w-3.5 shrink-0" />
           {error}
         </p>

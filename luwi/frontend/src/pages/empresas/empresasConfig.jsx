@@ -1,3 +1,4 @@
+
 import { empresasService } from "../../services/empresasService";
 import { Badge, Bubble } from "../../components/AdminUI";
 
@@ -9,15 +10,20 @@ export const empresasConfig = {
   backLabel: "Volver a Empresas",
   searchPlaceholder: "Buscar por nombre, sector o correo",
   countWords: ["empresa", "empresas"],
+
   formTitles: {
     create: "Nueva empresa",
     edit: "Editar empresa",
     view: "Detalle de la empresa",
   },
+
   service: empresasService,
+
   searchText: (i) => `${i.nombre} ${i.sector} ${i.correo}`,
+
   deleteText: (i) =>
     `¿Seguro que quieres eliminar la empresa "${i.nombre}"? Esta acción no se puede deshacer.`,
+
   columns: [
     {
       key: "nombre",
@@ -29,9 +35,18 @@ export const empresasConfig = {
         </div>
       ),
     },
-    { key: "sector", label: "Sector", render: (i) => <Badge>{i.sector}</Badge> },
-    { key: "correo", label: "Correo", render: (i) => i.correo },
+    {
+      key: "sector",
+      label: "Sector",
+      render: (i) => <Badge>{i.sector}</Badge>,
+    },
+    {
+      key: "correo",
+      label: "Correo",
+      render: (i) => i.correo,
+    },
   ],
+
   fields: [
     {
       name: "nombre",
@@ -46,7 +61,14 @@ export const empresasConfig = {
       label: "Sector",
       type: "select",
       placeholder: "Selecciona un sector",
-      options: ["Tecnología", "Salud", "Educación", "Finanzas", "Comercio", "Otro"],
+      options: [
+        "Tecnología",
+        "Salud",
+        "Educación",
+        "Finanzas",
+        "Comercio",
+        "Otro",
+      ],
       required: true,
       requiredMsg: "Selecciona un sector.",
       half: true,
@@ -59,6 +81,14 @@ export const empresasConfig = {
       required: true,
       requiredMsg: "Escribe un correo electrónico.",
       half: true,
+    },
+    {
+      name: "password",
+      label: "Contraseña",
+      type: "password",
+      placeholder: "Mínimo 8 caracteres",
+      required: true,
+      requiredMsg: "La contraseña debe tener al menos 8 caracteres.",
     },
   ],
 };
