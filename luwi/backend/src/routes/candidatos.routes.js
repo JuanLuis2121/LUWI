@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from "../middlewares/auth.middleware.js";
+import { requireAuth as verifyToken } from "../middlewares/auth.middleware.js"
 import { obtenerDashboard, guardarActividad } from "../controllers/dashboard.controller.js";
 
 const router = Router();
