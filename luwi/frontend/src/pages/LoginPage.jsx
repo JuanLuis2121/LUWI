@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -10,6 +10,7 @@ import useAuth from "../hooks/useAuth";
 export default function LoginPage() {
   const { login } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({ email: "", password: "", remember: true });
   const [errors, setErrors] = useState({});
@@ -44,14 +45,12 @@ export default function LoginPage() {
     try {
       // "remember" todavía no se envía: el backend no lo soporta (la cookie
       // se crea sin maxAge). Se agrega cuando se defina en el servidor.
-      const user = await login({
+      await login({
         email: form.email.trim(),
         password: form.password,
       });
 
-      setSuccess(`¡Bienvenido, ${user.username}!`);
-      setForm((f) => ({ ...f, email: "", password: "" }));
-      // TODO: redirigir al dashboard cuando exista (useNavigate -> "/dashboard")
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       setServerError(err.message || "No se pudo conectar con el servidor");
     } finally {

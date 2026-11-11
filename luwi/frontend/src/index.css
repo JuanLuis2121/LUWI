@@ -12,6 +12,20 @@
   --color-luwi-border: #dfe6f3;
   --color-luwi-bg: #f4f7fe;
 
+  /* Paleta de administración (formularios y listados) */
+  --color-admin-ink: #312e81;
+  --color-admin-blue: #1d4ed8;
+  --color-admin-purple: #7c3aed;
+  --color-admin-green: #10b981;
+  --color-admin-muted: #6b7280;
+  --color-admin-border: #e5e7eb;
+  --color-admin-bg: #f3f4f6;
+  --color-admin-soft: #e0e7ff;
+  --color-admin-line: #c7d2fe;
+  --color-admin-danger: #b42318;
+
+  --shadow-card: 0 10px 30px -12px rgb(18 48 110 / 0.18);
+
   /* Nueva paleta de la landing */
   --color-fondo: #16131f;
   --color-superficie: #221e30;
