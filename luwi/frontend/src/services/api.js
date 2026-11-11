@@ -1,20 +1,5 @@
-<<<<<<< HEAD
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
-});
-
-export const errMsg = (err, fallback) => {
-  const d = err?.response?.data;
-  if (typeof d?.message === "string") return d.message;
-  if (typeof d?.error === "string") return d.error;
-  if (Array.isArray(d?.error) && d.error[0]) return d.error[0].message ?? String(d.error[0]);
-  if (!err?.response) return "No se pudo conectar con el servidor";
-  return fallback;
-};
-=======
 // Cliente común para hablar con el backend de LUWI.
 // Envía las cookies de sesión (JWT) y convierte los errores del servidor en Error con mensaje legible.
 const API_URL = import.meta.env.VITE_API_URL;
@@ -47,4 +32,18 @@ export async function request(path, { method = "GET", body, fallback = "Ocurrió
   }
   return data;
 }
->>>>>>> origin/develop
+
+// Cliente Axios (usado por rutasService). La sesión funciona con cookies.
+export const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+});
+
+export const errMsg = (err, fallback) => {
+  const d = err?.response?.data;
+  if (typeof d?.message === "string") return d.message;
+  if (typeof d?.error === "string") return d.error;
+  if (Array.isArray(d?.error) && d.error[0]) return d.error[0].message ?? String(d.error[0]);
+  if (!err?.response) return "No se pudo conectar con el servidor";
+  return fallback;
+};

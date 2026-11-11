@@ -1,49 +1,65 @@
-import axios from "axios";
+import { api, errMsg } from "./api";
 
-// Cliente común para hablar con el backend de LUWI.
-// Envía las cookies de sesión (JWT) y convierte los errores del servidor en Error con mensaje legible.
-const API_URL = import.meta.env.VITE_API_URL;
+const BASE = "/rutas-aprendizaje";
+const unwrap = (res) => res.data?.data ?? res.data;
 
-const mensajeDeError = (data, fallback) => {
-  if (typeof data?.message === "string") return data.message;
-  if (typeof data?.error === "string") return data.error;
-  return fallback;
-};
-
-export async function request(path, { method = "GET", body, fallback = "Ocurrió un error" } = {}) {
-  let response;
-  try {
-    response = await fetch(`${API_URL}${path}`, {
-      method,
-      credentials: "include",
-      headers: body !== undefined ? { "Content-Type": "application/json" } : undefined,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
-    });
-  } catch {
-    throw new Error("No se pudo conectar con el servidor");
-  }
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const error = new Error(mensajeDeError(data, fallback));
-    error.status = response.status;
-    error.data = data;
-    throw error;
-  }
-  return data;
-}
-
-// Cliente Axios (usado por rutasService). La sesión funciona con cookies.
-export const api = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
+const normalizeCurso = (c) => ({
+  id: c._id,
+  titulo: c.titulo,
+  nivel: c.nivel ?? "",
+  competencia: c.competencia ?? "",
+  duracionHoras: c.duracionHoras ?? 0,
 });
 
-export const errMsg = (err, fallback) => {
-  const d = err?.response?.data;
-  if (typeof d?.message === "string") return d.message;
-  if (typeof d?.error === "string") return d.error;
-  if (Array.isArray(d?.error) && d.error[0]) return d.error[0].message ?? String(d.error[0]);
-  if (!err?.response) return "No se pudo conectar con el servidor";
-  return fallback;
+const normalizeRuta = (r) => ({
+  id: r._id,
+  nombre: r.nombre,
+  descripcion: r.descripcion ?? "",
+  puestoId: r.puesto?._id ?? "",
+  puestoTitulo: r.puesto?.titulo ?? "",
+  empresaNombre: r.puesto?.empresa?.nombre ?? "",
+  cursos: (r.cursos ?? []).map(normalizeCurso),
+  duracionTotalHoras: r.duracionTotalHoras ?? 0,
+});
+
+// Formato que espera el backend (el orden de cursos es el del arreglo).
+const toPayload = ({ nombre, descripcion, puestoId, cursoIds }) => ({
+  nombre,
+  descripcion,
+  puesto: puestoId,
+  cursos: cursoIds,
+});
+
+// Usado por el dashboard: devuelve la lista cruda tal como llega del backend.
+export async function getRutas() {
+  try {
+    const data = unwrap(await api.get(BASE));
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    throw new Error(errMsg(e, "No se pudieron cargar las rutas"));
+  }
+}
+
+export const rutasService = {
+  async list() {
+    const data = unwrap(await api.get(BASE));
+    return (Array.isArray(data) ? data : []).map(normalizeRuta);
+  },
+  async options() {
+    const data = unwrap(await api.get(`${BASE}/opciones`));
+    return {
+      puestos: (data.puestos ?? []).map((p) => ({
+        id: p._id,
+        titulo: p.titulo,
+        empresaNombre: p.empresa?.nombre ?? "",
+      })),
+      cursos: (data.cursos ?? []).map(normalizeCurso),
+    };
+  },
+  async get(id) {
+    return normalizeRuta(unwrap(await api.get(`${BASE}/${id}`)));
+  },
+  create: (form) => api.post(BASE, toPayload(form)),
+  update: (id, form) => api.put(`${BASE}/${id}`, toPayload(form)),
+  remove: (id) => api.delete(`${BASE}/${id}`),
 };
