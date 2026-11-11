@@ -1,30 +1,23 @@
 import { Router } from "express";
+import { requireAuth } from "../middlewares/auth.middleware.js";
+import { validateSchema } from "../middlewares/validate.milddleware.js";
+import { cursoValidator } from "../validators/curso.validator.js";
+import {
+  listarCursos,
+  obtenerCurso,
+  crearCurso,
+  actualizarCurso,
+  eliminarCurso,
+} from "../controllers/cursos.controller.js";
 
 const router = Router();
 
-// GET /api/cursos - Obtener todos los cursos
-router.get("/", (req, res) => {
-  res.json({ mensaje: "Módulo de Cursos en construcción - GET todos" });
-});
+router.use(requireAuth);
 
-// GET /api/cursos/:id - Obtener un curso por ID
-router.get("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Cursos en construcción - GET curso ${req.params.id}` });
-});
-
-// POST /api/cursos - Crear un nuevo curso
-router.post("/", (req, res) => {
-  res.json({ mensaje: "Módulo de Cursos en construcción - POST crear" });
-});
-
-// PUT /api/cursos/:id - Actualizar un curso
-router.put("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Cursos en construcción - PUT actualizar ${req.params.id}` });
-});
-
-// DELETE /api/cursos/:id - Eliminar un curso
-router.delete("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Cursos en construcción - DELETE ${req.params.id}` });
-});
+router.get("/", listarCursos); // GET /api/cursos?buscar=&nivel=
+router.get("/:id", obtenerCurso); // GET /api/cursos/:id
+router.post("/", validateSchema(cursoValidator), crearCurso); // POST /api/cursos
+router.put("/:id", validateSchema(cursoValidator), actualizarCurso); // PUT /api/cursos/:id
+router.delete("/:id", eliminarCurso); // DELETE /api/cursos/:id
 
 export default router;

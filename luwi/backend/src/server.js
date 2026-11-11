@@ -9,6 +9,7 @@ import progresoRoutes from "./routes/progreso.routes.js";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js";
 import rutasAprendizajeRoutes from "./routes/rutasAprendizaje.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -50,5 +51,6 @@ app.use("/api/cursos", cursosRoutes);
 app.use("/api/evaluaciones", evaluacionesRoutes);
 app.use("/api/progreso", progresoRoutes);
 app.use("/api/rutas-aprendizaje", rutasAprendizajeRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 export default app;
