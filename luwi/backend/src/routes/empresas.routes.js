@@ -12,7 +12,7 @@ import { requireAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 /**
- * @swagger
+ * @swaggergit
  * tags:
  *   name: Empresas
  *   description: Gestión de empresas registradas en LUWI

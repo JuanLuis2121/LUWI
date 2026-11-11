@@ -13,6 +13,7 @@ import authRoutes from "./routes/auth.routes.js";
 import rutasAprendizajeRoutes from "./routes/rutasAprendizaje.routes.js";
 import empresaRoutes from "./routes/empresas.routes.js";
 import puestoRoutes from "./routes/puesto.routes.js";
+import iaRoutes from "./routes/ia.routes.js";
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 
 // Rutas de los módulos
+app.use("/api/ia", iaRoutes);
 app.use("/api/empresas", empresaRoutes);
 app.use("/api/candidatos", candidatosRoutes);
 app.use("/api/cursos", cursosRoutes);
