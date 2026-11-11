@@ -11,6 +11,20 @@
   --color-luwi-muted: #7a869f;
   --color-luwi-border: #dfe6f3;
   --color-luwi-bg: #f4f7fe;
+  --color-luwi-mint: #f0fffc;
+  --color-luwi-aqua: #ccfaf0;
+  --color-luwi-periwinkle: #aebfe8;
+  --color-luwi-danger: #b42318
+    --color-admin-ink: #312e81;
+  --color-admin-blue: #1d4ed8;
+  --color-admin-purple: #7c3aed;
+  --color-admin-green: #10b981;
+  --color-admin-muted: #6b7280;
+  --color-admin-border: #e5e7eb;
+  --color-admin-bg: #f3f4f6;
+  --color-admin-soft: #e0e7ff;
+  --color-admin-line: #c7d2fe;
+  --color-admin-danger: #b42318;
 }
 
 @layer base {

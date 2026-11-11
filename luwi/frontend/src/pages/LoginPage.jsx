@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom"; // CAMBIO: useNavigate
 import AuthLayout from "../layouts/AuthLayout";
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -10,6 +10,7 @@ import useAuth from "../hooks/useAuth";
 export default function LoginPage() {
   const { login } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate(); // CAMBIO
 
   const [form, setForm] = useState({ email: "", password: "", remember: true });
   const [errors, setErrors] = useState({});
@@ -51,7 +52,7 @@ export default function LoginPage() {
 
       setSuccess(`¡Bienvenido, ${user.username}!`);
       setForm((f) => ({ ...f, email: "", password: "" }));
-      // TODO: redirigir al dashboard cuando exista (useNavigate -> "/dashboard")
+      navigate("/empresas"); // CAMBIO TEMPORAL: quitar antes del commit
     } catch (err) {
       setServerError(err.message || "No se pudo conectar con el servidor");
     } finally {
