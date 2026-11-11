@@ -11,6 +11,15 @@
   --color-luwi-muted: #7a869f;
   --color-luwi-border: #dfe6f3;
   --color-luwi-bg: #f4f7fe;
+
+  /* Nueva paleta de la landing */
+  --color-fondo: #16131f;
+  --color-superficie: #221e30;
+  --color-teal: #2dc8b8;
+  --color-lila: #cdb4f6;
+  --color-morado: #9b7bde;
+  --color-claro: #f6f3fc;
+  --color-tinta: #1e1b2e;
 }
 
 @layer base {
