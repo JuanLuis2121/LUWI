@@ -26,6 +26,13 @@ const puestoSchema = new mongoose.Schema(
       trim: true,
       maxlength: 2000,
     },
+// Competencias que pide el puesto (del catálogo)
+    competencias: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Competencia",
+      },
+    ],
   },
   { timestamps: true }
 );
