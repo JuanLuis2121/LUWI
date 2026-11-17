@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requireAuth } from "../middlewares/auth.middleware.js";
-import { validateSchema } from "../middlewares/validate.milddleware.js";
+import { validateSchema } from "../middlewares/validate.middleware.js";
 import { cursoValidator } from "../validators/curso.validator.js";
 import {
   listarCursos,
