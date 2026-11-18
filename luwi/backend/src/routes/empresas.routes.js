@@ -6,7 +6,7 @@ import {
   updateEmpresa,
   deleteEmpresa,
 } from "../controllers/empresa.Controller.js";
-import { validateSchema } from "../middlewares/validate.milddleware.js";
+import { validateSchema } from "../middlewares/validate.middleware.js";
 import { empresaSchema } from "../validators/empresa.validator.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 

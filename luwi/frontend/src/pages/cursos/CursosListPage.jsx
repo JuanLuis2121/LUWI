@@ -1,235 +1,305 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 import Icon from "../../components/Icon";
-import FormMessage from "../../components/FormMessage";
 import ConfirmModal from "../../components/ConfirmModal";
 import { ActionButton, Badge, Bubble } from "../../components/AdminUI";
-import {
-  actualizarUnidad,
-  crearUnidad,
-  desactivarCurso,
-  getCursos,
-  getUnidades,
-  moverUnidad,
-  publicarCurso,
-  retirarUnidad,
-  TIPOS_UNIDAD,
-} from "../../services/cursosService";
-import { errMsg } from "../../services/api";
+import { ErrorBanner, SuccessBanner } from "../../components/FormControls";
+import { EstadoCursoBadge, formatoHoras } from "../../components/cursos/EstadoCurso";
+import { getCursos, publicarCurso, desactivarCurso, eliminarCurso } from "../../services/cursosService";
 
-const ESTADOS = ["TODOS", "BORRADOR", "PUBLICADO", "INACTIVO"];
-const ETIQUETAS = { BORRADOR: "Borrador", PUBLICADO: "Publicado", INACTIVO: "Inactivo" };
-const TONOS = {
-  BORRADOR: "border-amber-200 bg-amber-50 text-amber-800",
-  PUBLICADO: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  INACTIVO: "border-admin-line bg-admin-bg text-admin-muted",
-};
-const UNIDAD_VACIA = { titulo: "", tipo: "TEXTO", contenido: "", recursoUrl: "", obligatoria: true };
-
-function Estado({ estado }) {
-  return <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${TONOS[estado] ?? TONOS.BORRADOR}`}>{ETIQUETAS[estado] ?? "Borrador"}</span>;
-}
-
-function Dialog({ title, onClose, children }) {
-  useEffect(() => {
-    const onKey = (event) => event.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 backdrop-blur-sm sm:items-center sm:p-4" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section role="dialog" aria-modal="true" aria-labelledby="unidad-dialog-title" className="max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl sm:p-7">
-        <header className="mb-5 flex items-center justify-between gap-4"><h2 id="unidad-dialog-title" className="text-xl font-bold text-admin-ink">{title}</h2><button type="button" onClick={onClose} aria-label="Cerrar" className="rounded-lg px-2 text-2xl text-admin-muted hover:bg-admin-bg">×</button></header>
-        {children}
-      </section>
-    </div>
-  );
-}
+const FILTROS_ESTADO = [
+  { value: "", label: "Todos los estados" },
+  { value: "BORRADOR", label: "Borrador" },
+  { value: "PUBLICADO", label: "Publicado" },
+  { value: "INACTIVO", label: "Inactivo" },
+];
 
 export default function CursosListPage() {
-  const [items, setItems] = useState([]);
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const [cursos, setCursos] = useState([]);
   const [query, setQuery] = useState("");
-  const [estado, setEstado] = useState("TODOS");
+  const [estado, setEstado] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
-  const [dialog, setDialog] = useState(null);
-  const [unidades, setUnidades] = useState([]);
-  const [unitForm, setUnitForm] = useState(UNIDAD_VACIA);
-  const [unitError, setUnitError] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [unitToRetire, setUnitToRetire] = useState(null);
-  const [retiring, setRetiring] = useState(false);
+  const [notice, setNotice] = useState(location.state?.message ?? "");
+  // id del curso que se está publicando o desactivando (sus botones quedan inactivos)
+  const [ocupado, setOcupado] = useState(null);
+  const [aDesactivar, setADesactivar] = useState(null);
+  const [aEliminar, setAEliminar] = useState(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      setItems(await getCursos());
-    } catch (err) {
-      setError(errMsg(err, "No se pudieron cargar los cursos."));
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    let active = true;
+    getCursos()
+      .then((data) => active && setCursos(data))
+      .catch((e) => active && setError(e.message))
+      .finally(() => active && setLoading(false));
+    return () => {
+      active = false;
+    };
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  // Acceso rápido del dashboard: /dashboard/cursos?nuevo=1
+  if (searchParams.get("nuevo") === "1") {
+    return <Navigate to="/dashboard/cursos/nuevo" replace />;
+  }
 
-  const filtered = useMemo(() => {
-    const text = query.trim().toLocaleLowerCase("es");
-    return items.filter((item) => {
-      const matchesText = !text || `${item.titulo} ${item.competencia} ${item.descripcion}`.toLocaleLowerCase("es").includes(text);
-      return matchesText && (estado === "TODOS" || item.estado === estado);
-    });
-  }, [items, query, estado]);
+  const q = query.trim().toLowerCase();
+  const filtrados = cursos.filter(
+    (c) =>
+      (!estado || (c.estado ?? "BORRADOR") === estado) &&
+      (!q || `${c.titulo} ${c.descripcion} ${c.competencia} ${c.nivel}`.toLowerCase().includes(q))
+  );
 
-  const closeDialog = useCallback(() => setDialog(null), []);
+  // Reemplaza el curso solo con lo que devolvió el servidor
+  const reemplazar = (actualizado) =>
+    setCursos((prev) => prev.map((c) => (c._id === actualizado._id ? { ...c, ...actualizado } : c)));
 
-  async function changeState(item) {
+  async function publicar(curso) {
+    setOcupado(curso._id);
     setError("");
     setNotice("");
     try {
-      if (item.estado === "PUBLICADO") await desactivarCurso(item._id);
-      else await publicarCurso(item._id);
-      setNotice(item.estado === "PUBLICADO" ? "Curso desactivado; su contenido y avance se conservaron." : "Curso publicado correctamente.");
-      await load();
-    } catch (err) {
-      setError(errMsg(err, "No se pudo actualizar el estado del curso."));
+      reemplazar(await publicarCurso(curso._id));
+      setNotice(`El curso "${curso.titulo}" quedó publicado.`);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setOcupado(null);
     }
   }
 
-  async function openUnits(item) {
+  async function confirmarDesactivar() {
+    const curso = aDesactivar;
+    setOcupado(curso._id);
     setError("");
-    setUnitError("");
-    setDialog({ item, unit: null, loading: true });
+    setNotice("");
     try {
-      const result = await getUnidades(item._id);
-      setUnidades(result?.unidades ?? []);
-      setDialog({ item, unit: null, loading: false });
-    } catch (err) {
-      setUnidades([]);
-      setDialog(null);
-      setError(errMsg(err, "No se pudieron cargar las unidades."));
-    }
-  }
-
-  function editUnit(unit) {
-    setUnitForm({
-      titulo: unit.titulo ?? "",
-      tipo: unit.tipo ?? "TEXTO",
-      contenido: unit.contenido ?? "",
-      recursoUrl: unit.recursoUrl ?? "",
-      obligatoria: unit.obligatoria !== false,
-    });
-    setUnitError("");
-    setDialog((current) => ({ ...current, unit }));
-  }
-
-  async function saveUnit(event) {
-    event.preventDefault();
-    if (!dialog?.item) return;
-    setSaving(true);
-    setUnitError("");
-    const payload = {
-      titulo: unitForm.titulo.trim(),
-      tipo: unitForm.tipo,
-      obligatoria: unitForm.obligatoria,
-      ...(unitForm.tipo === "TEXTO"
-        ? { contenido: unitForm.contenido.trim() }
-        : { recursoUrl: unitForm.recursoUrl.trim() }),
-    };
-    try {
-      if (dialog.unit?._id) await actualizarUnidad(dialog.item._id, dialog.unit._id, payload);
-      else await crearUnidad(dialog.item._id, payload);
-      const result = await getUnidades(dialog.item._id);
-      setUnidades(result?.unidades ?? []);
-      setDialog((current) => ({ ...current, unit: null }));
-      setUnitForm(UNIDAD_VACIA);
-      setNotice(dialog.unit ? "Unidad actualizada." : "Unidad agregada al curso.");
-      setItems(await getCursos());
-    } catch (err) {
-      setUnitError(errMsg(err, "No se pudo guardar la unidad."));
+      reemplazar(await desactivarCurso(curso._id));
+      setNotice(`El curso "${curso.titulo}" quedó desactivado.`);
+    } catch (e) {
+      setError(e.message);
     } finally {
-      setSaving(false);
+      setOcupado(null);
+      setADesactivar(null);
     }
   }
 
-  async function unitAction(unit, direction) {
-    setUnitError("");
+  // El backend no deja eliminar un curso que está en alguna ruta (409 con el motivo)
+  async function confirmarEliminar() {
+    const curso = aEliminar;
+    setOcupado(curso._id);
+    setError("");
+    setNotice("");
     try {
-      if (action === "move") await moverUnidad(dialog.item._id, unit._id, direction);
-      const result = await getUnidades(dialog.item._id);
-      setUnidades(result?.unidades ?? []);
-    } catch (err) {
-      setUnitError(errMsg(err, "No se pudo actualizar la unidad."));
-    }
-  }
-
-  async function confirmRetireUnit() {
-    if (!dialog?.item || !unitToRetire) return;
-    setRetiring(true);
-    setUnitError("");
-    try {
-      await retirarUnidad(dialog.item._id, unitToRetire._id);
-      const result = await getUnidades(dialog.item._id);
-      setUnidades(result?.unidades ?? []);
-      setItems(await getCursos());
-      setNotice("Unidad retirada; se conserva el historial de avance.");
-      setUnitToRetire(null);
-    } catch (err) {
-      setUnitError(errMsg(err, "No se pudo retirar la unidad."));
+      await eliminarCurso(curso._id);
+      setCursos((prev) => prev.filter((c) => c._id !== curso._id));
+      setNotice(`El curso "${curso.titulo}" se eliminó.`);
+    } catch (e) {
+      setError(e.message);
     } finally {
-      setRetiring(false);
+      setOcupado(null);
+      setAEliminar(null);
     }
   }
+
+  const resumen = (c) => (
+    <div className="min-w-0">
+      <p className="break-words font-semibold text-admin-ink">{c.titulo}</p>
+      <p className="line-clamp-2 max-w-[320px] break-words text-xs text-admin-muted">{c.descripcion}</p>
+      {c.alcance === "GLOBAL" && <p className="mt-1 text-xs font-semibold text-admin-blue">Curso global</p>}
+    </div>
+  );
+
+  const detalles = (c, enLinea = false) => (
+    <div className={`text-xs ${enLinea ? "flex flex-wrap items-center gap-x-3 gap-y-1" : "space-y-1 whitespace-nowrap"}`}>
+      <span className="capitalize">
+        <Badge>{c.nivel}</Badge>
+      </span>
+      <p className="font-medium">{formatoHoras(c.duracionHoras)}</p>
+      <p className="text-admin-muted">
+        {c.totalUnidades ?? 0} {(c.totalUnidades ?? 0) === 1 ? "unidad" : "unidades"}
+      </p>
+    </div>
+  );
+
+  // Íconos con nombre accesible (aria-label) y texto al pasar el cursor (title)
+  const icono = (nombre, label) => ({ "aria-label": `${label}`, title: label, children: <Icon name={nombre} className="h-4 w-4" /> });
+
+  const acciones = (c) => {
+    const est = c.estado ?? "BORRADOR";
+    const bloqueado = ocupado === c._id;
+    if (c.editable === false) {
+      return (
+        <>
+          <span className="text-xs text-admin-muted">Solo lectura</span>
+          <ActionButton size="sm" to={`/dashboard/cursos/${c._id}/unidades`} {...icono("layers", `Ver unidades de ${c.titulo}`)} />
+        </>
+      );
+    }
+    return (
+      <>
+        {est !== "PUBLICADO" && (
+          <ActionButton
+            size="sm"
+            variant="edit"
+            disabled={bloqueado}
+            onClick={() => publicar(c)}
+            {...icono("send", bloqueado ? `Publicando ${c.titulo}` : `Publicar ${c.titulo}`)}
+          />
+        )}
+        <ActionButton size="sm" variant="edit" to={`/dashboard/cursos/${c._id}/editar`} {...icono("pencil", `Editar ${c.titulo}`)} />
+        <ActionButton size="sm" to={`/dashboard/cursos/${c._id}/unidades`} {...icono("layers", `Gestionar unidades de ${c.titulo}`)} />
+        {est !== "INACTIVO" && (
+          <ActionButton size="sm" variant="danger" disabled={bloqueado} onClick={() => setADesactivar(c)} {...icono("ban", `Desactivar ${c.titulo}`)} />
+        )}
+        <ActionButton size="sm" variant="danger" disabled={bloqueado} onClick={() => setAEliminar(c)} {...icono("trash", `Eliminar ${c.titulo}`)} />
+      </>
+    );
+  };
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div><h1 className="text-4xl font-extrabold text-admin-ink">Cursos</h1><p className="mt-1 text-sm text-admin-muted">Administra cursos, unidades y publicación.</p></div>
-        <ActionButton variant="primary" to="/dashboard/cursos/nuevo"><Icon name="plus" className="h-4 w-4" />Nuevo curso</ActionButton>
+        <div>
+          <h1 className="text-4xl font-extrabold text-admin-ink">Cursos</h1>
+          <p className="mt-1 text-sm text-admin-muted">
+            Prepara los cursos, sus unidades y publícalos para usarlos en las rutas.
+          </p>
+        </div>
+        <ActionButton variant="primary" to="/dashboard/cursos/nuevo">
+          <Icon name="plus" className="h-4 w-4" />
+          Nuevo curso
+        </ActionButton>
       </div>
 
-      <div className="mb-4 space-y-2"><FormMessage type="error">{error}</FormMessage><FormMessage type="success">{notice}</FormMessage></div>
-
-      <section className="mb-4 flex flex-col gap-3 rounded-3xl bg-white p-4 shadow-lg shadow-admin-blue/5 sm:flex-row sm:items-center sm:justify-between">
-        <label className="flex w-full max-w-md items-center gap-3 rounded-2xl border-2 border-admin-line bg-admin-bg px-4 py-2.5 focus-within:border-admin-blue focus-within:ring-4 focus-within:ring-admin-blue/10">
-          <Icon name="search" className="h-[18px] w-[18px] text-admin-blue"/><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por título, competencia…" aria-label="Buscar cursos" className="w-full bg-transparent text-sm outline-none"/>
-        </label>
-        <div className="flex flex-wrap items-center gap-2">{ESTADOS.map((value) => <button key={value} type="button" onClick={() => setEstado(value)} className={`rounded-full px-3 py-2 text-xs font-semibold transition ${estado === value ? "bg-admin-ink text-white" : "bg-admin-bg text-admin-muted hover:bg-admin-soft"}`}>{value === "TODOS" ? "Todos" : ETIQUETAS[value]}</button>)}</div>
-      </section>
-
-      <div className="mb-3 flex items-center justify-between px-1 text-xs font-semibold text-admin-muted"><span>{filtered.length} {filtered.length === 1 ? "curso" : "cursos"}</span><button type="button" onClick={load} className="hover:text-admin-blue">Actualizar</button></div>
+      <div className="mb-4 space-y-2">
+        <ErrorBanner>{error}</ErrorBanner>
+        <SuccessBanner>{notice}</SuccessBanner>
+      </div>
 
       <section className="overflow-hidden rounded-3xl bg-white shadow-xl shadow-admin-blue/10">
-        {loading ? <p className="px-6 py-12 text-center text-sm text-admin-muted">Cargando cursos…</p> : filtered.length === 0 ? <div className="px-6 py-14 text-center"><Bubble><Icon name="book" className="h-4 w-4"/></Bubble><h2 className="mt-4 font-bold text-admin-ink">{query || estado !== "TODOS" ? "No encontramos cursos" : "Aún no hay cursos"}</h2><p className="mt-1 text-sm text-admin-muted">{query || estado !== "TODOS" ? "Prueba con otra búsqueda o filtro." : "Crea un curso borrador y agrega sus unidades para publicarlo."}</p></div> : <div className="divide-y divide-admin-border/70">{filtered.map((item) => {
-          const editable = item.editable !== false;
-          return <article key={item._id} className="flex flex-col gap-4 p-5 transition hover:bg-admin-bg/30 lg:flex-row lg:items-center">
-            <Bubble><Icon name="book" className="h-4 w-4"/></Bubble>
-            <div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h2 className="font-bold text-admin-ink">{item.titulo}</h2><Estado estado={item.estado}/><Badge>{item.alcance === "GLOBAL" ? "Global" : "Empresa"}</Badge></div><p className="mt-1 line-clamp-2 text-sm text-admin-muted">{item.descripcion}</p><div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-admin-muted"><span>{item.competencia}</span><span className="capitalize">{item.nivel}</span><span>{item.duracionHoras} h</span><span>{item.totalUnidades ?? 0} unidades · {item.unidadesObligatorias ?? 0} obligatorias</span></div></div>
-            <div className="flex flex-wrap gap-2 lg:justify-end">
-              {editable ? <><ActionButton size="sm" to={`/dashboard/cursos/${item._id}/editar`} variant="edit">Editar</ActionButton><ActionButton size="sm" onClick={() => openUnits(item)}>Unidades</ActionButton><ActionButton size="sm" onClick={() => changeState(item)} variant={item.estado === "PUBLICADO" ? "secondary" : "primary"}>{item.estado === "PUBLICADO" ? "Desactivar" : "Publicar"}</ActionButton></> : <><Badge>Solo lectura</Badge><ActionButton size="sm" onClick={() => openUnits(item)}>Ver unidades</ActionButton></>}
-            </div>
-          </article>;
-        })}</div>}
+        <div className="flex flex-wrap items-center gap-3 p-5">
+          <label className="flex min-w-0 flex-1 basis-64 items-center gap-3 rounded-2xl border-2 border-admin-line bg-admin-bg px-4 py-2.5 focus-within:border-admin-blue focus-within:ring-4 focus-within:ring-admin-blue/10">
+            <Icon name="search" className="h-[18px] w-[18px] shrink-0 text-admin-blue" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar por título, competencia o nivel"
+              aria-label="Buscar cursos"
+              className="w-full bg-transparent text-sm text-admin-ink outline-none placeholder:text-admin-muted"
+            />
+          </label>
+          <select
+            value={estado}
+            onChange={(e) => setEstado(e.target.value)}
+            aria-label="Filtrar por estado"
+            className="rounded-2xl border-2 border-admin-line bg-admin-bg px-4 py-2.5 text-sm text-admin-ink outline-none focus:border-admin-blue"
+          >
+            {FILTROS_ESTADO.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs font-bold text-admin-ink">
+            {filtrados.length} {filtrados.length === 1 ? "curso" : "cursos"}
+          </span>
+        </div>
+
+        {/* Escritorio: tabla */}
+        <div className="hidden overflow-x-auto md:block">
+          <table className="w-full text-left text-sm text-admin-ink">
+            <thead className="border-y border-admin-border bg-admin-bg text-xs uppercase tracking-wide">
+              <tr>
+                <th className="px-6 py-3 font-bold">Curso</th>
+                <th className="px-4 py-3 font-bold">Detalles</th>
+                <th className="px-4 py-3 font-bold">Estado</th>
+                <th className="px-4 py-3 text-right font-bold">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-admin-border/60">
+              {!loading &&
+                filtrados.map((c) => (
+                  <tr key={c._id} className="align-top transition hover:bg-admin-bg/60">
+                    <td className="px-6 py-3">
+                      <div className="flex min-w-[200px] items-start gap-3">
+                        <Bubble>
+                          <Icon name="book" className="h-4 w-4" />
+                        </Bubble>
+                        {resumen(c)}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">{detalles(c)}</td>
+                    <td className="px-4 py-3">
+                      <EstadoCursoBadge estado={c.estado ?? "BORRADOR"} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap items-center justify-end gap-2">{acciones(c)}</div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Celular: tarjetas */}
+        <ul className="divide-y divide-admin-border/60 border-t border-admin-border md:hidden">
+          {!loading &&
+            filtrados.map((c) => (
+              <li key={c._id} className="space-y-3 px-5 py-4">
+                <div className="flex items-start justify-between gap-3">
+                  {resumen(c)}
+                  <EstadoCursoBadge estado={c.estado ?? "BORRADOR"} />
+                </div>
+                {detalles(c, true)}
+                <div className="flex flex-wrap items-center gap-2">{acciones(c)}</div>
+              </li>
+            ))}
+        </ul>
+
+        {(loading || filtrados.length === 0) && (
+          <p className="border-t border-admin-border px-6 py-10 text-center text-sm text-admin-muted">
+            {loading
+              ? "Cargando..."
+              : q || estado
+                ? "No hay cursos que coincidan con la búsqueda."
+                : "Aún no hay cursos."}
+          </p>
+        )}
       </section>
 
-      {dialog && <Dialog title={dialog.unit ? (dialog.unit._id ? "Editar unidad" : "Nueva unidad") : `Unidades · ${dialog.item.titulo}`} onClose={closeDialog}>
-        {dialog.loading ? <p className="py-8 text-center text-sm text-admin-muted">Cargando unidades…</p> : dialog.unit ? <form onSubmit={saveUnit} className="space-y-4">
-          <label className="block text-sm font-semibold text-admin-ink">Título<input value={unitForm.titulo} onChange={(e) => setUnitForm({ ...unitForm, titulo: e.target.value })} required minLength={3} maxLength={150} className="mt-1 w-full rounded-xl border border-admin-line px-3 py-2.5 font-normal outline-none focus:border-admin-blue"/></label>
-          <label className="block text-sm font-semibold text-admin-ink">Tipo<select value={unitForm.tipo} onChange={(e) => setUnitForm({ ...unitForm, tipo: e.target.value, contenido: "", recursoUrl: "" })} className="mt-1 w-full rounded-xl border border-admin-line bg-white px-3 py-2.5 font-normal">{TIPOS_UNIDAD.map((tipo) => <option key={tipo} value={tipo}>{tipo === "TEXTO" ? "Texto" : tipo === "VIDEO" ? "Video" : "Enlace"}</option>)}</select></label>
-          {unitForm.tipo === "TEXTO" ? <label className="block text-sm font-semibold text-admin-ink">Contenido<textarea value={unitForm.contenido} onChange={(e) => setUnitForm({ ...unitForm, contenido: e.target.value })} required minLength={10} rows={5} className="mt-1 w-full rounded-xl border border-admin-line px-3 py-2.5 font-normal outline-none focus:border-admin-blue"/></label> : <label className="block text-sm font-semibold text-admin-ink">URL del {unitForm.tipo === "VIDEO" ? "video" : "recurso"}<input type="url" value={unitForm.recursoUrl} onChange={(e) => setUnitForm({ ...unitForm, recursoUrl: e.target.value })} required placeholder="https://…" className="mt-1 w-full rounded-xl border border-admin-line px-3 py-2.5 font-normal outline-none focus:border-admin-blue"/></label>}
-          <label className="flex items-center gap-2 text-sm text-admin-ink"><input type="checkbox" checked={unitForm.obligatoria} onChange={(e) => setUnitForm({ ...unitForm, obligatoria: e.target.checked })} className="accent-admin-blue"/>Cuenta para el avance obligatorio</label>
-          <FormMessage type="error">{unitError}</FormMessage><div className="flex justify-end gap-2 border-t border-admin-border pt-4"><ActionButton onClick={() => setDialog((current) => ({ ...current, unit: null }))}>Cancelar</ActionButton><button type="submit" disabled={saving} className="rounded-full bg-[linear-gradient(135deg,#1D4ED8,#7C3AED)] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60">{saving ? "Guardando…" : "Guardar unidad"}</button></div>
-        </form> : <>
-          <div className="mb-4 flex items-start justify-between gap-3"><div><p className="text-sm text-admin-muted">{unidades.length} {unidades.length === 1 ? "unidad" : "unidades"} vigentes</p><p className="mt-1 text-xs text-admin-muted">Las unidades retiradas conservan el historial de avance.</p></div>{dialog.item.editable !== false && <button type="button" onClick={() => { setUnitForm(UNIDAD_VACIA); setUnitError(""); setDialog((current) => ({ ...current, unit: { _id: "" } })); }} className="rounded-full bg-admin-ink px-4 py-2 text-sm font-semibold text-white">+ Agregar</button>}</div>
-          <FormMessage type="error">{unitError}</FormMessage>
-          {unidades.length === 0 ? <div className="rounded-2xl border border-dashed border-admin-line px-4 py-8 text-center text-sm text-admin-muted">Este curso aún no tiene unidades.</div> : <ol className="space-y-2">{unidades.map((unit, index) => <li key={unit._id} className="flex items-center gap-2 rounded-2xl border border-admin-border bg-admin-bg/50 p-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-admin-blue">{index + 1}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-admin-ink">{unit.titulo}</p><p className="text-xs text-admin-muted">{unit.tipo} · {unit.obligatoria ? "Obligatoria" : "Complementaria"}</p></div>{dialog.item.editable !== false && <><button type="button" title="Subir" aria-label="Subir unidad" disabled={index === 0} onClick={() => unitAction(unit, "subir")} className="rounded-lg px-2 py-1 text-admin-ink hover:bg-white disabled:opacity-30">↑</button><button type="button" title="Bajar" aria-label="Bajar unidad" disabled={index === unidades.length - 1} onClick={() => unitAction(unit, "bajar")} className="rounded-lg px-2 py-1 text-admin-ink hover:bg-white disabled:opacity-30">↓</button><button type="button" onClick={() => editUnit(unit)} className="rounded-lg px-2 py-1 text-xs font-semibold text-admin-blue hover:bg-white">Editar</button><button type="button" onClick={() => setUnitToRetire(unit)} className="rounded-lg px-2 py-1 text-xs font-semibold text-admin-danger hover:bg-white">Retirar</button></>}</li>)}</ol>}
-          <div className="mt-5 flex justify-end border-t border-admin-border pt-4"><ActionButton onClick={closeDialog}>Cerrar</ActionButton></div>
-        </>}
-      </Dialog>}
-      <ConfirmModal open={!!unitToRetire} title="Retirar unidad" confirmLabel="Retirar unidad" loading={retiring} message={unitToRetire ? `¿Quieres retirar “${unitToRetire.titulo}”? No se borrará el historial de avance de quienes ya la revisaron.` : ""} onConfirm={confirmRetireUnit} onCancel={() => { if (!retiring) setUnitToRetire(null); }} />
+      <ConfirmModal
+        open={!!aDesactivar}
+        title="Desactivar curso"
+        message={
+          aDesactivar
+            ? `¿Desactivar el curso "${aDesactivar.titulo}"? Ya no se podrá agregar a rutas nuevas. Sus unidades, las rutas donde aparece y el avance de los postulantes se conservan.`
+            : ""
+        }
+        confirmLabel="Desactivar"
+        loadingLabel="Desactivando..."
+        loading={ocupado === aDesactivar?._id}
+        onConfirm={confirmarDesactivar}
+        onCancel={() => setADesactivar(null)}
+      />
+
+      <ConfirmModal
+        open={!!aEliminar}
+        title="Eliminar curso"
+        message={
+          aEliminar
+            ? `¿Eliminar el curso "${aEliminar.titulo}" y todas sus unidades? Esta acción no se puede deshacer. Si el curso está en alguna ruta no se podrá eliminar: en ese caso desactívalo.`
+            : ""
+        }
+        confirmLabel="Eliminar"
+        loadingLabel="Eliminando..."
+        loading={ocupado === aEliminar?._id}
+        onConfirm={confirmarEliminar}
+        onCancel={() => setAEliminar(null)}
+      />
     </div>
   );
 }

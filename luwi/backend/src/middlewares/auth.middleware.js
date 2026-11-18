@@ -42,7 +42,8 @@ export const requireAuth = async (req, res, next) => {
 
   try {
     const user = await User.findById(payload.id)
-      .select("_id username email")
+      .select("_id username email role empresa")
+      .populate("empresa", "_id nombre")
       .lean();
 
     if (!user) {
@@ -51,7 +52,23 @@ export const requireAuth = async (req, res, next) => {
       });
     }
 
+    if (
+      !user.role ||
+      !["admin", "empresa", "rrhh", "postulante"].includes(user.role)
+    ) {
+      return res.status(403).json({
+        message: "El usuario no tiene un rol válido.",
+      });
+    }
+
+    if (user.role !== "admin" && !user.empresa) {
+      return res.status(403).json({
+        message: "El usuario no tiene una empresa asociada.",
+      });
+    }
+
     req.user = user;
+
     return next();
   } catch {
     return res.status(500).json({

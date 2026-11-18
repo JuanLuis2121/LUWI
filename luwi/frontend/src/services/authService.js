@@ -39,5 +39,26 @@ async function post(path, body, fallback) {
 export const registerUser = (payload) =>
   post("/auth/register", payload, "Error al registrar usuario");
 
-export const loginUser = (payload) =>
-  post("/auth/login", payload, "Error al iniciar sesión");
+// La API de Wala responde { message, user: { id, nombre, email, rol, empresa } },
+// con rol en minúsculas ("admin" | "empresa" | "rrhh" | "postulante").
+export async function loginUser(payload) {
+  const data = await post("/auth/login", payload, "Error al iniciar sesión");
+  return data.user;
+}
+
+// Usuario de la sesión actual (cookie). Devuelve null si no hay sesión.
+export async function getSessionUser() {
+  try {
+    const response = await fetch(`${API_URL}/auth/me`, {
+      credentials: "include",
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.user ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export const logoutUser = () =>
+  post("/auth/logout", {}, "Error al cerrar sesión");

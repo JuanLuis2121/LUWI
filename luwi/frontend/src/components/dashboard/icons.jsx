@@ -48,3 +48,27 @@ export const TrendUpIcon = (p) => (
 export const ClockIcon = (p) => (
   <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
 );
+export const UserIcon = (p) => (
+  <svg {...base} {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0116 0" /></svg>
+);
+export const LockIcon = (p) => (
+  <svg {...base} {...p}><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 018 0v4" /></svg>
+);
+export const CheckIcon = (p) => (
+  <svg {...base} {...p}><path d="M5 12l5 5L20 7" /></svg>
+);
+export const CheckCircleIcon = (p) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M8 12l3 3 5-6" /></svg>
+);
+export const ChevronLeftIcon = (p) => (
+  <svg {...base} {...p}><path d="M15 6l-6 6 6 6" /></svg>
+);
+export const ChevronRightIcon = (p) => (
+  <svg {...base} {...p}><path d="M9 6l6 6-6 6" /></svg>
+);
+export const ExternalLinkIcon = (p) => (
+  <svg {...base} {...p}><path d="M14 4h6v6M20 4l-9 9" /><path d="M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5" /></svg>
+);
+export const AlertIcon = (p) => (
+  <svg {...base} {...p}><path d="M12 3l9.5 17H2.5L12 3z" /><path d="M12 10v4M12 17.5v.01" /></svg>
+);

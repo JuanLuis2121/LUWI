@@ -17,6 +17,7 @@ import dashboardRoutes from "./routes/dashboard.routes.js";
 import competenciasRoutes from "./routes/competencias.routes.js";
 import miFormacionRoutes from "./routes/miFormacion.routes.js";
 import progresoProcesoRoutes from "./routes/progresoProceso.routes.js";
+import asignacionesRoutes from "./routes/asignaciones.routes.js";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use(express.json());
 // Middleware para procesar cookies
 app.use(cookieParser());
 
+// Configuración de Swagger UI
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Ruta principal de prueba
@@ -61,5 +63,6 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/competencias", competenciasRoutes);
 app.use("/api/mi-formacion", miFormacionRoutes);
 app.use("/api/procesos-formacion", progresoProcesoRoutes);
+app.use("/api", asignacionesRoutes);
 
 export default app;

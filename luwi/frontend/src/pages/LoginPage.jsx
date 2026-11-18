@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import SocialButtons from "../components/SocialButtons";
 import FormMessage from "../components/FormMessage";
 import useAuth from "../hooks/useAuth";
+import { inicioSegunRol } from "../utils/roles";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -45,12 +46,12 @@ export default function LoginPage() {
     try {
       // "remember" todavía no se envía: el backend no lo soporta (la cookie
       // se crea sin maxAge). Se agrega cuando se defina en el servidor.
-      const user = await login({
+      const usuario = await login({
         email: form.email.trim(),
         password: form.password,
       });
 
-      navigate(user?.rol === "POSTULANTE" ? "/mi-formacion" : "/dashboard", { replace: true });
+      navigate(inicioSegunRol(usuario.rol), { replace: true });
     } catch (err) {
       setServerError(err.message || "No se pudo conectar con el servidor");
     } finally {

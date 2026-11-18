@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Icon from "../../components/Icon";
 import { ActionButton } from "../../components/AdminUI";
-import { getProcesosFormacion } from "../../services/miFormacionService";
+import { getProcesosFormacion } from "../../services/procesosFormacionService";
 
 const labelEstado = { ACTIVO: "Activo", SUSPENDIDO: "Suspendido", FINALIZADO: "Finalizado" };
 const tonoEstado = {
