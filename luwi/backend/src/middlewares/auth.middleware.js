@@ -42,7 +42,7 @@ export const requireAuth = async (req, res, next) => {
 
   try {
     const user = await User.findById(payload.id)
-      .select("_id username email")
+      .select("_id username email rol candidato estadoCuenta")
       .lean();
 
     if (!user) {
@@ -59,3 +59,19 @@ export const requireAuth = async (req, res, next) => {
     });
   }
 };
+
+// Permite el paso solo a los roles indicados. Se usa después de requireAuth.
+// Las cuentas antiguas sin rol se tratan como "RRHH".
+export const requireRol =
+  (...roles) =>
+  (req, res, next) => {
+    const rol = req.user?.rol || "RRHH";
+
+    if (!roles.includes(rol)) {
+      return res.status(403).json({
+        message: "No tienes permiso para acceder a esta sección.",
+      });
+    }
+
+    return next();
+  };

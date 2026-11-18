@@ -15,6 +15,7 @@ import empresaRoutes from "./routes/empresas.routes.js";
 import puestoRoutes from "./routes/puesto.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import competenciasRoutes from "./routes/competencias.routes.js";
+import miFormacionRoutes from "./routes/miFormacion.routes.js";
 
 const app = express();
 
@@ -57,5 +58,8 @@ app.use("/api/rutas-aprendizaje", rutasAprendizajeRoutes);
 app.use("/api/puestos", puestoRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/competencias", competenciasRoutes);
+
+// Formación del postulante (solo rol POSTULANTE)
+app.use("/api/mi-formacion", miFormacionRoutes);
 
 export default app;
