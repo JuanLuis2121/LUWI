@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   crearAsignacion,
   getAsignacion,
+  cambiarAcceso,
 } from "../controllers/asignaciones.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 import {
@@ -92,6 +93,56 @@ router.get(
   cargarContexto,
   requireRol("ADMIN", "RRHH"),
   getAsignacion,
+);
+
+/**
+ * @swagger
+ * /api/asignaciones/{asignacionId}/cursos/{cursoAsignadoId}/acceso:
+ *   patch:
+ *     summary: Habilitar o bloquear un curso de la asignación
+ *     description: "Bloquear un curso conserva el avance del postulante. Cada cambio queda en el historial."
+ *     tags: [Asignaciones]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: asignacionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: cursoAsignadoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               acceso:
+ *                 type: string
+ *                 enum: [HABILITADO, BLOQUEADO]
+ *     responses:
+ *       200:
+ *         description: Acceso actualizado correctamente
+ *       400:
+ *         description: Acceso o ID inválido
+ *       403:
+ *         description: La asignación es de otra empresa
+ *       404:
+ *         description: Asignación o curso no encontrados
+ *       409:
+ *         description: Asignación reemplazada o proceso no activo
+ */
+router.patch(
+  "/asignaciones/:asignacionId/cursos/:cursoAsignadoId/acceso",
+  requireAuth,
+  cargarContexto,
+  requireRol("ADMIN", "RRHH"),
+  cambiarAcceso,
 );
 
 export default router;

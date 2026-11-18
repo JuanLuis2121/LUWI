@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import ProcesoFormacion from "../models/ProcesoFormacion.js";
-import AsignacionRuta from "../models/AsignacionRuta.js";
+import AsignacionRuta, { ACCESOS } from "../models/AsignacionRuta.js";
 import RutaAprendizaje from "../models/RutaAprendizaje.js";
 import ProgresoUnidad from "../models/ProgresoUnidad.js";
 import { perteneceAEmpresa } from "../middlewares/contexto.middleware.js";
@@ -216,3 +216,90 @@ export const getAsignacion = async (req, res) => {
     });
   }
 };
+
+// HABILITAR O BLOQUEAR UN CURSO DE LA ASIGNACIÓN
+export const cambiarAcceso = async (req, res) => {
+  try {
+    const { asignacionId, cursoAsignadoId } = req.params;
+    const { acceso } = req.body;
+
+    if (
+      !mongoose.isValidObjectId(asignacionId) ||
+      !mongoose.isValidObjectId(cursoAsignadoId)
+    ) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
+    if (!ACCESOS.includes(acceso)) {
+      return res.status(400).json({
+        message: "El acceso debe ser HABILITADO o BLOQUEADO.",
+      });
+    }
+
+    const asignacion = await AsignacionRuta.findById(asignacionId);
+
+    if (!asignacion) {
+      return res.status(404).json({ message: "Asignación no encontrada" });
+    }
+
+    if (!perteneceAEmpresa(req.user, asignacion.empresa)) {
+      return res.status(403).json({
+        message: "Esta asignación pertenece a otra empresa.",
+      });
+    }
+
+    if (asignacion.estado !== "ACTIVA") {
+      return res.status(409).json({
+        message: "Esta asignación ya fue reemplazada.",
+      });
+    }
+
+    const proceso = await ProcesoFormacion.findById(asignacion.proceso);
+
+    if (!proceso || proceso.estado !== "ACTIVO") {
+      return res.status(409).json({
+        message: "El proceso de formación no está activo.",
+      });
+    }
+
+    const curso = asignacion.cursos.id(cursoAsignadoId);
+
+    if (!curso) {
+      return res.status(404).json({
+        message: "Curso no encontrado en esta asignación",
+      });
+    }
+
+    // Si ya tiene ese acceso, no se cambia nada ni se duplica el historial
+    if (curso.acceso === acceso) {
+      return res.status(200).json({
+        message: "El curso ya tenía ese acceso",
+        asignacion: formatearAsignacion(asignacion),
+      });
+    }
+
+    const ahora = new Date();
+
+    curso.acceso = acceso;
+    curso.fechaCambioAcceso = ahora;
+    curso.cambiadoPor = req.user._id;
+    curso.historialAcceso.push({
+      acceso,
+      fecha: ahora,
+      responsable: req.user._id,
+    });
+
+    await asignacion.save();
+
+    res.status(200).json({
+      message: "Acceso actualizado",
+      asignacion: formatearAsignacion(asignacion),
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al cambiar el acceso del curso",
+      error: error.message,
+    });
+  }
+};
+  
