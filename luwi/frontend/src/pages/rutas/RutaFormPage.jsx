@@ -2,31 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Icon from "../../components/Icon";
 import { ActionButton } from "../../components/AdminUI";
-import { rutasService } from "../../services/rutasService";
+import { FieldError, Label, inputCls } from "../../components/FormControls";
+import { rutasService, cursoCompatible } from "../../services/rutasService";
 import { errMsg } from "../../services/api";
-
-const inputCls = (error) =>
-  `w-full rounded-2xl border-2 bg-admin-bg px-4 py-3 text-sm text-admin-ink outline-none transition placeholder:text-admin-muted focus:ring-4 focus:ring-admin-blue/10 disabled:cursor-default disabled:opacity-80 ${
-    error ? "border-admin-danger" : "border-admin-line focus:border-admin-blue"
-  }`;
-
-function FieldError({ children }) {
-  if (!children) return null;
-  return (
-    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-admin-danger">
-      <Icon name="alert" className="h-3.5 w-3.5 shrink-0" />
-      {children}
-    </p>
-  );
-}
-
-function Label({ htmlFor, required, children }) {
-  return (
-    <label htmlFor={htmlFor} className="mb-1.5 block text-xs font-bold text-admin-ink">
-      {children} {required && <span className="text-admin-danger">*</span>}
-    </label>
-  );
-}
 
 export default function RutaFormPage({ mode }) {
   const { id } = useParams();
@@ -78,7 +56,14 @@ export default function RutaFormPage({ mode }) {
     };
   }, [mode, id]);
 
-  const available = options.cursos.filter((c) => !cursos.some((x) => x.id === c.id));
+  const puesto = options.puestos.find((p) => p.id === puestoId);
+  // Solo cursos publicados, globales o de la empresa del puesto, y que no estén ya en la ruta
+  const available = puesto
+    ? options.cursos.filter((c) => cursoCompatible(c, puesto) && !cursos.some((x) => x.id === c.id))
+    : [];
+  // Estado actual de cada curso de la ruta (puede haber cambiado desde que se agregó)
+  const actual = (c) => options.cursos.find((x) => x.id === c.id) ?? c;
+  const incompatibles = puesto ? cursos.filter((c) => !cursoCompatible(actual(c), puesto)) : [];
 
   const errors = {};
   if (submitted) {
@@ -86,12 +71,15 @@ export default function RutaFormPage({ mode }) {
     if (!descripcion.trim()) errors.descripcion = "Escribe la descripción de la ruta.";
     if (!puestoId) errors.puesto = "Selecciona el puesto de la ruta.";
     if (cursos.length === 0) errors.cursos = "Agrega al menos un curso a la ruta.";
+    else if (incompatibles.length > 0)
+      errors.cursos = "Quita los cursos que no son compatibles con el puesto antes de guardar.";
   }
   const errorCount = Object.keys(errors).length;
 
   function addCurso() {
-    const curso = options.cursos.find((c) => c.id === toAdd);
-    if (!curso) return;
+    const curso = available.find((c) => c.id === toAdd);
+    // Impide duplicados aunque el selector quede desactualizado
+    if (!curso || cursos.some((c) => c.id === curso.id)) return;
     setCursos((prev) => [...prev, curso]);
     setToAdd("");
   }
@@ -114,7 +102,8 @@ export default function RutaFormPage({ mode }) {
       nombre.trim().length < 3 ||
       !descripcion.trim() ||
       !puestoId ||
-      cursos.length === 0
+      cursos.length === 0 ||
+      incompatibles.length > 0
     )
       return;
 
@@ -181,7 +170,7 @@ export default function RutaFormPage({ mode }) {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="mt-5 space-y-5 rounded-3xl bg-white p-7 shadow-xl shadow-admin-blue/10"
+          className="mt-5 space-y-5 rounded-3xl bg-white p-5 shadow-xl shadow-admin-blue/10 sm:p-7"
         >
           <div>
             <Label htmlFor="nombre" required={!readOnly}>Nombre de la ruta</Label>
@@ -225,7 +214,7 @@ export default function RutaFormPage({ mode }) {
               {options.puestos.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.titulo}
-                  {p.empresaNombre ? ` — ${p.empresaNombre}` : ""}
+                  {p.empresaNombre ? ` (${p.empresaNombre})` : ""}
                 </option>
               ))}
             </select>
@@ -238,25 +227,37 @@ export default function RutaFormPage({ mode }) {
             </p>
 
             {!readOnly && (
-              <div className="mb-3 flex gap-2">
+              <div className="mb-3 flex flex-col gap-2 sm:flex-row">
                 <select
                   value={toAdd}
                   onChange={(e) => setToAdd(e.target.value)}
                   aria-label="Curso a agregar"
+                  disabled={!puesto}
                   className={inputCls(false)}
                 >
-                  <option value="">Selecciona un curso para agregar</option>
+                  <option value="">
+                    {!puesto
+                      ? "Selecciona primero el puesto"
+                      : available.length === 0
+                        ? "No hay más cursos publicados compatibles"
+                        : "Selecciona un curso para agregar"}
+                  </option>
                   {available.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.titulo}
                     </option>
                   ))}
                 </select>
-                <ActionButton variant="edit" onClick={addCurso} disabled={!toAdd}>
+                <ActionButton variant="edit" onClick={addCurso} disabled={!toAdd} className="shrink-0">
                   <Icon name="plus" className="h-4 w-4" />
-                  Agregar
+                  Agregar curso
                 </ActionButton>
               </div>
+            )}
+            {!readOnly && (
+              <p className="mb-3 text-xs text-admin-muted">
+                Solo aparecen cursos publicados que sean globales o de la empresa del puesto.
+              </p>
             )}
 
             {cursos.length === 0 ? (
@@ -268,17 +269,24 @@ export default function RutaFormPage({ mode }) {
                 {cursos.map((c, i) => (
                   <li
                     key={c.id}
-                    className="flex items-center gap-3 rounded-2xl border-2 border-admin-line/60 bg-admin-bg px-4 py-2.5"
+                    className={`flex flex-wrap items-center gap-3 rounded-2xl border-2 bg-admin-bg px-4 py-2.5 ${
+                      incompatibles.includes(c) ? "border-admin-danger" : "border-admin-line/60"
+                    }`}
                   >
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-admin-soft text-xs font-bold text-admin-ink">
                       {i + 1}
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold text-admin-ink">
+                    <span className="min-w-0 flex-1 basis-40">
+                      <span className="block break-words text-sm font-semibold text-admin-ink">
                         {c.titulo}
                       </span>
-                      <span className="text-xs capitalize text-admin-muted">
-                        {[c.nivel, c.duracionHoras ? `${c.duracionHoras} h` : ""]
+                      {incompatibles.includes(c) && (
+                        <span className="block text-xs font-semibold text-admin-danger">
+                          No es compatible con el puesto (no está publicado o es de otra empresa).
+                        </span>
+                      )}
+                      <span className="text-xs text-admin-muted">
+                        {[c.nivel ? c.nivel.charAt(0).toUpperCase() + c.nivel.slice(1) : "", c.duracionHoras ? `${c.duracionHoras} h` : ""]
                           .filter(Boolean)
                           .join(" · ")}
                       </span>
@@ -328,7 +336,7 @@ export default function RutaFormPage({ mode }) {
             )}
           </div>
 
-          <div className="flex justify-end gap-3 pt-3">
+          <div className="flex flex-wrap justify-end gap-3 pt-3">
             {readOnly ? (
               <>
                 <ActionButton to="/dashboard/rutas">Volver</ActionButton>
@@ -342,7 +350,7 @@ export default function RutaFormPage({ mode }) {
                 <ActionButton to="/dashboard/rutas">Cancelar</ActionButton>
                 <ActionButton variant="primary" type="submit" disabled={saving}>
                   <Icon name="check" className="h-4 w-4" />
-                  {saving ? "Guardando..." : "Guardar"}
+                  {saving ? "Guardando..." : mode === "edit" ? "Guardar cambios" : "Guardar ruta"}
                 </ActionButton>
               </>
             )}
