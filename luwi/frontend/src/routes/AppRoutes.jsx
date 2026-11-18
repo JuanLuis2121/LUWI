@@ -12,6 +12,7 @@ import CursosListPage from "../pages/cursos/CursosListPage";
 import CursoFormPage from "../pages/cursos/CursoFormPage";
 import CursoUnidadesPage from "../pages/cursos/CursoUnidadesPage";
 import FichaPostulantePage from "../pages/postulantes/FichaPostulantePage";
+import ProcesosFormacionPage from "../pages/postulantes/ProcesosFormacionPage";
 import RutasListPage from "../pages/rutas/RutasListPage";
 import RutaFormPage from "../pages/rutas/RutaFormPage";
 import PostulanteLayout from "../layouts/PostulanteLayout";
@@ -51,6 +52,7 @@ export default function AppRoutes() {
           <Route path="/dashboard/cursos/:id/editar" element={<CursoFormPage mode="edit" />} />
           <Route path="/dashboard/cursos/:id/unidades" element={<CursoUnidadesPage />} />
           <Route path="/dashboard/cursos/:id" element={<CursoUnidadesPage />} />
+          <Route path="/dashboard/postulantes" element={<ProcesosFormacionPage />} />
           <Route path="/dashboard/postulantes/:procesoId" element={<FichaPostulantePage />} />
           <Route path="/dashboard/rutas" element={<RutasListPage />} />
           <Route path="/dashboard/rutas/nuevo" element={<RutaFormPage mode="create" />} />
@@ -75,4 +77,4 @@ export default function AppRoutes() {
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
-} 
+}

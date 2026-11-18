@@ -2,7 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import AnimatedBackground from "../core/AnimatedBackground";
 import Logo from "../Logo";
 import {
-  HomeIcon, BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, LogoutIcon, CloseIcon,
+  HomeIcon, BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, UsersIcon, LogoutIcon, CloseIcon,
 } from "./icons";
 
 // Para agregar una sección nueva basta con añadir un objeto aquí.
@@ -12,6 +12,7 @@ export const MENU_ITEMS = [
   { to: "/dashboard/puestos", label: "Puestos", icon: BriefcaseIcon },
   { to: "/dashboard/cursos", label: "Cursos", icon: BookIcon },
   { to: "/dashboard/rutas", label: "Rutas de aprendizaje", icon: RouteIcon },
+  { to: "/dashboard/postulantes", label: "Postulantes", icon: UsersIcon },
 ];
 
 // El fondo animado lo pone <AnimatedBackground>; aquí solo el color del texto.

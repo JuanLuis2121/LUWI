@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, PlusIcon } from "./icons";
 
-// Marlon: cada acceso abre el módulo con ?nuevo=1 para mostrar directamente el formulario.
+// Accesos directos a los formularios de creación de cada módulo.
 export const ACCIONES = [
-  { to: "/dashboard/empresas?nuevo=1", label: "Nueva empresa", icon: BuildingIcon },
-  { to: "/dashboard/puestos?nuevo=1", label: "Nuevo puesto", icon: BriefcaseIcon },
-  { to: "/dashboard/cursos?nuevo=1", label: "Nuevo curso", icon: BookIcon },
-  { to: "/dashboard/rutas?nuevo=1", label: "Nueva ruta", icon: RouteIcon },
+  { to: "/dashboard/empresas/nuevo", label: "Nueva empresa", icon: BuildingIcon },
+  { to: "/dashboard/puestos/nuevo", label: "Nuevo puesto", icon: BriefcaseIcon },
+  { to: "/dashboard/cursos/nuevo", label: "Nuevo curso", icon: BookIcon },
+  { to: "/dashboard/rutas/nuevo", label: "Nueva ruta", icon: RouteIcon },
 ];
 
 /** Accesos directos de creación. `inverse` = para usar sobre fondo con degradado. */

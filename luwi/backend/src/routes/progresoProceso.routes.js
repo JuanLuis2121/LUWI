@@ -1,10 +1,24 @@
 import { Router } from "express";
 import { requireAuth } from "../middlewares/auth.middleware.js";
-import { obtenerProgresoProceso } from "../controllers/progresoProceso.controller.js";
+import { listarProcesosFormacion, obtenerProgresoProceso } from "../controllers/progresoProceso.controller.js";
 
 // Se monta en /api/procesos-formacion. Naomi monta sus rutas de asignación en el mismo prefijo
 // con otro router; Express permite varios routers en el mismo prefijo sin chocar.
 const router = Router();
+
+/**
+ * @swagger
+ * /api/procesos-formacion:
+ *   get:
+ *     summary: Listar procesos visibles para el usuario
+ *     description: ADMIN ve todos, RRHH solo los de su empresa y POSTULANTE solo los propios.
+ *     tags: [Mi formación]
+ *     security: [{ cookieAuth: [] }]
+ *     responses:
+ *       200: { description: "{ data: [{ id, estado, postulante, empresa, puesto }] }" }
+ *       401: { description: Sin sesión }
+ */
+router.get("/", requireAuth, listarProcesosFormacion);
 
 /**
  * @swagger

@@ -25,6 +25,50 @@ async function puedeVer(perfil, proceso) {
   return false;
 }
 
+// GET /api/procesos-formacion
+// Lista procesos visibles para iniciar la ficha: ADMIN todos, RRHH su empresa,
+// postulante solo sus procesos. El frontend usa el id para abrir el detalle de progreso.
+export async function listarProcesosFormacion(req, res) {
+  try {
+    const perfil = await perfilDeSesion(req);
+    const filtro = {};
+
+    if (perfil.rol === "RRHH" && perfil.empresa) {
+      filtro.empresa = perfil.empresa;
+    } else if (perfil.rol === "POSTULANTE") {
+      const candidatoId = perfil.candidato ?? (await Candidato.findOne({ usuario: perfil._id }).select("_id").lean())?._id;
+      if (!candidatoId) return res.json({ data: [] });
+      filtro.candidato = candidatoId;
+    } else if (perfil.rol !== "ADMIN" && perfil.rol !== "RRHH") {
+      throw new ErrorFormacion(403, "No tienes permiso para consultar procesos.", "SIN_PERMISO");
+    }
+
+    const procesos = await ProcesoFormacion.find(filtro)
+      .populate("candidato", "nombre correo")
+      .populate("empresa", "nombre")
+      .populate("puesto", "titulo")
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    return res.json({
+      data: procesos.map((proceso) => ({
+        id: String(proceso._id),
+        estado: proceso.estado,
+        fechaInicio: proceso.fechaInicio,
+        postulante: proceso.candidato ? {
+          id: String(proceso.candidato._id),
+          nombre: proceso.candidato.nombre,
+          correo: proceso.candidato.correo,
+        } : null,
+        empresa: proceso.empresa ? { id: String(proceso.empresa._id), nombre: proceso.empresa.nombre } : null,
+        puesto: proceso.puesto ? { id: String(proceso.puesto._id), titulo: proceso.puesto.titulo } : null,
+      })),
+    });
+  } catch (error) {
+    return responderError(res, error, "No se pudieron obtener los procesos de formación.");
+  }
+}
+
 // GET /api/procesos-formacion/:procesoId/progreso
 // Avance real del proceso para la ficha del postulante (RR. HH.).
 export async function obtenerProgresoProceso(req, res) {
