@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "seed:postulante": "node scripts/crearPostulantePrueba.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

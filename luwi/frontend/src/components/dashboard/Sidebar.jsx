@@ -24,9 +24,9 @@ const linkClass = ({ isActive }) =>
  * Menú lateral. En escritorio es fijo; en celular se muestra como
  * panel deslizable controlado por `open` / `onClose`.
  */
-export default function Sidebar({ open, onClose, onLogout }) {
+export default function Sidebar({ open, onClose, onLogout, items = MENU_ITEMS }) {
   const { pathname } = useLocation();
-  const current = MENU_ITEMS.find(({ to, end }) => (end ? pathname === to : pathname.startsWith(to)))?.to;
+  const current = items.find(({ to, end }) => (end ? pathname === to : pathname.startsWith(to)))?.to;
 
   return (
     <>
@@ -63,7 +63,7 @@ export default function Sidebar({ open, onClose, onLogout }) {
             className="rounded-xl bg-luwi-blue/10"
             transition={{ type: "spring", bounce: 0.2, duration: 0.3 }}
           >
-            {MENU_ITEMS.map(({ to, label, icon: Icon, end }) => (
+            {items.map(({ to, label, icon: Icon, end }) => (
               <NavLink key={to} data-id={to} to={to} end={end} onClick={onClose} className={linkClass}>
                 <Icon className="h-5 w-5 shrink-0" />
                 {label}
