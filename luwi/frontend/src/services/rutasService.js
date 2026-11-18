@@ -9,7 +9,17 @@ const normalizeCurso = (c) => ({
   nivel: c.nivel ?? "",
   competencia: c.competencia ?? "",
   duracionHoras: c.duracionHoras ?? 0,
+  // Los cursos viejos sin estado se tratan como BORRADOR (igual que el backend)
+  estado: c.estado ?? "BORRADOR",
+  // null = curso global (compatible con cualquier puesto)
+  empresaId: c.empresa ? String(c.empresa?._id ?? c.empresa) : null,
 });
+
+// Un curso se puede incluir en la ruta de un puesto si está PUBLICADO y es
+// global o de la misma empresa del puesto (misma regla que valida el backend).
+export const cursoCompatible = (curso, puesto) =>
+  curso.estado === "PUBLICADO" &&
+  (!curso.empresaId || (puesto && curso.empresaId === puesto.empresaId));
 
 const normalizeRuta = (r) => ({
   id: r._id,
@@ -51,10 +61,21 @@ export const rutasService = {
       puestos: (data.puestos ?? []).map((p) => ({
         id: p._id,
         titulo: p.titulo,
+        empresaId: p.empresa ? String(p.empresa._id ?? p.empresa) : null,
         empresaNombre: p.empresa?.nombre ?? "",
       })),
       cursos: (data.cursos ?? []).map(normalizeCurso),
     };
+  },
+  // Rutas del puesto del postulante (las únicas compatibles para asignar).
+  // El listado no trae estado ni empresa de los cursos: se completan con /opciones
+  // para avisar antes de confirmar qué cursos rechazaría el backend.
+  async compatiblesConPuesto(puestoId) {
+    const [rutas, opciones] = await Promise.all([this.list(), this.options()]);
+    const porId = new Map(opciones.cursos.map((c) => [c.id, c]));
+    return rutas
+      .filter((r) => r.puestoId === puestoId)
+      .map((r) => ({ ...r, cursos: r.cursos.map((c) => ({ ...c, ...(porId.get(c.id) ?? {}) })) }));
   },
   async get(id) {
     return normalizeRuta(unwrap(await api.get(`${BASE}/${id}`)));

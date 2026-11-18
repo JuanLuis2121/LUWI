@@ -45,6 +45,40 @@ const paths = {
   ),
   check: <path d="M20 6 9 17l-5-5" />,
   arrowLeft: <path d="M19 12H5M12 19l-7-7 7-7" />,
+  arrowUp: <path d="M12 19V5M5 12l7-7 7 7" />,
+  arrowDown: <path d="M12 5v14M19 12l-7 7-7-7" />,
+  lock: (
+    <>
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </>
+  ),
+  unlock: (
+    <>
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 7.5-2" />
+    </>
+  ),
+  layers: (
+    <>
+      <path d="m12 2 10 5-10 5L2 7Z" />
+      <path d="m2 17 10 5 10-5M2 12l10 5 10-5" />
+    </>
+  ),
+  send: <path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z" />,
+  ban: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="m4.9 4.9 14.2 14.2" />
+    </>
+  ),
+  route: (
+    <>
+      <circle cx="6" cy="19" r="2" />
+      <circle cx="18" cy="5" r="2" />
+      <path d="M8 19h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7" />
+    </>
+  ),
   alert: (
     <>
       <circle cx="12" cy="12" r="10" />
