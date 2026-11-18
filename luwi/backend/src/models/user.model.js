@@ -30,6 +30,11 @@ const userSchema = new mongoose.Schema(
       enum: ROLES,
       required: true,
     },
+    candidato: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Candidato",
+      required: false,
+    },
 
     empresa: {
       type: mongoose.Schema.Types.ObjectId,
@@ -39,27 +44,10 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    candidato: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Candidato",
-      default: null,
-    },
-
     estadoCuenta: {
       type: String,
       enum: ESTADOS_CUENTA,
       default: "ACTIVA",
-    },
-
-    activacionToken: {
-      type: String,
-      default: null,
-      select: false,
-    },
-
-    activacionExpira: {
-      type: Date,
-      default: null,
     },
   },
   {

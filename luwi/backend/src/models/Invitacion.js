@@ -37,7 +37,6 @@ const invitacionSchema = new mongoose.Schema(
 
     invalidadaEn: {
       type: Date,
-      default: null,
     },
 
     creadaPor: {

@@ -182,6 +182,17 @@ export const createCandidato = async (req, res) => {
         { session },
       );
 
+      // Asociar el perfil del candidato con el usuario
+      await User.updateOne(
+        { _id: usuario._id },
+        {
+          $set: {
+            candidato: candidato._id,
+          },
+        },
+        { session },
+      );
+
       // Crear invitación independiente del proceso
       // de formación.
       await Invitacion.create(

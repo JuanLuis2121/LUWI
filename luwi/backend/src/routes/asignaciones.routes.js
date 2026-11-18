@@ -4,11 +4,7 @@ import {
   getAsignacion,
   cambiarAcceso,
 } from "../controllers/asignaciones.controller.js";
-import { requireAuth } from "../middlewares/auth.middleware.js";
-import {
-  cargarContexto,
-  requireRol,
-} from "../middlewares/contexto.middleware.js";
+import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -59,7 +55,6 @@ const router = Router();
 router.post(
   "/procesos-formacion/:procesoId/asignacion",
   requireAuth,
-  cargarContexto,
   requireRol("ADMIN", "RRHH"),
   crearAsignacion,
 );
@@ -90,7 +85,6 @@ router.post(
 router.get(
   "/procesos-formacion/:procesoId/asignacion",
   requireAuth,
-  cargarContexto,
   requireRol("ADMIN", "RRHH"),
   getAsignacion,
 );
@@ -140,7 +134,6 @@ router.get(
 router.patch(
   "/asignaciones/:asignacionId/cursos/:cursoAsignadoId/acceso",
   requireAuth,
-  cargarContexto,
   requireRol("ADMIN", "RRHH"),
   cambiarAcceso,
 );
