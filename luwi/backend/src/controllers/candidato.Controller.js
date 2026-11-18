@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import Candidato from "../models/Candidato.js";
-import User from "../models/user.model.js";
+import User, { ROLES } from "../models/user.model.js";
+import Invitacion from "../models/Invitacion.js";
 import Puesto from "../models/Puesto.js";
 import crypto from "node:crypto";
 import { enviarCorreoActivacion } from "../services/email.service.js";
@@ -79,18 +80,16 @@ export const createCandidato = async (req, res) => {
     });
   }
 
-  if (!nombre || !correo) {
+  if (
+    typeof nombre !== "string" ||
+    !nombre.trim() ||
+    typeof correo !== "string" ||
+    !correo.trim()
+  ) {
     return res.status(400).json({
       message: "Nombre y correo son obligatorios.",
     });
   }
-
-  // Generar token de activación
-  const token = crypto.randomBytes(32).toString("hex");
-
-  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
-
-  const expiracion = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
   if (
     !Array.isArray(habilidades) ||
@@ -102,20 +101,33 @@ export const createCandidato = async (req, res) => {
     });
   }
 
+  const email = correo.trim().toLowerCase();
+
+  // Token original: se envía por correo, nunca se guarda.
+  const token = crypto.randomBytes(32).toString("hex");
+
+  // Solo almacenamos el hash del token.
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+  // La invitación vence después de 48 horas.
+  const expiraEn = new Date(Date.now() + 48 * 60 * 60 * 1000);
+
   const session = await mongoose.startSession();
 
+  let candidatoCreado;
+
   try {
-    const email = correo.trim().toLowerCase();
-
-    let candidatoCreado;
-
     await session.withTransaction(async () => {
+      // Comprobar que los puestos pertenecen a la empresa
+      // del usuario RRHH autenticado.
       const puestosValidos = await Puesto.countDocuments({
         _id: { $in: puestosAplicados },
         empresa: empresaId,
       }).session(session);
 
-      if (puestosValidos !== new Set(puestosAplicados).size) {
+      const puestosUnicos = new Set(puestosAplicados.map(String));
+
+      if (puestosValidos !== puestosUnicos.size) {
         const error = new Error(
           "Uno o más puestos no pertenecen a tu empresa.",
         );
@@ -123,6 +135,20 @@ export const createCandidato = async (req, res) => {
         throw error;
       }
 
+      // No crear otra cuenta si el correo ya existe.
+      const usuarioExistente = await User.findOne({
+        email,
+      }).session(session);
+
+      if (usuarioExistente) {
+        const error = new Error(
+          "El correo ya está registrado. No se modificó la contraseña ni la cuenta existente.",
+        );
+        error.status = 409;
+        throw error;
+      }
+
+      // Crear usuario pendiente.
       const [usuario] = await User.create(
         [
           {
@@ -131,17 +157,16 @@ export const createCandidato = async (req, res) => {
             password: await bcrypt.hash(
               crypto.randomBytes(32).toString("hex"),
               10,
-            ), // Contraseña temporal
-            role: "postulante",
+            ),
+            role: ROLES[3], // "POSTULANTE"
             empresa: empresaId,
-            cuentaActiva: false,
-            activacionToken: tokenHash,
-            activacionExpira: expiracion,
+            estadoCuenta: "PENDIENTE",
           },
         ],
         { session },
       );
 
+      // Crear perfil del postulante.
       const [candidato] = await Candidato.create(
         [
           {
@@ -157,21 +182,52 @@ export const createCandidato = async (req, res) => {
         { session },
       );
 
+      // Crear invitación independiente del proceso
+      // de formación.
+      await Invitacion.create(
+        [
+          {
+            usuario: usuario._id,
+            tokenHash,
+            expiraEn,
+            estado: "PENDIENTE",
+            creadaPor: req.user._id,
+          },
+        ],
+        { session },
+      );
+
       candidatoCreado = candidato;
     });
 
-    await enviarCorreoActivacion({
-      correo: email,
-      nombre: nombre.trim(),
-      token,
-    });
+    // El correo se envía después de confirmar
+    // la transacción en MongoDB.
+    try {
+      await enviarCorreoActivacion({
+        correo: email,
+        nombre: nombre.trim(),
+        token,
+      });
+    } catch (emailError) {
+      console.error("Error al enviar correo de activación:", emailError);
+
+      return res.status(201).json({
+        message:
+          "Postulante creado, pero no se pudo enviar el correo de activación.",
+        candidato: candidatoCreado,
+        correoEnviado: false,
+      });
+    }
 
     return res.status(201).json({
-      message: "Postulante creado correctamente.",
+      message:
+        "Postulante creado correctamente. Invitación enviada por correo.",
       candidato: candidatoCreado,
+      correoEnviado: true,
     });
   } catch (error) {
     console.error("Error al crear el postulante:", error);
+
     if (error.code === 11000) {
       return res.status(409).json({
         message: "El correo ya está registrado.",
@@ -180,7 +236,9 @@ export const createCandidato = async (req, res) => {
 
     return res.status(error.status || 500).json({
       message:
-        error.status === 400 ? error.message : "Error al crear el postulante.",
+        error.status === 400 || error.status === 409
+          ? error.message
+          : "Error al crear el postulante.",
     });
   } finally {
     await session.endSession();
@@ -295,7 +353,7 @@ export const deleteCandidato = async (req, res) => {
       if (candidato.usuario) {
         await User.deleteOne({
           _id: candidato.usuario,
-          role: "postulante",
+          role: ROLES[3], // "POSTULANTE"
           empresa: getEmpresaId(req),
         }).session(session);
       }

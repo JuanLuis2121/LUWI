@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+import User, { ROLES } from "../models/user.model.js";
 
 // Se usa DESPUÉS de requireAuth. Completa req.user con rol, empresa,
 // candidato y estado de cuenta, y bloquea cuentas desactivadas.
@@ -59,7 +59,7 @@ export const requireRol =
 // Un ADMIN puede operar sobre cualquier empresa;
 // un usuario RRHH solo sobre la suya.
 export const perteneceAEmpresa = (usuario, empresaId) => {
-  if (usuario.rol === "ADMIN") return true;
+  if (usuario.rol === ROLES[0]) return true;
   if (!usuario.empresa || !empresaId) return false;
   return String(usuario.empresa) === String(empresaId);
 };

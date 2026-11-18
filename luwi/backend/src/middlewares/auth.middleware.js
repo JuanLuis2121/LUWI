@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.model.js";
+import User, { ROLES } from "../models/user.model.js";
 
 export const requireAuth = async (req, res, next) => {
   const token = req.cookies?.token;
@@ -52,16 +52,13 @@ export const requireAuth = async (req, res, next) => {
       });
     }
 
-    if (
-      !user.role ||
-      !["admin", "empresa", "rrhh", "postulante"].includes(user.role)
-    ) {
+    if (!user.role || !ROLES.includes(user.role)) {
       return res.status(403).json({
         message: "El usuario no tiene un rol válido.",
       });
     }
 
-    if (user.role !== "admin" && !user.empresa) {
+    if (user.role !== ROLES[0] && !user.empresa) {
       return res.status(403).json({
         message: "El usuario no tiene una empresa asociada.",
       });
@@ -75,4 +72,14 @@ export const requireAuth = async (req, res, next) => {
       message: "No se pudo verificar la sesión. Inténtalo de nuevo.",
     });
   }
+};
+
+export const requireRRHH = (req, res, next) => {
+  if (req.user.role !== ROLES[2]) {
+    return res.status(403).json({
+      message: "Acceso exclusivo para Recursos Humanos.",
+    });
+  }
+
+  next();
 };

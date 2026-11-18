@@ -1,7 +1,7 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import User from "../src/models/user.model.js";
+import User, { ROLES } from "../src/models/user.model.js";
 
 const createAdmin = async () => {
   try {
@@ -41,7 +41,7 @@ const createAdmin = async () => {
       username: ADMIN_USERNAME.trim(),
       email,
       password: passwordHash,
-      role: "admin",
+      role: ROLES[0], // "ADMIN"
       empresa: null,
     });
 

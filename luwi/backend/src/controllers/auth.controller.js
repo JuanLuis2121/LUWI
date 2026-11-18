@@ -1,4 +1,5 @@
-import User from "../models/user.model.js";
+import User, { ROLES } from "../models/user.model.js";
+import Invitacion from "../models/Invitacion.js";
 import Empresa from "../models/Empresa.js";
 import bcrypt from "bcryptjs";
 import { CreateAccessToken } from "../utils/jwt.js";
@@ -27,9 +28,9 @@ export const register = async (req, res) => {
     let role;
     let empresaAsignada = null;
 
-    if (req.user.role === "admin") {
+    if (req.user.role === "ADMIN") {
       // El administrador general crea administradores de empresa.
-      role = "empresa";
+      role = "ADMIN-EMPRESA";
 
       if (!empresaId || !mongoose.isValidObjectId(empresaId)) {
         return res.status(400).json({
@@ -46,13 +47,13 @@ export const register = async (req, res) => {
       }
 
       empresaAsignada = empresaId;
-    } else if (req.user.role === "empresa") {
+    } else if (req.user.role === "ADMIN-EMPRESA") {
       // El administrador de empresa crea usuarios RRHH.
-      role = "rrhh";
+      role = "RRHH";
       empresaAsignada = req.user.empresa._id;
-    } else if (req.user.role === "rrhh") {
+    } else if (req.user.role === "RRHH") {
       // RRHH crea cuentas de postulantes.
-      role = "postulante";
+      role = "POSTULANTE";
       empresaAsignada = req.user.empresa._id;
     } else {
       return res.status(403).json({
@@ -105,7 +106,7 @@ export const login = async (req, res) => {
 
     if (!userFound) {
       return res.status(400).json({
-        message: "Credenciales incorrectas.",
+        message: "No existe una cuenta con ese correo.",
       });
     }
 
@@ -113,11 +114,11 @@ export const login = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({
-        message: "Credenciales incorrectas.",
+        message: "La contraseña es incorrecta.",
       });
     }
 
-    if (!["admin", "empresa", "rrhh", "postulante"].includes(userFound.role)) {
+    if (!ROLES.includes(userFound.role)) {
       return res.status(403).json({
         message: "El usuario no tiene un rol válido.",
       });
@@ -128,15 +129,21 @@ export const login = async (req, res) => {
       .populate("empresa", "_id nombre")
       .lean();
 
-    if (user.role !== "admin" && !user.empresa) {
+    if (user.role !== "ADMIN" && !user.empresa) {
       return res.status(403).json({
         message: "El usuario no tiene una empresa asociada válida.",
       });
     }
 
-    if (userFound.cuentaActiva === false) {
+    if (userFound.estadoCuenta === "PENDIENTE") {
       return res.status(403).json({
         message: "Debes activar tu cuenta desde el correo electrónico.",
+      });
+    }
+
+    if (userFound.estadoCuenta === "DESACTIVADA") {
+      return res.status(403).json({
+        message: "Tu cuenta está desactivada.",
       });
     }
 
@@ -185,64 +192,134 @@ export const logout = (req, res) => {
 
 // ACTIVAR CUENTA
 export const activarCuenta = async (req, res) => {
+  const { token, password } = req.body;
+
+  if (typeof token !== "string" || !/^[a-f0-9]{64}$/.test(token)) {
+    return res.status(400).json({
+      message: "Token de activación inválido.",
+    });
+  }
+
+  if (
+    typeof password !== "string" ||
+    password.length < 8 ||
+    password.length > 64 ||
+    !/[A-Z]/.test(password) ||
+    !/[a-z]/.test(password) ||
+    !/[0-9]/.test(password)
+  ) {
+    return res.status(400).json({
+      message:
+        "La contraseña debe tener entre 8 y 64 caracteres, incluir mayúscula, minúscula y número.",
+    });
+  }
+
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+  // Preparar el hash antes de iniciar la transacción.
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const session = await mongoose.startSession();
+
   try {
-    const { token, password } = req.body;
+    await session.withTransaction(async () => {
+      const ahora = new Date();
 
-    if (!token || typeof token !== "string") {
-      return res.status(400).json({
-        message: "Token de activación requerido.",
-      });
-    }
+      // Buscar una invitación pendiente y vigente.
+      const invitacion = await Invitacion.findOne({
+        tokenHash,
+        estado: "PENDIENTE",
+        expiraEn: { $gt: ahora },
+      }).session(session);
 
-    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+      if (!invitacion) {
+        const error = new Error(
+          "El enlace es inválido, ha expirado o ya fue utilizado.",
+        );
+        error.status = 400;
+        throw error;
+      }
 
-    const usuario = await User.findOne({
-      activacionToken: tokenHash,
-      activacionExpira: { $gt: new Date() },
-      cuentaActiva: false,
-      role: "postulante",
-    }).select("+activacionToken");
-
-    if (!usuario) {
-      return res.status(400).json({
-        message: "El enlace es inválido o ha expirado.",
-      });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const actualizado = await User.findOneAndUpdate(
-      {
-        _id: usuario._id,
-        activacionToken: tokenHash,
-        activacionExpira: { $gt: new Date() },
-        cuentaActiva: false,
-      },
-      {
-        $set: {
-          password: passwordHash,
-          cuentaActiva: true,
+      // Activar únicamente una cuenta pendiente.
+      const usuario = await User.findOneAndUpdate(
+        {
+          _id: invitacion.usuario,
+          role: "POSTULANTE",
+          estadoCuenta: "PENDIENTE",
         },
-        $unset: {
-          activacionToken: "",
-          activacionExpira: "",
+        {
+          $set: {
+            password: passwordHash,
+            estadoCuenta: "ACTIVA",
+          },
+          // Limpiar campos del sistema anterior.
+          $unset: {
+            activacionToken: "",
+            activacionExpira: "",
+          },
         },
-      },
-      { new: true },
-    );
+        {
+          new: true,
+          session,
+        },
+      );
 
-    if (!actualizado) {
-      return res.status(400).json({
-        message: "El enlace ya fue utilizado o ha expirado.",
-      });
-    }
+      if (!usuario) {
+        const error = new Error("La cuenta no existe o ya está activada.");
+        error.status = 400;
+        throw error;
+      }
+
+      // Marcar la invitación como utilizada.
+      const resultado = await Invitacion.updateOne(
+        {
+          _id: invitacion._id,
+          estado: "PENDIENTE",
+          expiraEn: { $gt: ahora },
+        },
+        {
+          $set: {
+            estado: "USADA",
+            usadaEn: ahora,
+          },
+        },
+        { session },
+      );
+
+      if (resultado.modifiedCount !== 1) {
+        const error = new Error(
+          "La invitación ya fue utilizada o ha expirado.",
+        );
+        error.status = 400;
+        throw error;
+      }
+    });
 
     return res.status(200).json({
       message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
     });
-  } catch {
+  } catch (error) {
+    console.error("Error al activar cuenta:", error);
+
+    if (error.status === 400) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    // Si dos solicitudes intentan usar el mismo token,
+    // MongoDB puede generar un conflicto de escritura.
+    if (error.code === 112 || error.codeName === "WriteConflict") {
+      return res.status(409).json({
+        message:
+          "La invitación está siendo procesada. Verifica si la cuenta ya fue activada.",
+      });
+    }
+
     return res.status(500).json({
-      message: "Error al activar la cuenta.",
+      message: "Error interno al activar la cuenta.",
     });
+  } finally {
+    await session.endSession();
   }
 };
