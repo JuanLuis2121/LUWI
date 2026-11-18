@@ -1,7 +1,7 @@
 import { MenuIcon } from "./icons";
 
 /** Barra superior: botón de menú (celular) y nombre del usuario. */
-export default function Topbar({ username, onMenuClick }) {
+export default function Topbar({ username, onMenuClick, subtitle = "Panel de control" }) {
   const name = username || "Usuario";
   const initial = name.charAt(0).toUpperCase();
 
@@ -16,7 +16,7 @@ export default function Topbar({ username, onMenuClick }) {
         <MenuIcon className="h-6 w-6" />
       </button>
 
-      <p className="hidden text-sm text-luwi-muted lg:block">Panel de control</p>
+      <p className="hidden text-sm text-luwi-muted lg:block">{subtitle}</p>
 
       <div className="flex items-center gap-3">
         <span className="max-w-[10rem] truncate text-sm font-semibold text-luwi-navy sm:max-w-xs">

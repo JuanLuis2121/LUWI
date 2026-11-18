@@ -26,6 +26,7 @@ export const register = async (req, res) => {
       id: UserSaved._id,
       username: UserSaved.username,
       email: UserSaved.email,
+      rol: UserSaved.rol ?? "RRHH",
       createdAt: UserSaved.createdAt,
       updatedAt: UserSaved.updatedAt,
     });
@@ -50,6 +51,13 @@ export const login = async (req, res) => {
     if (!UserFound)
       return res.status(400).json({ message: "Email incorrecto" });
 
+    // Cuenta de postulante creada por RR. HH. que todavía no activa su invitación
+    if (!UserFound.password || UserFound.estadoCuenta === "PENDIENTE")
+      return res.status(400).json({ message: "Tu cuenta todavía no está activada" });
+
+    if (UserFound.estadoCuenta === "DESACTIVADA")
+      return res.status(403).json({ message: "Tu cuenta está desactivada" });
+
     const IsMatch = await bcrypt.compare(password, UserFound.password);
     if (!IsMatch)
       return res.status(400).json({ message: "Contraseña incorrecta" });
@@ -60,10 +68,26 @@ export const login = async (req, res) => {
       id: UserFound._id,
       username: UserFound.username,
       email: UserFound.email,
+      rol: UserFound.rol ?? "RRHH",
       createdAt: UserFound.createdAt,
       updatedAt: UserFound.updatedAt,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+// Usuario de la sesión actual (requireAuth ya lo cargó). Sirve para recuperar la sesión al recargar.
+export const me = (req, res) => {
+  res.json({
+    id: req.user._id,
+    username: req.user.username,
+    email: req.user.email,
+    rol: req.user.rol ?? "RRHH",
+  });
+};
+
+export const logout = (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Sesión cerrada" });
 };

@@ -42,7 +42,7 @@ export const requireAuth = async (req, res, next) => {
 
   try {
     const user = await User.findById(payload.id)
-      .select("_id username email")
+      .select("_id username email rol candidato estadoCuenta")
       .lean();
 
     if (!user) {
