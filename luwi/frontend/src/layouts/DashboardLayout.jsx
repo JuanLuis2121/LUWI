@@ -23,7 +23,7 @@ export default function DashboardLayout() {
       <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={handleLogout} />
 
       <div className="lg:pl-64">
-        <Topbar username={user?.username} onMenuClick={() => setMenuOpen(true)} />
+        <Topbar username={user?.nombre} onMenuClick={() => setMenuOpen(true)} />
         <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 sm:py-8">
           <Outlet />
         </main>

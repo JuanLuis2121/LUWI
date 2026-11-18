@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { inicioSegunRol, ROLES } from "../utils/roles";
+import { esRolValido, inicioSegunRol } from "../utils/roles";
 
 /**
  * Protege un grupo de rutas.
@@ -25,8 +25,11 @@ export default function RequireAuth({ roles }) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  // Las cuentas antiguas sin rol se tratan como RRHH (igual que el backend)
-  const rol = user.rol || ROLES.RRHH;
+  // Sin un rol conocido no hay a dónde redirigir (evita un ciclo de redirecciones)
+  const rol = user.rol;
+  if (!esRolValido(rol)) {
+    return <Navigate to="/login" replace />;
+  }
   if (roles && !roles.includes(rol)) {
     return <Navigate to={inicioSegunRol(rol)} replace />;
   }

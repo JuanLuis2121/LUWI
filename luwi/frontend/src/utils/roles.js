@@ -1,11 +1,14 @@
-// Roles de usuario (deben coincidir con user.model.js del backend)
+// Roles de usuario: los mismos valores que devuelve la API de autenticación (Wala), en minúsculas.
 export const ROLES = {
-  ADMIN: "ADMIN",
-  RRHH: "RRHH",
-  POSTULANTE: "POSTULANTE",
+  ADMIN: "admin",
+  EMPRESA: "empresa",
+  RRHH: "rrhh",
+  POSTULANTE: "postulante",
 };
 
-export const ROLES_ADMINISTRATIVOS = [ROLES.ADMIN, ROLES.RRHH];
+export const ROLES_ADMINISTRATIVOS = [ROLES.ADMIN, ROLES.EMPRESA, ROLES.RRHH];
+
+export const esRolValido = (rol) => Object.values(ROLES).includes(rol);
 
 // Pantalla de inicio de cada rol después de iniciar sesión
 export const inicioSegunRol = (rol) =>

@@ -225,10 +225,16 @@ async function crearPostulantePrueba() {
       { email: CORREO_POSTULANTE },
       {
         $setOnInsert: { username: "Postulante Prueba", email: CORREO_POSTULANTE },
+        // El usuario cumple con los dos modelos que conviven en develop:
+        //   rol + estadoCuenta  -> mi-formacion (Marlon) y asignaciones (Naomi)
+        //   role + cuentaActiva + empresa -> login y sesión (Wala); su login exige empresa
         $set: {
           password: passwordHash,
           rol: "POSTULANTE",
           estadoCuenta: "ACTIVA",
+          role: "postulante",
+          cuentaActiva: true,
+          empresa: empresa._id,
         },
       },
       UPSERT

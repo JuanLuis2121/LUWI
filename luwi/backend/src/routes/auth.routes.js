@@ -1,24 +1,46 @@
 import { Router } from "express";
-import { register, login, me, logout } from "../controllers/auth.controller.js";
-import { validateSchema } from "../middlewares/validate.milddleware.js";
+
+import {
+  register,
+  login,
+  logout,
+  getSession,
+  activarCuenta,
+} from "../controllers/auth.controller.js";
+
 import { requireAuth } from "../middlewares/auth.middleware.js";
+import { validateSchema } from "../middlewares/validate.middleware.js";
+
 import {
   registerValidator,
   loginValidator,
+  activarCuentaValidator,
 } from "../validators/auth.validator.js";
 
 const router = Router();
 
-//Registrar usuario
-router.post("/register", validateSchema(registerValidator), register);
+// REGISTRAR USUARIO
+router.post(
+  "/register",
+  requireAuth,
+  validateSchema(registerValidator),
+  register,
+);
 
-//Loguear usuario
+// INICIAR SESIÓN
 router.post("/login", validateSchema(loginValidator), login);
 
-//Usuario de la sesión actual (para recuperar la sesión al recargar)
-router.get("/me", requireAuth, me);
+// CONSULTAR SESIÓN
+router.get("/me", requireAuth, getSession);
 
-//Cerrar sesión
+// CERRAR SESIÓN
 router.post("/logout", logout);
+
+// ACTIVAR CUENTA
+router.post(
+  "/activar-cuenta",
+  validateSchema(activarCuentaValidator),
+  activarCuenta,
+);
 
 export default router;

@@ -30,7 +30,7 @@ export default function PostulanteInicio() {
   if (error && !datos) return <ErrorCarga mensaje={error} onRetry={recargar} />;
 
   const asignacion = datos?.asignacion;
-  const nombre = datos?.usuario?.nombre || user?.username || "bienvenido";
+  const nombre = datos?.usuario?.nombre || user?.nombre || "bienvenido";
 
   return (
     <div className="space-y-6">

@@ -39,8 +39,12 @@ async function post(path, body, fallback) {
 export const registerUser = (payload) =>
   post("/auth/register", payload, "Error al registrar usuario");
 
-export const loginUser = (payload) =>
-  post("/auth/login", payload, "Error al iniciar sesión");
+// La API de Wala responde { message, user: { id, nombre, email, rol, empresa } },
+// con rol en minúsculas ("admin" | "empresa" | "rrhh" | "postulante").
+export async function loginUser(payload) {
+  const data = await post("/auth/login", payload, "Error al iniciar sesión");
+  return data.user;
+}
 
 // Usuario de la sesión actual (cookie). Devuelve null si no hay sesión.
 export async function getSessionUser() {
@@ -49,7 +53,8 @@ export async function getSessionUser() {
       credentials: "include",
     });
     if (!response.ok) return null;
-    return await response.json();
+    const data = await response.json();
+    return data.user ?? null;
   } catch {
     return null;
   }

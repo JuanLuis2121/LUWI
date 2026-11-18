@@ -20,7 +20,7 @@ export default function MiPerfil() {
 
   if (cargando && !datos) return <Cargando filas={1} />;
 
-  const nombre = datos?.usuario?.nombre || user?.username || "";
+  const nombre = datos?.usuario?.nombre || user?.nombre || "";
   const correo = datos?.usuario?.correo || user?.email || "";
 
   return (

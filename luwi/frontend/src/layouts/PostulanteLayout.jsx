@@ -34,7 +34,7 @@ export default function PostulanteLayout() {
 
       <div className="lg:pl-64">
         <Topbar
-          username={user?.username}
+          username={user?.nombre}
           subtitle="Mi formación"
           onMenuClick={() => setMenuOpen(true)}
         />
