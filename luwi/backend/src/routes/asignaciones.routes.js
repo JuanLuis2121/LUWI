@@ -69,7 +69,7 @@ router.post(
  * /api/procesos-formacion/{procesoId}/asignacion:
  *   get:
  *     summary: Consultar la ruta asignada a un proceso
- *     description: Devuelve { asignacion: null } si todavía no tiene ruta.
+ *     description: "Devuelve { asignacion: null } si todavía no tiene ruta."
  *     tags: [Asignaciones]
  *     security:
  *       - cookieAuth: []
