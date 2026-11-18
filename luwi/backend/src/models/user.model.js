@@ -10,11 +10,13 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     email: {
       type: String,
       required: true,
       unique: true,
       trim: true,
+      lowercase: true,
     },
     // Opcional: una cuenta de postulante nace PENDIENTE, sin contraseña,
     // hasta que activa su invitación.
@@ -43,6 +45,40 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ESTADOS_CUENTA,
       default: "ACTIVA", // las cuentas existentes siguen activas
+    },
+
+    role: {
+      type: String,
+      enum: ["admin", "empresa", "rrhh", "postulante"],
+      required: true,
+    },
+
+    empresa: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Empresa",
+      required: function () {
+        return this.role !== "admin";
+      },
+    },
+
+    //Para creacion de candidatos por primera vez
+    // Estado de activación de la cuenta
+    cuentaActiva: {
+      type: Boolean,
+      default: true,
+    },
+
+    // Hash del token de activación
+    activacionToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+
+    // Fecha de vencimiento del enlace
+    activacionExpira: {
+      type: Date,
+      default: null,
     },
   },
   {

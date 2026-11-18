@@ -8,6 +8,7 @@ const candidatoSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     correo: {
       type: String,
       required: true,
@@ -26,15 +27,19 @@ const candidatoSchema = new mongoose.Schema(
       ref: "User",
       required: false,
     },
+
     telefono: {
       type: String,
       required: false,
+      trim: true,
     },
+
     habilidades: [
       {
         type: String,
       },
     ],
+
     puestosAplicados: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -44,7 +49,7 @@ const candidatoSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Candidato = mongoose.model("Candidato", candidatoSchema);

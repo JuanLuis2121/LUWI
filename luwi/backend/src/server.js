@@ -38,6 +38,7 @@ app.use(express.json());
 // Middleware para procesar cookies
 app.use(cookieParser());
 
+// Configuración de Swagger UI
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Ruta principal de prueba

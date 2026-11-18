@@ -239,8 +239,16 @@ router.post("/:id/unidades", validateSchema(unidadValidator), crearUnidad);
  *       200: { description: "{ message, data: { cursoId, estado, unidades } }" }
  *       409: { description: Ya es la primera o la última }
  */
-router.put("/:id/unidades/:unidadId", validateSchema(unidadValidator), actualizarUnidad);
-router.patch("/:id/unidades/:unidadId/mover", validateSchema(moverUnidadValidator), moverUnidad);
+router.put(
+  "/:id/unidades/:unidadId",
+  validateSchema(unidadValidator),
+  actualizarUnidad,
+);
+router.patch(
+  "/:id/unidades/:unidadId/mover",
+  validateSchema(moverUnidadValidator),
+  moverUnidad,
+);
 router.delete("/:id/unidades/:unidadId", retirarUnidad);
 
 export default router;
