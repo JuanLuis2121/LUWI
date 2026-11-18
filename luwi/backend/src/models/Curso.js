@@ -41,6 +41,14 @@ const cursoSchema = new mongoose.Schema(
       trim: true,
       maxlength: 500,
     },
+  // Competencias que enseña el curso (del catálogo).
+    // El texto "competencia" de arriba se mantiene mientras el equipo migra.
+    competencias: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Competencia",
+      },
+    ],
   },
   {
     timestamps: true,
