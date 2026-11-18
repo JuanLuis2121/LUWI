@@ -78,6 +78,29 @@ async function validarDatos(body) {
     };
   }
 
+  // Compatibilidad con el puesto (entrega 4, Marlon): cada curso debe estar
+  // PUBLICADO y ser global (sin empresa) o de la misma empresa que el puesto.
+  const [puestoDoc, cursosDocs] = await Promise.all([
+    Puesto.findById(puesto).select("empresa").lean(),
+    Curso.find({ _id: { $in: cursosNormalizados } }).select("titulo estado empresa").lean(),
+  ]);
+
+  const noPublicados = cursosDocs.filter((c) => (c.estado ?? "BORRADOR") !== "PUBLICADO");
+  if (noPublicados.length > 0) {
+    return {
+      error: `Solo se pueden agregar cursos publicados. Revisa: ${noPublicados.map((c) => `"${c.titulo}"`).join(", ")}.`,
+    };
+  }
+
+  const deOtraEmpresa = cursosDocs.filter(
+    (c) => c.empresa && String(c.empresa) !== String(puestoDoc?.empresa)
+  );
+  if (deOtraEmpresa.length > 0) {
+    return {
+      error: `Estos cursos pertenecen a otra empresa y no son compatibles con el puesto: ${deOtraEmpresa.map((c) => `"${c.titulo}"`).join(", ")}.`,
+    };
+  }
+
   return {
     datos: {
       nombre: nombre.trim(),
@@ -276,7 +299,7 @@ export const obtenerOpciones = async (req, res) => {
         .lean(),
 
       Curso.find()
-        .select("titulo competencia nivel duracionHoras")
+        .select("titulo competencia nivel duracionHoras estado empresa")
         .sort({ titulo: 1 })
         .lean(),
     ]);
