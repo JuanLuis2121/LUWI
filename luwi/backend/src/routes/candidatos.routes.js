@@ -7,19 +7,9 @@ import {
   deleteCandidato,
 } from "../controllers/candidato.Controller.js";
 
-import { requireAuth } from "../middlewares/auth.middleware.js";
+import { requireAuth, requireRRHH } from "../middlewares/auth.middleware.js";
 
 const router = Router();
-
-const requireRRHH = (req, res, next) => {
-  if (req.user.role !== "rrhh") {
-    return res.status(403).json({
-      message: "Acceso exclusivo para Recursos Humanos.",
-    });
-  }
-
-  next();
-};
 
 router.use(requireAuth, requireRRHH);
 

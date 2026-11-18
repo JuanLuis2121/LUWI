@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-export const ROLES = ["ADMIN", "RRHH", "POSTULANTE"];
+export const ROLES = ["ADMIN", "ADMIN-EMPRESA", "RRHH", "POSTULANTE"];
+
 export const ESTADOS_CUENTA = ["PENDIENTE", "ACTIVA", "DESACTIVADA"];
 
 const userSchema = new mongoose.Schema(
@@ -18,71 +19,39 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
-    // Opcional: una cuenta de postulante nace PENDIENTE, sin contraseña,
-    // hasta que activa su invitación.
+
     password: {
       type: String,
-      required: false,
-    },
-    rol: {
-      type: String,
-      enum: ROLES,
-      default: "RRHH", // las cuentas que ya existen son de uso administrativo
-    },
-    // Empresa a la que pertenece un usuario RRHH (ADMIN y POSTULANTE no la necesitan)
-    empresa: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Empresa",
-      required: false,
-    },
-    // Perfil del postulante (modelo Candidato) cuando rol = POSTULANTE
-    candidato: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Candidato",
-      required: false,
-    },
-    estadoCuenta: {
-      type: String,
-      enum: ESTADOS_CUENTA,
-      default: "ACTIVA", // las cuentas existentes siguen activas
+      required: true,
     },
 
     role: {
       type: String,
-      enum: ["admin", "empresa", "rrhh", "postulante"],
+      enum: ROLES,
       required: true,
+    },
+    candidato: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Candidato",
+      required: false,
     },
 
     empresa: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Empresa",
       required: function () {
-        return this.role !== "admin";
+        return this.role !== "ADMIN";
       },
     },
 
-    //Para creacion de candidatos por primera vez
-    // Estado de activación de la cuenta
-    cuentaActiva: {
-      type: Boolean,
-      default: true,
-    },
-
-    // Hash del token de activación
-    activacionToken: {
+    estadoCuenta: {
       type: String,
-      default: null,
-      select: false,
-    },
-
-    // Fecha de vencimiento del enlace
-    activacionExpira: {
-      type: Date,
-      default: null,
+      enum: ESTADOS_CUENTA,
+      default: "ACTIVA",
     },
   },
   {
-    timestamps: true, // crea campos createdAt y updatedAt
+    timestamps: true,
   },
 );
 
