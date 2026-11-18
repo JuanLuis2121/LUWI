@@ -29,7 +29,7 @@ const cursosService = {
 export const cursosConfig = {
   basePath: "/dashboard/cursos",
   title: "Cursos",
-  subtitle: "Administra los cursos disponibles para capacitación.",
+  subtitle: "Los cursos se guardan como borradores. Agrega unidades para poder publicarlos.",
   newLabel: "Nuevo curso",
   backLabel: "Volver a Cursos",
   searchPlaceholder: "Buscar por título, competencia o nivel",
@@ -121,11 +121,10 @@ export const cursosConfig = {
     },
     {
       name: "enlace",
-      label: "Enlace",
+      label: "Enlace complementario (opcional)",
       type: "url",
       placeholder: "https://",
-      required: true,
-      requiredMsg: "Escribe el enlace del curso.",
+      required: false,
     },
   ],
 };

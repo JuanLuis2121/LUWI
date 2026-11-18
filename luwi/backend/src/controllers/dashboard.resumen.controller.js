@@ -8,8 +8,8 @@ const LIMITE_RECIENTES = 5;
 
 // Filtro de cada módulo según quién consulta.
 //   ADMIN (o RRHH antiguo sin empresa): todo.
-//   RRHH con empresa: solo su empresa, sus puestos y las rutas de esos puestos.
-//   Los cursos todavía no tienen empresa ("alcance" pendiente con Wallan/Naomi): se muestran todos.
+//   RRHH con empresa: su empresa, sus puestos, rutas de sus puestos y cursos visibles
+//   para ella (globales + propios), conforme a la regla de alcance de Cursos.
 async function filtrosSegunRol(perfil) {
   if (perfil.rol === "ADMIN" || !perfil.empresa) {
     return { empresas: {}, puestos: {}, cursos: {}, rutas: {} };
@@ -18,7 +18,7 @@ async function filtrosSegunRol(perfil) {
   return {
     empresas: { _id: perfil.empresa },
     puestos: { empresa: perfil.empresa },
-    cursos: {},
+    cursos: { empresa: { $in: [null, perfil.empresa] } },
     rutas: { puesto: { $in: idsPuestos } },
   };
 }

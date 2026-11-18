@@ -45,12 +45,12 @@ export default function LoginPage() {
     try {
       // "remember" todavía no se envía: el backend no lo soporta (la cookie
       // se crea sin maxAge). Se agrega cuando se defina en el servidor.
-      await login({
+      const user = await login({
         email: form.email.trim(),
         password: form.password,
       });
 
-      navigate("/dashboard", { replace: true });
+      navigate(user?.rol === "POSTULANTE" ? "/mi-formacion" : "/dashboard", { replace: true });
     } catch (err) {
       setServerError(err.message || "No se pudo conectar con el servidor");
     } finally {
