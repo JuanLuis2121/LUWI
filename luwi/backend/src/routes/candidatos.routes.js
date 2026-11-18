@@ -1,38 +1,32 @@
 import { Router } from "express";
-import { requireAuth as verifyToken } from "../middlewares/auth.middleware.js"
-import { obtenerDashboard, guardarActividad } from "../controllers/dashboard.controller.js";
+import {
+  getCandidatos,
+  getCandidato,
+  createCandidato,
+  updateCandidato,
+  deleteCandidato,
+} from "../controllers/candidato.Controller.js";
+
+import { requireAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-// GET /api/candidatos/me/dashboard - Datos del dashboard del candidato autenticado
-router.get("/me/dashboard", verifyToken, obtenerDashboard);
+const requireRRHH = (req, res, next) => {
+  if (req.user.role !== "rrhh") {
+    return res.status(403).json({
+      message: "Acceso exclusivo para Recursos Humanos.",
+    });
+  }
 
-// POST /api/candidatos/me/actividad - Registrar minutos de estudio del día
-router.post("/me/actividad", verifyToken, guardarActividad);
+  next();
+};
 
-// GET /api/candidatos - Obtener todos los candidatos
-router.get("/", (req, res) => {
-  res.json({ mensaje: "Módulo de Candidatos en construcción - GET todos" });
-});
+router.use(requireAuth, requireRRHH);
 
-// GET /api/candidatos/:id - Obtener un candidato por ID
-router.get("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Candidatos en construcción - GET candidato ${req.params.id}` });
-});
-
-// POST /api/candidatos - Crear un nuevo candidato
-router.post("/", (req, res) => {
-  res.json({ mensaje: "Módulo de Candidatos en construcción - POST crear" });
-});
-
-// PUT /api/candidatos/:id - Actualizar un candidato
-router.put("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Candidatos en construcción - PUT actualizar ${req.params.id}` });
-});
-
-// DELETE /api/candidatos/:id - Eliminar un candidato
-router.delete("/:id", (req, res) => {
-  res.json({ mensaje: `Módulo de Candidatos en construcción - DELETE ${req.params.id}` });
-});
+router.get("/", getCandidatos);
+router.get("/:id", getCandidato);
+router.post("/", createCandidato);
+router.put("/:id", updateCandidato);
+router.delete("/:id", deleteCandidato);
 
 export default router;

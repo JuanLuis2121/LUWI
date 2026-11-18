@@ -59,7 +59,7 @@ export default function DashboardHome() {
         <div className="pointer-events-none absolute -bottom-16 right-24 h-40 w-40 rounded-full bg-luwi-teal/30" />
         <p className="relative text-sm text-white/80">{fechaHoy()}</p>
         <h1 className="relative mt-1 text-2xl font-bold sm:text-3xl">
-          Hola, {user?.username ?? "bienvenido"}
+          Hola, {user?.nombre ?? "bienvenido"}
         </h1>
         <p className="relative mt-1 max-w-xl text-sm text-white/80">
           Este es el resumen de tu plataforma LUWI. Crea nuevos registros desde los accesos rápidos.
