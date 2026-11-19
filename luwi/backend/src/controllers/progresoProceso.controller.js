@@ -17,7 +17,9 @@ const mismo = (a, b) => a != null && b != null && String(a) === String(b);
 //   POSTULANTE: solo el suyo.
 async function puedeVer(perfil, proceso) {
   if (perfil.rol === "ADMIN") return true;
-  if (perfil.rol === "RRHH") return !perfil.empresa || mismo(perfil.empresa, proceso.empresa?._id ?? proceso.empresa);
+  if (perfil.rol === "RRHH" || perfil.rol === "ADMIN-EMPRESA") {
+    return mismo(perfil.empresa, proceso.empresa?._id ?? proceso.empresa);
+  }
   if (perfil.rol === "POSTULANTE") {
     const candidatoId = perfil.candidato ?? (await Candidato.findOne({ usuario: perfil._id }).select("_id").lean())?._id;
     return mismo(candidatoId, proceso.candidato?._id ?? proceso.candidato);

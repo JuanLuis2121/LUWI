@@ -1,7 +1,6 @@
 // Lógica común de la formación del postulante (entrega 4).
 // La usan mi-formacion (postulante) y el progreso del proceso (RR. HH.).
 import mongoose from "mongoose";
-import User from "../models/user.model.js";
 import Candidato from "../models/Candidato.js";
 import ProcesoFormacion from "../models/ProcesoFormacion.js";
 import AsignacionRuta from "../models/AsignacionRuta.js";
@@ -34,15 +33,18 @@ export function responderError(res, error, mensaje500) {
 }
 
 // ---------- quién es el usuario de la sesión ----------
-// requireAuth (Wallan) solo carga _id, username y email; aquí se leen rol, empresa y candidato.
-// Cuando Wallan entregue sus controles reutilizables, esto puede sustituirse por ellos.
+// requireAuth (Wallan) ya carga en req.user el role, la empresa ({ _id, nombre }) y el candidato,
+// y rechaza cuentas sin rol válido, desactivadas, pendientes o sin empresa (salvo ADMIN).
+// Aquí solo se adapta ese dato a la forma que usan los controladores de este módulo (perfil.rol).
 export async function perfilDeSesion(req) {
-  const user = await User.findById(req.user._id).select("rol empresa candidato estadoCuenta").lean();
-  if (!user) throw new ErrorFormacion(401, "El usuario de esta sesión ya no existe.");
-  if (user.estadoCuenta === "DESACTIVADA") {
-    throw new ErrorFormacion(403, "Tu cuenta está desactivada. Contacta a Recursos Humanos.", "CUENTA_DESACTIVADA");
-  }
-  return { ...user, rol: user.rol ?? "RRHH" };
+  const { _id, role, empresa, candidato } = req.user ?? {};
+  if (!_id || !role) throw new ErrorFormacion(401, "Debes iniciar sesión para continuar.");
+  return {
+    _id,
+    rol: role,
+    empresa: empresa?._id ?? empresa ?? null,
+    candidato: candidato ?? null,
+  };
 }
 
 // Perfil de postulante (Candidato) asociado al usuario.
