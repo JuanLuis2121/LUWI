@@ -1,10 +1,16 @@
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import { AuthProvider } from "./context/AuthProvider";
+import "./index.css";
+
 function App() {
   return (
-    <main>
-      <h1>LUWI</h1>
-      <p>Plataforma inteligente para la formación de candidatos.</p>
-    </main>
-  )
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
