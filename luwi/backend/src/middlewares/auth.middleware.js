@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import { normalizeUserRole } from "../utils/userRole.js";
 
 export const requireAuth = async (req, res, next) => {
   const token = req.cookies?.token;
@@ -42,7 +43,7 @@ export const requireAuth = async (req, res, next) => {
 
   try {
     const user = await User.findById(payload.id)
-      .select("_id username email role empresa")
+      .select("_id username email role rol empresa")
       .populate("empresa", "_id nombre")
       .lean();
 
@@ -52,14 +53,15 @@ export const requireAuth = async (req, res, next) => {
       });
     }
 
-    if (
-      !user.role ||
-      !["admin", "empresa", "rrhh", "postulante"].includes(user.role)
-    ) {
+    const role = normalizeUserRole(user);
+
+    if (!role) {
       return res.status(403).json({
         message: "El usuario no tiene un rol válido.",
       });
     }
+
+    user.role = role;
 
     if (user.role !== "admin" && !user.empresa) {
       return res.status(403).json({

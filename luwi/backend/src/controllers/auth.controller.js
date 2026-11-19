@@ -4,13 +4,14 @@ import bcrypt from "bcryptjs";
 import { CreateAccessToken } from "../utils/jwt.js";
 import mongoose from "mongoose";
 import crypto from "node:crypto";
+import { normalizeUserRole } from "../utils/userRole.js";
 
 // FORMATEAR DATOS DEL USUARIO
 const getUserData = (user) => ({
   id: user._id,
   nombre: user.username,
   email: user.email,
-  rol: user.role,
+  rol: normalizeUserRole(user),
   empresa: user.empresa
     ? {
         id: user.empresa._id,
@@ -117,16 +118,20 @@ export const login = async (req, res) => {
       });
     }
 
-    if (!["admin", "empresa", "rrhh", "postulante"].includes(userFound.role)) {
+    const role = normalizeUserRole(userFound);
+
+    if (!role) {
       return res.status(403).json({
         message: "El usuario no tiene un rol válido.",
       });
     }
 
     const user = await User.findById(userFound._id)
-      .select("_id username email role empresa")
+      .select("_id username email role rol empresa")
       .populate("empresa", "_id nombre")
       .lean();
+
+    user.role = role;
 
     if (user.role !== "admin" && !user.empresa) {
       return res.status(403).json({
