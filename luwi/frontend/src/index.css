@@ -12,6 +12,8 @@
   --color-luwi-cristal-fondo: #eaf3ff; /* Fondo general de las pantallas de acceso */
   --color-luwi-texto: #3d5a8a;         /* Texto secundario */
   --color-luwi-linea: #d5e3f7;         /* Bordes y separadores */
+  --color-luwi-noche: #061a45;         /* Azul noche: menú lateral y tarjetas oscuras */
+  --color-luwi-panel: #f3f7fd;         /* Fondo del panel administrativo */
 
   --color-luwi-navy: #12306e;
   --color-luwi-blue: #2f6bff;
@@ -36,7 +38,7 @@
 
   --shadow-card: 0 10px 30px -12px rgb(18 48 110 / 0.18);
 
-  /* Nueva paleta de la landing */
+  /* Paleta de la landing */
   --color-fondo: #16131f;
   --color-superficie: #221e30;
   --color-teal: #2dc8b8;
@@ -56,4 +58,23 @@
 
 body {
   @apply bg-luwi-bg font-sans text-luwi-ink antialiased;
+}
+
+/* Barra de desplazamiento fina y discreta (menú lateral oscuro) */
+.scroll-oscuro {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.18) transparent;
+}
+.scroll-oscuro::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-oscuro::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-oscuro::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.18);
+  border-radius: 999px;
+}
+.scroll-oscuro::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 0.32);
 }
