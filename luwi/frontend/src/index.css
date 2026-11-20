@@ -2,6 +2,16 @@
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* Identidad visual LUWI (login y nuevas pantallas) */
+  --color-luwi-profundo: #0b3a8c;      /* Azul profundo: encabezados y elementos principales */
+  --color-luwi-medio: #0b5bd3;         /* Paso intermedio de los degradados */
+  --color-luwi-tecno: #009cff;         /* Azul tecnológico: botones, indicadores y acciones */
+  --color-luwi-cristal: #dcebff;       /* Azul cristal: transparencias y superficies suaves */
+  --color-luwi-cristal-fondo: #eaf3ff; /* Fondo general de las pantallas de acceso */
+  --color-luwi-texto: #3d5a8a;         /* Texto secundario */
+  --color-luwi-linea: #d5e3f7;         /* Bordes y separadores */
 
   --color-luwi-navy: #12306e;
   --color-luwi-blue: #2f6bff;
