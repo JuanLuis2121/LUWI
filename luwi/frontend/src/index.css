@@ -79,3 +79,25 @@ body {
 .scroll-oscuro::-webkit-scrollbar-thumb:hover {
   background: rgb(255 255 255 / 0.32);
 }
+
+/* Movimiento suave de las tarjetas flotantes del login */
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Autocompletado del navegador: mantiene el fondo blanco de los campos */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0b3a8c;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  caret-color: #0b3a8c;
+  transition: background-color 9999s ease-out 0s;
+}

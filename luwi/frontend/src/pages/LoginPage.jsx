@@ -87,6 +87,17 @@ export default function LoginPage() {
     <AuthLayout
       title="Bienvenido de vuelta"
       subtitle="Inicia sesión para continuar tu ruta en LUWI."
+      footer={
+        <>
+          ¿No tienes una cuenta?{" "}
+          <Link
+            to="/register"
+            className="rounded font-semibold text-luwi-medio transition hover:text-luwi-profundo hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
+          >
+            Regístrate
+          </Link>
+        </>
+      }
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <Input
@@ -123,7 +134,7 @@ export default function LoginPage() {
 
       <SocialButtons />
 
-      <div className="mt-7 text-center">
+      <div className="mt-5 text-center">
         <Link
           to="/forgot-password"
           className="rounded text-[14px] font-medium text-luwi-medio transition hover:text-luwi-profundo hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"

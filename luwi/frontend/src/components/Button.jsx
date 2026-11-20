@@ -38,7 +38,7 @@ export default function Button({
       type={type}
       disabled={loading || disabled}
       aria-busy={loading || undefined}
-      className={`group flex h-[54px] w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-luwi-profundo via-luwi-medio to-luwi-tecno px-6 text-[16px] font-semibold text-white shadow-[0_12px_28px_-8px_rgba(0,110,230,0.55)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-8px_rgba(0,110,230,0.6)] hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 ${className}`}
+      className={`group flex h-[50px] w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-luwi-profundo via-luwi-medio to-luwi-tecno px-6 text-[15px] font-semibold text-white shadow-[0_12px_28px_-8px_rgba(0,110,230,0.55)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-8px_rgba(0,110,230,0.6)] hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 ${className}`}
       {...props}
     >
       {loading ? (

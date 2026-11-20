@@ -78,7 +78,7 @@ export default function Input({
   return (
     <div className={`w-full ${className}`}>
       <div
-        className={`flex h-[54px] items-center gap-3.5 rounded-2xl border bg-white/80 px-5 shadow-[0_4px_14px_rgba(11,58,140,0.05)] transition duration-200 focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,156,255,0.12)] ${
+        className={`flex h-[50px] items-center gap-3.5 rounded-2xl border bg-white/80 px-5 shadow-[0_4px_14px_rgba(11,58,140,0.05)] transition duration-200 focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,156,255,0.12)] ${
           error ? "border-red-400" : "border-luwi-linea"
         }`}
       >

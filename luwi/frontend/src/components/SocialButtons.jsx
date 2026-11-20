@@ -31,11 +31,11 @@ function AppleIcon() {
 
 export default function SocialButtons({ onGoogle, onMicrosoft, onApple }) {
   const buttonClass =
-    "flex h-[50px] w-[50px] items-center justify-center rounded-2xl border border-white bg-white/90 text-[#111] shadow-[0_6px_18px_rgba(11,58,140,0.08)] transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_10px_24px_rgba(11,58,140,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40";
+    "flex h-[46px] w-[46px] items-center justify-center rounded-2xl border border-white bg-white/90 text-[#111] shadow-[0_6px_18px_rgba(11,58,140,0.08)] transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_10px_24px_rgba(11,58,140,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40";
 
   return (
-    <div className="mt-7">
-      <div className="mb-5 flex items-center gap-4 text-[12px] text-luwi-texto">
+    <div className="mt-6">
+      <div className="mb-4 flex items-center gap-4 text-[12px] text-luwi-texto">
         <span className="h-px flex-1 bg-luwi-linea" />
         o continúa con
         <span className="h-px flex-1 bg-luwi-linea" />
