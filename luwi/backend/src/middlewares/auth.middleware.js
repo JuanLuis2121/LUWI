@@ -136,6 +136,3 @@ export const perteneceAEmpresa = (usuario, empresaId) => {
 
   return String(usuarioEmpresaId) === String(empresaId);
 };
-
-// COMPATIBILIDAD CON RUTAS EXISTENTES
-export const requireRRHH = requireRol("RRHH");

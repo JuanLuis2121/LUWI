@@ -11,7 +11,7 @@ const getUserData = (user) => ({
   id: user._id,
   nombre: user.username,
   email: user.email,
-  rol: user.role,
+  role: user.role,
   empresa: user.empresa
     ? {
         id: user.empresa._id,

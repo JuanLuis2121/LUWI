@@ -2,7 +2,10 @@ import Empresa from "../models/Empresa.js";
 import Puesto from "../models/Puesto.js";
 import Curso from "../models/Curso.js";
 import RutaAprendizaje from "../models/RutaAprendizaje.js";
-import { perfilDeSesion, responderError } from "../services/formacion.service.js";
+import {
+  perfilDeSesion,
+  responderError,
+} from "../services/formacion.service.js";
 
 const LIMITE_RECIENTES = 5;
 
@@ -11,10 +14,12 @@ const LIMITE_RECIENTES = 5;
 //   RRHH con empresa: solo su empresa, sus puestos y las rutas de esos puestos.
 //   Los cursos todavía no tienen empresa ("alcance" pendiente con Wallan/Naomi): se muestran todos.
 async function filtrosSegunRol(perfil) {
-  if (perfil.rol === "ADMIN" || !perfil.empresa) {
+  if (perfil.role === "ADMIN" || !perfil.empresa) {
     return { empresas: {}, puestos: {}, cursos: {}, rutas: {} };
   }
-  const idsPuestos = await Puesto.find({ empresa: perfil.empresa }).distinct("_id");
+  const idsPuestos = await Puesto.find({ empresa: perfil.empresa }).distinct(
+    "_id",
+  );
   return {
     empresas: { _id: perfil.empresa },
     puestos: { empresa: perfil.empresa },
@@ -25,10 +30,20 @@ async function filtrosSegunRol(perfil) {
 
 // Cada módulo con el campo que se muestra como nombre en "Actividad reciente".
 const MODULOS = [
-  { clave: "empresas", tipo: "empresa", modelo: Empresa, campoNombre: "nombre" },
+  {
+    clave: "empresas",
+    tipo: "empresa",
+    modelo: Empresa,
+    campoNombre: "nombre",
+  },
   { clave: "puestos", tipo: "puesto", modelo: Puesto, campoNombre: "titulo" },
   { clave: "cursos", tipo: "curso", modelo: Curso, campoNombre: "titulo" },
-  { clave: "rutas", tipo: "ruta", modelo: RutaAprendizaje, campoNombre: "nombre" },
+  {
+    clave: "rutas",
+    tipo: "ruta",
+    modelo: RutaAprendizaje,
+    campoNombre: "nombre",
+  },
 ];
 
 // GET /api/dashboard/resumen
@@ -36,8 +51,10 @@ const MODULOS = [
 export async function obtenerResumen(req, res) {
   try {
     const perfil = await perfilDeSesion(req);
-    if (perfil.rol === "POSTULANTE") {
-      return res.status(403).json({ message: "No tienes permiso para acceder a esta sección." });
+    if (perfil.role === "POSTULANTE") {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para acceder a esta sección." });
     }
     const filtros = await filtrosSegunRol(perfil);
 
@@ -54,7 +71,7 @@ export async function obtenerResumen(req, res) {
             .lean(),
         ]);
         return { total, ultimos };
-      })
+      }),
     );
 
     const resumen = {};
@@ -78,6 +95,10 @@ export async function obtenerResumen(req, res) {
 
     return res.json(resumen);
   } catch (error) {
-    return responderError(res, error, "No se pudo obtener el resumen del dashboard.");
+    return responderError(
+      res,
+      error,
+      "No se pudo obtener el resumen del dashboard.",
+    );
   }
 }
