@@ -7,11 +7,11 @@ import {
   deleteCandidato,
 } from "../controllers/candidato.Controller.js";
 
-import { requireAuth, requireRRHH } from "../middlewares/auth.middleware.js";
+import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.use(requireAuth, requireRRHH);
+router.use(requireAuth, requireRol("RRHH")); // Solo RRHH puede acceder a estas rutas
 
 router.get("/", getCandidatos);
 router.get("/:id", getCandidato);
