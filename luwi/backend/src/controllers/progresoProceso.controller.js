@@ -16,10 +16,17 @@ const mismo = (a, b) => a != null && b != null && String(a) === String(b);
 //   RRHH: solo procesos de su empresa (una cuenta RRHH antigua sin empresa ve todos, por compatibilidad).
 //   POSTULANTE: solo el suyo.
 async function puedeVer(perfil, proceso) {
-  if (perfil.rol === "ADMIN") return true;
-  if (perfil.rol === "RRHH") return !perfil.empresa || mismo(perfil.empresa, proceso.empresa?._id ?? proceso.empresa);
-  if (perfil.rol === "POSTULANTE") {
-    const candidatoId = perfil.candidato ?? (await Candidato.findOne({ usuario: perfil._id }).select("_id").lean())?._id;
+  if (perfil.role === "ADMIN") return true;
+  if (perfil.role === "RRHH")
+    return (
+      !perfil.empresa ||
+      mismo(perfil.empresa, proceso.empresa?._id ?? proceso.empresa)
+    );
+  if (perfil.role === "POSTULANTE") {
+    const candidatoId =
+      perfil.candidato ??
+      (await Candidato.findOne({ usuario: perfil._id }).select("_id").lean())
+        ?._id;
     return mismo(candidatoId, proceso.candidato?._id ?? proceso.candidato);
   }
   return false;
@@ -30,7 +37,8 @@ async function puedeVer(perfil, proceso) {
 export async function obtenerProgresoProceso(req, res) {
   try {
     const { procesoId } = req.params;
-    if (!esId(procesoId)) throw new ErrorFormacion(404, "El proceso no existe.", "NO_ENCONTRADO");
+    if (!esId(procesoId))
+      throw new ErrorFormacion(404, "El proceso no existe.", "NO_ENCONTRADO");
 
     const perfil = await perfilDeSesion(req);
     const proceso = await ProcesoFormacion.findById(procesoId)
@@ -49,14 +57,27 @@ export async function obtenerProgresoProceso(req, res) {
         id: String(proceso._id),
         estado: proceso.estado,
         fechaInicio: proceso.fechaInicio,
-        postulante: proceso.candidato ? { id: String(proceso.candidato._id), nombre: proceso.candidato.nombre, correo: proceso.candidato.correo } : null,
-        empresa: proceso.empresa ? { id: String(proceso.empresa._id), nombre: proceso.empresa.nombre } : null,
-        puesto: proceso.puesto ? { id: String(proceso.puesto._id), titulo: proceso.puesto.titulo } : null,
+        postulante: proceso.candidato
+          ? {
+              id: String(proceso.candidato._id),
+              nombre: proceso.candidato.nombre,
+              correo: proceso.candidato.correo,
+            }
+          : null,
+        empresa: proceso.empresa
+          ? { id: String(proceso.empresa._id), nombre: proceso.empresa.nombre }
+          : null,
+        puesto: proceso.puesto
+          ? { id: String(proceso.puesto._id), titulo: proceso.puesto.titulo }
+          : null,
       },
       asignacion: null,
     };
 
-    const asignacion = await AsignacionRuta.findOne({ proceso: proceso._id, estado: "ACTIVA" }).lean();
+    const asignacion = await AsignacionRuta.findOne({
+      proceso: proceso._id,
+      estado: "ACTIVA",
+    }).lean();
     if (!asignacion) return res.json({ data });
 
     const { avance } = await avanceDeAsignacion(asignacion);
@@ -64,7 +85,10 @@ export async function obtenerProgresoProceso(req, res) {
 
     data.asignacion = {
       id: String(asignacion._id),
-      ruta: { id: String(asignacion.ruta), nombre: asignacion.estructura?.nombre },
+      ruta: {
+        id: String(asignacion.ruta),
+        nombre: asignacion.estructura?.nombre,
+      },
       fechaAsignacion: asignacion.fechaAsignacion,
       porcentaje: avance.porcentajeGeneral,
       totalObligatorias: avance.totalObligatorias,
@@ -88,6 +112,10 @@ export async function obtenerProgresoProceso(req, res) {
     };
     return res.json({ data });
   } catch (error) {
-    return responderError(res, error, "No se pudo obtener el progreso del proceso.");
+    return responderError(
+      res,
+      error,
+      "No se pudo obtener el progreso del proceso.",
+    );
   }
 }
