@@ -6,11 +6,7 @@ import {
   updatePuesto,
   deletePuesto,
 } from "../controllers/puesto.Controller.js";
-<<<<<<< HEAD
-import { validateSchema } from "../middlewares/validate.milddleware.js";
-=======
 import { validateSchema } from "../middlewares/validate.middleware.js";
->>>>>>> origin/develop
 import { puestoSchema } from "../validators/puesto.validator.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 

@@ -3,37 +3,41 @@ import { getOpenAI } from "../config/openai.js";
 export const generarPlanCapacitacion = async (perfil) => {
   const openai = getOpenAI();
 
-  const respuesta = await openai.responses.create({
-    model: process.env.OPENAI_MODEL || "gpt-6-luna",
+  const respuesta = await openai.chat.completions.create({
+    model: process.env.GEMINI_MODEL || "gemini-3.5-flash-lite",
+    messages: [
+      {
+        role: "system",
+        content: `
+          Eres LUWI AI, un asistente especializado en orientación
+          profesional y capacitación tecnológica.
 
-    instructions: `
-      Eres LUWI AI, un asistente especializado en
-      orientación profesional y capacitación tecnológica.
+          Analiza las habilidades actuales e identifica oportunidades de mejora.
+          Recomienda tecnologías, conocimientos y actividades de aprendizaje.
+          Organiza el plan según la disponibilidad semanal del candidato.
 
-      Tu trabajo es analizar el perfil de los candidatos
-      y generar planes de capacitación personalizados.
+          Responde en español con explicaciones claras y prácticas.
+          No inventes certificaciones ni cursos específicos.
+        `,
+      },
+      {
+        role: "user",
+        content: `
+          Analiza el siguiente perfil profesional:
 
-      Debes:
-      - Analizar las habilidades actuales.
-      - Identificar oportunidades de mejora.
-      - Recomendar tecnologías y conocimientos.
-      - Proponer cursos y actividades de aprendizaje.
-      - Crear un plan de capacitación organizado.
+          ${JSON.stringify(perfil, null, 2)}
 
-      Responde siempre en español.
-      Utiliza explicaciones claras y prácticas.
-      No inventes certificaciones ni cursos específicos.
-    `,
-
-    input: `
-      Analiza el siguiente perfil profesional:
-
-      ${JSON.stringify(perfil, null, 2)}
-
-      Genera un plan de capacitación personalizado
-      según las necesidades del candidato.
-    `,
+          Genera un plan de capacitación personalizado.
+        `,
+      },
+    ],
   });
 
-  return respuesta.output_text;
+  const plan = respuesta.choices[0]?.message?.content?.trim();
+
+  if (!plan) {
+    throw new Error("Gemini no devolvió un plan de capacitación.");
+  }
+
+  return plan;
 };
