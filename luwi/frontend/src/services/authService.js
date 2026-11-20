@@ -8,12 +8,17 @@ const ROLES_API = {
   POSTULANTE: "postulante",
 };
 
+// El backend puede enviar el rol como "rol" o como "role": se aceptan ambos.
 function normalizarUsuario(user) {
   if (!user) return null;
 
-  const rol = Object.prototype.hasOwnProperty.call(ROLES_API, user.rol)
-    ? ROLES_API[user.rol]
-    : user.rol;
+  const rolApi = user.rol ?? user.role;
+
+  const rol = Object.prototype.hasOwnProperty.call(ROLES_API, rolApi)
+    ? ROLES_API[rolApi]
+    : typeof rolApi === "string"
+      ? rolApi.toLowerCase()
+      : rolApi;
 
   return {
     ...user,
