@@ -35,11 +35,11 @@ const items = [
             ["Work", "Llegar al trabajo con la preparación necesaria."],
             ["Improve", "Seguir mejorando con seguimiento de tu progreso."],
           ].map(([palabra, descripcion]) => (
-            <li key={palabra} className="rounded-xl bg-[#F2FBF9] p-4">
-              <span className="inline-block rounded-full bg-[#DBB4FD] px-3 py-1 text-sm font-bold text-black">
+            <li key={palabra} className="rounded-xl bg-claro p-4">
+              <span className="inline-block rounded-full bg-lila px-3 py-1 text-sm font-bold text-tinta">
                 {palabra}
               </span>
-              <span className="mt-2 block text-base text-black/75">
+              <span className="mt-2 block text-base text-tinta/75">
                 {descripcion}
               </span>
             </li>
@@ -110,36 +110,36 @@ export default function AcercaDeNosotros() {
   return (
     <section
       id="nosotros"
-      className="bg-[#F2FBF9] px-4 py-20 sm:px-8"
+      className="bg-claro px-4 py-20 sm:px-8"
       aria-labelledby="nosotros-titulo"
     >
       <div className="mx-auto max-w-5xl">
         <h2
           id="nosotros-titulo"
-          className="text-center text-4xl font-black tracking-tight text-black sm:text-6xl"
+          className="text-center text-4xl font-black tracking-tight text-tinta sm:text-6xl"
         >
           Acerca de{" "}
-          <span className="relative isolate ml-1 inline-block px-4 text-black">
+          <span className="relative isolate ml-1 inline-block px-4 text-tinta">
             <svg
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
-              className="absolute inset-0 -z-10 h-full w-full"
+              className="absolute inset-0 -z-10 h-full w-full text-lila"
               aria-hidden="true"
             >
               <polygon
                 points="0,10 2,3 100,0 98,86 100,96 3,100 1,90"
-                fill="#DBB4FD"
+                fill="currentColor"
               />
             </svg>
             nosotros
           </span>
         </h2>
 
-        <div className="mx-auto mt-10 max-w-4xl space-y-5 rounded-[2rem] bg-[#00B9A9] px-6 py-10 text-center sm:px-14 sm:py-14">
-          <p className="text-xl font-extrabold leading-snug tracking-tight text-black sm:text-3xl">
+        <div className="mx-auto mt-10 max-w-4xl space-y-5 rounded-[2rem] bg-teal px-6 py-10 text-center sm:px-14 sm:py-14">
+          <p className="text-xl font-extrabold leading-snug tracking-tight text-tinta sm:text-3xl">
             LUWI prepara a los candidatos antes de que lleguen al puesto.
           </p>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-black/80 sm:text-lg">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-tinta/80 sm:text-lg">
             Somos una plataforma que ayuda a las empresas a formar a las
             personas según lo que cada cargo realmente necesita. Identificamos
             la distancia entre lo que sabe un candidato y lo que pide el puesto,
@@ -154,7 +154,7 @@ export default function AcercaDeNosotros() {
             return (
               <div
                 key={item.id}
-                className="rounded-2xl bg-white shadow-[0_8px_24px_-8px_rgba(0,80,72,0.18)]"
+                className="rounded-2xl bg-white shadow-[0_8px_24px_-8px_rgba(60,20,110,0.18)]"
               >
                 <h3>
                   <button
@@ -163,12 +163,12 @@ export default function AcercaDeNosotros() {
                     aria-expanded={open}
                     aria-controls={`panel-${item.id}`}
                     id={`btn-${item.id}`}
-                    className="flex w-full items-center justify-between gap-4 rounded-2xl px-6 py-6 text-left text-lg font-extrabold tracking-tight text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B9A9] sm:px-10 sm:text-2xl"
+                    className="flex w-full items-center justify-between gap-4 rounded-2xl px-6 py-6 text-left text-lg font-extrabold tracking-tight text-tinta focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal sm:px-10 sm:text-2xl"
                   >
                     {item.title}
                     <span
-                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-black transition-colors duration-300 motion-reduce:transition-none ${
-                        open ? "bg-[#00B9A9]" : "bg-[#DBB4FD]"
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-tinta transition-colors duration-300 motion-reduce:transition-none ${
+                        open ? "bg-teal" : "bg-lila"
                       }`}
                     >
                       <PlusIcon open={open} />
@@ -185,7 +185,7 @@ export default function AcercaDeNosotros() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="mx-6 mb-8 space-y-4 border-t border-black/10 pt-6 text-base leading-relaxed text-black/75 sm:mx-10 sm:text-lg">
+                    <div className="mx-6 mb-8 space-y-4 border-t border-tinta/10 pt-6 text-base leading-relaxed text-tinta/75 sm:mx-10 sm:text-lg">
                       {item.body}
                     </div>
                   </div>

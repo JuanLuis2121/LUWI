@@ -13,7 +13,15 @@ import authRoutes from "./routes/auth.routes.js";
 import rutasAprendizajeRoutes from "./routes/rutasAprendizaje.routes.js";
 import empresaRoutes from "./routes/empresas.routes.js";
 import puestoRoutes from "./routes/puesto.routes.js";
+<<<<<<< HEAD
 import iaRoutes from "./routes/ia.routes.js";
+=======
+import dashboardRoutes from "./routes/dashboard.routes.js";
+import competenciasRoutes from "./routes/competencias.routes.js";
+import miFormacionRoutes from "./routes/miFormacion.routes.js";
+import progresoProcesoRoutes from "./routes/progresoProceso.routes.js";
+import asignacionesRoutes from "./routes/asignaciones.routes.js";
+>>>>>>> origin/develop
 
 const app = express();
 
@@ -34,6 +42,7 @@ app.use(express.json());
 // Middleware para procesar cookies
 app.use(cookieParser());
 
+// Configuración de Swagger UI
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Ruta principal de prueba

@@ -112,10 +112,10 @@ const contactItems = [
 ];
 
 const linkClass =
-  "text-base text-white/70 transition-colors hover:text-teal-400 focus-visible:text-teal-400 focus-visible:outline-none";
+  "text-base text-white/70 transition-colors hover:text-teal focus-visible:text-teal focus-visible:outline-none";
 
 const headingClass =
-  "text-sm font-bold uppercase tracking-widest text-purple-300";
+  "text-sm font-bold uppercase tracking-widest text-lila";
 
 // Desplazamiento suave a la sección (Inicio sube al tope de la página)
 function irASeccion(e, href) {
@@ -135,7 +135,7 @@ function irASeccion(e, href) {
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-fondo text-white">
       <div className="mx-auto grid max-w-6xl gap-12 px-8 py-16 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.3fr]">
         {/* Marca y redes */}
         <div>
@@ -144,8 +144,8 @@ export default function Footer() {
             onClick={(e) => irASeccion(e, "#inicio")}
             className="text-3xl font-extrabold"
           >
-            <span className="text-teal-500">LU</span>
-            <span className="text-purple-300">WI</span>
+            <span className="text-teal">LU</span>
+            <span className="text-lila">WI</span>
           </a>
           <p className="mt-3 text-sm font-bold uppercase tracking-widest text-white/50">
             Learn · Upgrade · Work · Improve
@@ -164,7 +164,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   aria-label={`${s.name} de LUWI (${s.handle})`}
                   title={`${s.name} · ${s.handle}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-teal-500 hover:bg-teal-500 hover:text-black focus-visible:border-teal-500 focus-visible:bg-teal-500 focus-visible:text-black focus-visible:outline-none"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-teal hover:bg-teal hover:text-tinta focus-visible:border-teal focus-visible:bg-teal focus-visible:text-tinta focus-visible:outline-none"
                 >
                   {s.icon}
                 </a>
@@ -187,7 +187,7 @@ export default function Footer() {
           </ul>
           <a
             href="/solicitar"
-            className="mt-8 inline-block rounded-full bg-purple-300 px-7 py-3 text-base font-bold text-black transition-colors hover:bg-purple-400"
+            className="mt-8 inline-block rounded-full bg-lila px-7 py-3 text-base font-bold text-tinta transition-colors hover:bg-morado"
           >
             Inicia hoy
           </a>
@@ -199,7 +199,7 @@ export default function Footer() {
           <ul className="mt-5 space-y-4">
             {contactItems.map((c) => (
               <li key={c.label} className="flex items-start gap-3 text-white/70">
-                <span className="mt-0.5 text-teal-500">{c.icon}</span>
+                <span className="mt-0.5 text-teal">{c.icon}</span>
                 {c.href ? (
                   <a href={c.href} className={linkClass}>
                     {c.label}
@@ -222,7 +222,7 @@ export default function Footer() {
               <li key={l.label}>
                 <a
                   href={l.href}
-                  className="transition-colors hover:text-teal-400 focus-visible:text-teal-400 focus-visible:outline-none"
+                  className="transition-colors hover:text-teal focus-visible:text-teal focus-visible:outline-none"
                 >
                   {l.label}
                 </a>

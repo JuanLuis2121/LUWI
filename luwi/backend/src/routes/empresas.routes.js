@@ -6,13 +6,21 @@ import {
   updateEmpresa,
   deleteEmpresa,
 } from "../controllers/empresa.Controller.js";
+<<<<<<< HEAD
 import { validateSchema } from "../middlewares/validate.milddleware.js";
+=======
+import { validateSchema } from "../middlewares/validate.middleware.js";
+>>>>>>> origin/develop
 import { empresaSchema } from "../validators/empresa.validator.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 /**
+<<<<<<< HEAD
  * @swaggergit
+=======
+ * @swagger
+>>>>>>> origin/develop
  * tags:
  *   name: Empresas
  *   description: Gestión de empresas registradas en LUWI
