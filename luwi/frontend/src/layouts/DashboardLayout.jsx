@@ -21,7 +21,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-luwi-panel">
+    <div className="min-h-screen bg-luwi-panel font-poppins">
       <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={handleLogout} mostrarIA />
 
       <div className="lg:pl-64">
