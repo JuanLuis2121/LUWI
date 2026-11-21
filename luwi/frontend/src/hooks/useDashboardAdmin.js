@@ -3,6 +3,7 @@ import { getResumen } from "../services/dashboardService";
 import { getCursos } from "../services/cursosService";
 import { getRutas } from "../services/rutasService";
 import { puestosService } from "../services/puestosService";
+import { empresasService } from "../services/empresasService";
 
 const idDe = (x) => String(x?._id ?? x?.id ?? x ?? "");
 
@@ -19,11 +20,12 @@ export default function useDashboardAdmin() {
     setCargando(true);
     setError(false);
 
-    const [resumen, cursos, rutas, puestos] = await Promise.allSettled([
+    const [resumen, cursos, rutas, puestos, empresas] = await Promise.allSettled([
       getResumen(),
       getCursos(),
       getRutas(),
       puestosService.list(),
+      empresasService.list(),
     ]);
 
     // Sin el resumen no hay indicadores principales: se muestra el error.
@@ -36,6 +38,7 @@ export default function useDashboardAdmin() {
     const listaCursos = cursos.status === "fulfilled" ? cursos.value : [];
     const listaRutas = rutas.status === "fulfilled" ? rutas.value : [];
     const listaPuestos = puestos.status === "fulfilled" ? puestos.value : [];
+    const listaEmpresas = empresas.status === "fulfilled" ? empresas.value : [];
 
     // ----- Estado de los cursos -----
     const estadoDe = (c) => c.estado ?? "BORRADOR";
@@ -162,6 +165,8 @@ export default function useDashboardAdmin() {
       totalRutas: listaRutas.length,
       preparacion,
       indicadores,
+      // Listas completas para los cálculos por periodo (tendencias y actividad)
+      listas: { empresas: listaEmpresas, puestos: listaPuestos, cursos: listaCursos, rutas: listaRutas },
     });
     setCargando(false);
   }, []);

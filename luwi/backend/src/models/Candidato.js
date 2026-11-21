@@ -28,6 +28,15 @@ const candidatoSchema = new mongoose.Schema(
       required: false,
     },
 
+    // Empresa que registró al postulante. createCandidato ya lo enviaba,
+    // pero como el campo no existía en el esquema Mongoose lo descartaba
+    // y el listado de /api/candidatos (que filtra por empresa) salía vacío.
+    empresa: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Empresa",
+      required: false,
+    },
+
     telefono: {
       type: String,
       required: false,
@@ -51,6 +60,8 @@ const candidatoSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+candidatoSchema.index({ empresa: 1 });
 
 const Candidato = mongoose.model("Candidato", candidatoSchema);
 

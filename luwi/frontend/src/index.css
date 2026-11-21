@@ -101,3 +101,47 @@ input:-webkit-autofill:focus {
   caret-color: #0b3a8c;
   transition: background-color 9999s ease-out 0s;
 }
+
+/* Notificaciones (toast) */
+@keyframes entrar-toast {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes vaciar-toast {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Panel lateral (drawer) */
+@keyframes entrar-drawer {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Confeti de la celebración */
+@keyframes caer-confeti {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(540deg);
+    opacity: 0.6;
+  }
+}

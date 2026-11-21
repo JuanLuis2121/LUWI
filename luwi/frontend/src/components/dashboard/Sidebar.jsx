@@ -5,6 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import {
   HomeIcon, BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, LogoutIcon, CloseIcon,
 } from "./icons";
+import { UsersIcon } from "../pipeline/Piezas";
 
 // Para agregar una sección nueva basta con añadir un objeto aquí.
 // "grupo" agrupa los enlaces bajo un título pequeño en el menú.
@@ -12,6 +13,7 @@ export const MENU_ITEMS = [
   { to: "/dashboard", label: "Inicio", icon: HomeIcon, end: true, grupo: "General" },
   { to: "/dashboard/empresas", label: "Empresas", icon: BuildingIcon, grupo: "Organización" },
   { to: "/dashboard/puestos", label: "Puestos", icon: BriefcaseIcon, grupo: "Organización" },
+  { to: "/dashboard/postulantes", label: "Postulantes", icon: UsersIcon, grupo: "Talento" },
   { to: "/dashboard/cursos", label: "Cursos", icon: BookIcon, grupo: "Formación" },
   { to: "/dashboard/rutas", label: "Rutas de aprendizaje", icon: RouteIcon, grupo: "Formación" },
 ];
@@ -85,7 +87,7 @@ export default function Sidebar({ open, onClose, onLogout, items = MENU_ITEMS, m
           <path d="M0 160 C80 120 150 190 264 140 V200 H0Z" fill="white" />
         </svg>
 
-        <div className="relative mb-9 flex items-center justify-between px-2">
+        <div className="relative mb-7 flex items-center justify-between px-2">
           <Logo size="sm" variant="light" />
           <button
             type="button"
@@ -97,7 +99,7 @@ export default function Sidebar({ open, onClose, onLogout, items = MENU_ITEMS, m
           </button>
         </div>
 
-        <nav className="scroll-oscuro relative -mr-2 flex flex-1 flex-col gap-6 overflow-y-auto pr-2">
+        <nav className="relative -mr-2 flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {agrupar(items).map((grupo) => (
             <div key={grupo.nombre || "menu"}>
               {grupo.nombre && (
@@ -137,9 +139,9 @@ export default function Sidebar({ open, onClose, onLogout, items = MENU_ITEMS, m
           ))}
         </nav>
 
-        {/* Tarjeta de IA (módulo planificado en la propuesta). Se oculta en pantallas bajas. */}
+        {/* Tarjeta de IA (módulo planificado en la propuesta) */}
         {mostrarIA && (
-          <div className="relative mb-3 mt-4 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] p-4 [@media(max-height:820px)]:hidden">
+          <div className="relative mb-3 mt-4 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] p-4 [@media(max-height:1079px)]:hidden">
             <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-luwi-tecno/30 blur-2xl" />
             <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-luwi-tecno to-luwi-medio text-white">
               <SparkIcon className="h-5 w-5" />
