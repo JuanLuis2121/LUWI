@@ -4,6 +4,7 @@ import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
 import CreateMenu from "../components/dashboard/CreateMenu";
 import CommandSearch from "../components/dashboard/CommandSearch";
+import NotificationBell from "../components/dashboard/NotificationBell";
 import useAuth from "../hooks/useAuth";
 
 /**
@@ -36,6 +37,7 @@ export default function DashboardLayout() {
             </>
           }
         >
+          <NotificationBell />
           <CreateMenu />
         </Topbar>
         <main className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8">

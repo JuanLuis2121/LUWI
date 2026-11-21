@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import StatCard from "../../components/dashboard/StatCard";
 import Panel from "../../components/dashboard/Panel";
@@ -9,6 +10,19 @@ import {
 } from "../../components/dashboard/icons";
 import useAuth from "../../hooks/useAuth";
 import useDashboardAdmin from "../../hooks/useDashboardAdmin";
+import PeriodSelector from "../../components/dashboard/PeriodSelector";
+import ActividadChart from "../../components/dashboard/ActividadChart";
+import { PERIODOS, tendencia, actividadPorIntervalo } from "../../utils/periodo";
+
+// Periodo elegido: se recuerda en el navegador
+const leerPeriodo = () => {
+  try {
+    const v = localStorage.getItem("luwi-dashboard-periodo");
+    return PERIODOS[v] ? v : "30d";
+  } catch {
+    return "30d";
+  }
+};
 
 // ---------- Configuración ----------
 
@@ -444,6 +458,26 @@ export default function DashboardHome() {
   const { datos, error, cargando, recargar } = useDashboardAdmin();
   const listo = !cargando && datos;
   const t = datos?.totales;
+  const [periodo, setPeriodoState] = useState(leerPeriodo);
+
+  const setPeriodo = (p) => {
+    setPeriodoState(p);
+    try {
+      localStorage.setItem("luwi-dashboard-periodo", p);
+    } catch {
+      // Sin almacenamiento: el periodo dura mientras la página esté abierta
+    }
+  };
+
+  // Tendencias por tipo y actividad del periodo (se recalculan al cambiar de periodo)
+  const porPeriodo = useMemo(() => {
+    if (!datos?.listas) return null;
+    const texto = `en ${PERIODOS[periodo].label}`;
+    const t4 = Object.fromEntries(
+      Object.entries(datos.listas).map(([k, lista]) => [k, { ...tendencia(lista, periodo), texto }])
+    );
+    return { tendencias: t4, actividad: actividadPorIntervalo(datos.listas, periodo) };
+  }, [datos, periodo]);
 
   // Las cuatro tarjetas siguen el flujo de LUWI: empresa → puesto → ruta → curso.
   const pasos = [
@@ -503,18 +537,35 @@ export default function DashboardHome() {
 
       {/* Flujo de preparación */}
       <section aria-labelledby="flujo-titulo">
-        <div className="mb-3 flex items-end justify-between">
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 id="flujo-titulo" className="text-[15px] font-semibold text-luwi-profundo">Flujo de preparación</h2>
             <p className="text-xs text-luwi-texto/75">De la empresa al curso: cada paso habilita el siguiente</p>
           </div>
+          <PeriodSelector value={periodo} onChange={setPeriodo} />
         </div>
         <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4 xl:gap-6">
           {pasos.map(({ key, ...card }, i) => (
-            <StatCard key={key} {...card} value={t?.[key] ?? 0} loading={cargando} conector={i < pasos.length - 1} />
+            <StatCard
+              key={key}
+              {...card}
+              value={t?.[key] ?? 0}
+              tendencia={porPeriodo?.tendencias[key]}
+              loading={cargando}
+              conector={i < pasos.length - 1}
+            />
           ))}
         </div>
       </section>
+
+      {/* Actividad del periodo */}
+      <Panel title="Actividad del periodo" subtitle="Registros creados en la plataforma por intervalo" icon={TrendUpIcon}>
+        {cargando || !porPeriodo ? (
+          <div className="h-52 animate-pulse rounded-2xl bg-luwi-cristal-fondo" />
+        ) : (
+          <ActividadChart datos={porPeriodo.actividad} />
+        )}
+      </Panel>
 
       {/* Pendientes + estado de cursos */}
       <div className="grid gap-6 lg:grid-cols-3">

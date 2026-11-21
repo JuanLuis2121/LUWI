@@ -3,6 +3,7 @@ import { empresasService } from "../../services/empresasService";
 import Icon from "../../components/Icon";
 import { Badge, Bubble } from "../../components/AdminUI";
 import { BriefcaseIcon } from "../../components/dashboard/icons";
+import { DrawerField } from "../../components/ui/Drawer";
 
 const empresaNombre = (i, lookups) =>
   lookups.empresas?.find((e) => e.id === i.empresaId)?.nombre ?? "—";
@@ -26,6 +27,50 @@ export const puestosConfig = {
   lookups: { empresas: () => empresasService.list() },
   searchText: (i, lookups) =>
     `${i.titulo} ${empresaNombre(i, lookups)} ${i.descripcion}`,
+
+  // Filtros de la barra de herramientas
+  filters: [
+    {
+      key: "empresa",
+      label: "Empresa",
+      value: (i) => i.empresaId ?? "",
+      options: (items, lookups) =>
+        [...new Set(items.map((i) => i.empresaId).filter(Boolean))]
+          .map((id) => ({ value: id, label: lookups.empresas?.find((e) => e.id === id)?.nombre ?? "Sin nombre" }))
+          .sort((a, b) => a.label.localeCompare(b.label)),
+    },
+  ],
+
+  // Exportación a CSV
+  exportName: "puestos-luwi",
+  exportColumns: [
+    { label: "Título", value: (i) => i.titulo },
+    { label: "Empresa", value: (i, lookups) => empresaNombre(i, lookups) },
+    { label: "Descripción", value: (i) => i.descripcion },
+    { label: "Requisitos", value: (i) => i.requisitos },
+  ],
+
+  // Vista rápida (panel lateral)
+  titleOf: (i) => i.titulo,
+  subtitleOf: (i, lookups) => empresaNombre(i, lookups),
+  quickView: (i, lookups) => (
+    <dl>
+      <DrawerField label="Empresa">
+        <Badge>{empresaNombre(i, lookups)}</Badge>
+      </DrawerField>
+      <DrawerField label="Descripción">
+        <span className="whitespace-pre-line">{i.descripcion}</span>
+      </DrawerField>
+      <DrawerField label="Requisitos">
+        <span className="whitespace-pre-line">{i.requisitos}</span>
+      </DrawerField>
+      <DrawerField label="Competencias">
+        {Array.isArray(i.competencias) && i.competencias.length
+          ? `${i.competencias.length} ${i.competencias.length === 1 ? "competencia asignada" : "competencias asignadas"}`
+          : "Sin competencias asignadas"}
+      </DrawerField>
+    </dl>
+  ),
   stats: (items) => {
     const empresas = new Set(items.map((i) => i.empresaId).filter(Boolean)).size;
     return [
@@ -35,7 +80,7 @@ export const puestosConfig = {
     ];
   },
   deleteText: (i) =>
-    `¿Seguro que quieres eliminar el puesto "${i.titulo}"? Esta acción no se puede deshacer.`,
+    `¿Seguro que quieres eliminar el puesto "${i.titulo}"? Tendrás unos segundos para deshacerlo.`,
   columns: [
     {
       key: "titulo",

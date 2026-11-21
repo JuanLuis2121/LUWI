@@ -14,6 +14,12 @@ import rutasAprendizajeRoutes from "./routes/rutasAprendizaje.routes.js";
 import empresaRoutes from "./routes/empresas.routes.js";
 import puestoRoutes from "./routes/puesto.routes.js";
 import iaRoutes from "./routes/ia.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
+import competenciasRoutes from "./routes/competencias.routes.js";
+import miFormacionRoutes from "./routes/miFormacion.routes.js";
+import progresoProcesoRoutes from "./routes/progresoProceso.routes.js";
+import asignacionesRoutes from "./routes/asignaciones.routes.js";
+import procesosRoutes from "./routes/procesos.routes.js";
 
 const app = express();
 
@@ -56,4 +62,11 @@ app.use("/api/evaluaciones", evaluacionesRoutes);
 app.use("/api/progreso", progresoRoutes);
 app.use("/api/rutas-aprendizaje", rutasAprendizajeRoutes);
 app.use("/api/puestos", puestoRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/competencias", competenciasRoutes);
+app.use("/api/mi-formacion", miFormacionRoutes);
+app.use("/api/procesos-formacion", procesosRoutes);
+app.use("/api/procesos-formacion", progresoProcesoRoutes);
+app.use("/api", asignacionesRoutes);
+
 export default app;

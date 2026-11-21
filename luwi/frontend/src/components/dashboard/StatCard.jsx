@@ -1,14 +1,39 @@
 import { Link } from "react-router-dom";
+import Sparkline from "./Sparkline";
+import useCountUp from "../../hooks/useCountUp";
+
+/** Etiqueta de cambio respecto al periodo anterior (ej. "+3 en 30 días"). */
+function Delta({ nuevos, texto }) {
+  const sube = nuevos > 0;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${
+        sube ? "bg-emerald-50 text-emerald-700" : "bg-luwi-panel text-luwi-texto/70"
+      }`}
+    >
+      {sube && (
+        <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M7 14l5-5 5 5" />
+        </svg>
+      )}
+      {sube ? `+${nuevos}` : "Sin cambios"} {texto}
+    </span>
+  );
+}
 
 /**
  * Tarjeta de indicador, pensada como un paso del flujo de preparación.
  * - paso: número del paso ("01", "02"...). Opcional.
  * - detalle: texto corto debajo del número.
  * - progreso: 0-100, dibuja una barra con su porcentaje (opcional).
+ * - tendencia: { nuevos, serie, texto } → etiqueta de cambio + minigráfica (opcional).
  * - conector: muestra una flecha hacia la siguiente tarjeta (solo pantallas grandes).
  * - to: si se recibe, toda la tarjeta lleva al módulo.
  */
-export default function StatCard({ paso, label, value, icon: Icon, detalle, progreso, conector = false, loading = false, to }) {
+export default function StatCard({ paso, label, value, icon: Icon, detalle, progreso, tendencia, conector = false, loading = false, to }) {
+  const numero = useCountUp(typeof value === "number" ? value : 0);
+  const mostrado = typeof value === "number" ? numero : value;
+
   const body = (
     <>
       <div className="flex items-start justify-between">
@@ -23,10 +48,19 @@ export default function StatCard({ paso, label, value, icon: Icon, detalle, prog
       {loading ? (
         <span className="mt-1 block h-10 w-20 animate-pulse rounded-lg bg-luwi-cristal" />
       ) : (
-        <p className="mt-0.5 text-[36px] font-bold leading-tight tracking-tight text-luwi-profundo">{value}</p>
+        <div className="mt-0.5 flex items-end justify-between gap-3">
+          <p className="text-[36px] font-bold leading-tight tracking-tight text-luwi-profundo tabular-nums">{mostrado}</p>
+          {tendencia?.serie && <Sparkline datos={tendencia.serie} ancho={96} alto={34} className="mb-2 h-[34px] w-[96px] shrink-0" />}
+        </div>
       )}
 
-      {detalle && !loading && <p className="mt-1 text-xs text-luwi-texto/80">{detalle}</p>}
+      {tendencia && !loading && (
+        <div className="mt-1">
+          <Delta nuevos={tendencia.nuevos} texto={tendencia.texto} />
+        </div>
+      )}
+
+      {detalle && !loading && <p className="mt-2 text-xs text-luwi-texto/80">{detalle}</p>}
 
       {typeof progreso === "number" && !loading && (
         <div className="mt-4 flex items-center gap-3">
