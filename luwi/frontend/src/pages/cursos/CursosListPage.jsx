@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 import Icon from "../../components/Icon";
 import ConfirmModal from "../../components/ConfirmModal";
-import { ActionButton, Badge, Bubble } from "../../components/AdminUI";
+import {
+  ActionButton, Badge, Bubble, PageHeader, TableCard, SearchBox, CountPill, TableSkeleton, EmptyState, thCls,
+} from "../../components/AdminUI";
+import { BookIcon } from "../../components/dashboard/icons";
 import { ErrorBanner, SuccessBanner } from "../../components/FormControls";
 import { EstadoCursoBadge, formatoHoras } from "../../components/cursos/EstadoCurso";
 import { getCursos, publicarCurso, desactivarCurso, eliminarCurso } from "../../services/cursosService";
 
 const FILTROS_ESTADO = [
-  { value: "", label: "Todos los estados" },
+  { value: "", label: "Todos" },
+  { value: "PUBLICADO", label: "Publicados" },
   { value: "BORRADOR", label: "Borrador" },
-  { value: "PUBLICADO", label: "Publicado" },
-  { value: "INACTIVO", label: "Inactivo" },
+  { value: "INACTIVO", label: "Inactivos" },
 ];
 
 export default function CursosListPage() {
@@ -46,6 +49,10 @@ export default function CursosListPage() {
   }
 
   const q = query.trim().toLowerCase();
+  const estadoDe = (c) => c.estado ?? "BORRADOR";
+  const cuenta = (valor) => (valor ? cursos.filter((c) => estadoDe(c) === valor).length : cursos.length);
+  const horasTotales = cursos.reduce((a, c) => a + (Number(c.duracionHoras) || 0), 0);
+  const unidadesTotales = cursos.reduce((a, c) => a + (c.totalUnidades ?? 0), 0);
   const filtrados = cursos.filter(
     (c) =>
       (!estado || (c.estado ?? "BORRADOR") === estado) &&
@@ -106,9 +113,14 @@ export default function CursosListPage() {
 
   const resumen = (c) => (
     <div className="min-w-0">
-      <p className="break-words font-semibold text-admin-ink">{c.titulo}</p>
-      <p className="line-clamp-2 max-w-[320px] break-words text-xs text-admin-muted">{c.descripcion}</p>
-      {c.alcance === "GLOBAL" && <p className="mt-1 text-xs font-semibold text-admin-blue">Curso global</p>}
+      <p className="break-words font-semibold text-luwi-profundo">{c.titulo}</p>
+      <p className="mt-0.5 line-clamp-2 max-w-[360px] break-words text-xs text-luwi-texto/80">{c.descripcion}</p>
+      {c.alcance === "GLOBAL" && (
+        <span className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-luwi-tecno/10 px-2 py-0.5 text-[11px] font-semibold text-luwi-medio">
+          <span className="h-1.5 w-1.5 rounded-full bg-luwi-tecno" />
+          Curso global
+        </span>
+      )}
     </div>
   );
 
@@ -117,8 +129,8 @@ export default function CursosListPage() {
       <span className="capitalize">
         <Badge>{c.nivel}</Badge>
       </span>
-      <p className="font-medium">{formatoHoras(c.duracionHoras)}</p>
-      <p className="text-admin-muted">
+      <p className="font-medium text-luwi-profundo">{formatoHoras(c.duracionHoras)}</p>
+      <p className="text-luwi-texto/80">
         {c.totalUnidades ?? 0} {(c.totalUnidades ?? 0) === 1 ? "unidad" : "unidades"}
       </p>
     </div>
@@ -133,7 +145,7 @@ export default function CursosListPage() {
     if (c.editable === false) {
       return (
         <>
-          <span className="text-xs text-admin-muted">Solo lectura</span>
+          <span className="text-xs text-luwi-texto/70">Solo lectura</span>
           <ActionButton size="sm" to={`/dashboard/cursos/${c._id}/unidades`} {...icono("layers", `Ver unidades de ${c.titulo}`)} />
         </>
       );
@@ -159,117 +171,137 @@ export default function CursosListPage() {
     );
   };
 
+  const botonNuevo = (
+    <ActionButton variant="primary" to="/dashboard/cursos/nuevo">
+      <Icon name="plus" className="h-4 w-4" />
+      Nuevo curso
+    </ActionButton>
+  );
+
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-extrabold text-admin-ink">Cursos</h1>
-          <p className="mt-1 text-sm text-admin-muted">
-            Prepara los cursos, sus unidades y publícalos para usarlos en las rutas.
-          </p>
-        </div>
-        <ActionButton variant="primary" to="/dashboard/cursos/nuevo">
-          <Icon name="plus" className="h-4 w-4" />
-          Nuevo curso
-        </ActionButton>
-      </div>
+      <PageHeader
+        icon={BookIcon}
+        seccion="Formación"
+        title="Cursos"
+        subtitle="Prepara los cursos, sus unidades y publícalos para usarlos en las rutas."
+        stats={
+          loading
+            ? []
+            : [
+                { label: "Cursos en catálogo", value: cursos.length },
+                { label: "Horas de contenido", value: horasTotales.toLocaleString("es-DO") },
+                { label: "Unidades creadas", value: unidadesTotales },
+              ]
+        }
+        action={botonNuevo}
+      />
 
-      <div className="mb-4 space-y-2">
+      <div className="mb-4 space-y-2 empty:hidden">
         <ErrorBanner>{error}</ErrorBanner>
         <SuccessBanner>{notice}</SuccessBanner>
       </div>
 
-      <section className="overflow-hidden rounded-3xl bg-white shadow-xl shadow-admin-blue/10">
-        <div className="flex flex-wrap items-center gap-3 p-5">
-          <label className="flex min-w-0 flex-1 basis-64 items-center gap-3 rounded-2xl border-2 border-admin-line bg-admin-bg px-4 py-2.5 focus-within:border-admin-blue focus-within:ring-4 focus-within:ring-admin-blue/10">
-            <Icon name="search" className="h-[18px] w-[18px] shrink-0 text-admin-blue" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por título, competencia o nivel"
-              aria-label="Buscar cursos"
-              className="w-full bg-transparent text-sm text-admin-ink outline-none placeholder:text-admin-muted"
-            />
-          </label>
-          <select
-            value={estado}
-            onChange={(e) => setEstado(e.target.value)}
-            aria-label="Filtrar por estado"
-            className="rounded-2xl border-2 border-admin-line bg-admin-bg px-4 py-2.5 text-sm text-admin-ink outline-none focus:border-admin-blue"
-          >
-            {FILTROS_ESTADO.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-          <span className="text-xs font-bold text-admin-ink">
+      <TableCard>
+        <div className="flex flex-wrap items-center gap-3 border-b border-luwi-linea/70 p-5">
+          <SearchBox
+            value={query}
+            onChange={setQuery}
+            placeholder="Buscar por título, competencia o nivel"
+            className="min-w-0 flex-1 basis-64"
+          />
+
+          {/* Filtro por estado en pestañas */}
+          <div role="tablist" aria-label="Filtrar por estado" className="flex flex-wrap gap-1 rounded-xl bg-luwi-panel p-1 ring-1 ring-inset ring-luwi-linea">
+            {FILTROS_ESTADO.map((f) => {
+              const activo = estado === f.value;
+              return (
+                <button
+                  key={f.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={activo}
+                  onClick={() => setEstado(f.value)}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40 ${
+                    activo ? "bg-white text-luwi-profundo shadow-sm" : "text-luwi-texto hover:text-luwi-profundo"
+                  }`}
+                >
+                  {f.label}
+                  <span className={`rounded-md px-1.5 text-[10.5px] ${activo ? "bg-luwi-cristal text-luwi-medio" : "bg-white/70 text-luwi-texto/70"}`}>
+                    {cuenta(f.value)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <CountPill>
             {filtrados.length} {filtrados.length === 1 ? "curso" : "cursos"}
-          </span>
+          </CountPill>
         </div>
 
-        {/* Escritorio: tabla */}
-        <div className="hidden overflow-x-auto md:block">
-          <table className="w-full text-left text-sm text-admin-ink">
-            <thead className="border-y border-admin-border bg-admin-bg text-xs uppercase tracking-wide">
-              <tr>
-                <th className="px-6 py-3 font-bold">Curso</th>
-                <th className="px-4 py-3 font-bold">Detalles</th>
-                <th className="px-4 py-3 font-bold">Estado</th>
-                <th className="px-4 py-3 text-right font-bold">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-admin-border/60">
-              {!loading &&
-                filtrados.map((c) => (
-                  <tr key={c._id} className="align-top transition hover:bg-admin-bg/60">
-                    <td className="px-6 py-3">
-                      <div className="flex min-w-[200px] items-start gap-3">
-                        <Bubble>
-                          <Icon name="book" className="h-4 w-4" />
-                        </Bubble>
-                        {resumen(c)}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">{detalles(c)}</td>
-                    <td className="px-4 py-3">
-                      <EstadoCursoBadge estado={c.estado ?? "BORRADOR"} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap items-center justify-end gap-2">{acciones(c)}</div>
-                    </td>
+        {loading ? (
+          <TableSkeleton />
+        ) : filtrados.length === 0 ? (
+          <EmptyState
+            icon={BookIcon}
+            title={q || estado ? "Sin resultados" : "Aún no hay cursos"}
+            text={q || estado ? "No hay cursos que coincidan con la búsqueda o el filtro." : "Crea el primer curso y agrégale unidades."}
+            action={!q && !estado && botonNuevo}
+          />
+        ) : (
+          <>
+            {/* Escritorio: tabla */}
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full text-left text-sm text-luwi-profundo">
+                <thead className="bg-luwi-panel/70">
+                  <tr>
+                    <th className={thCls}>Curso</th>
+                    <th className={`${thCls} px-4`}>Detalles</th>
+                    <th className={`${thCls} px-4`}>Estado</th>
+                    <th className={`${thCls} px-4 text-right`}>Acciones</th>
                   </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody className="divide-y divide-luwi-linea/60">
+                  {filtrados.map((c) => (
+                    <tr key={c._id} className="align-top transition hover:bg-luwi-panel/60">
+                      <td className="px-6 py-4">
+                        <div className="flex min-w-[220px] items-start gap-3">
+                          <Bubble>
+                            <Icon name="book" className="h-4 w-4" />
+                          </Bubble>
+                          {resumen(c)}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">{detalles(c)}</td>
+                      <td className="px-4 py-4">
+                        <EstadoCursoBadge estado={estadoDe(c)} />
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex flex-wrap items-center justify-end gap-1.5">{acciones(c)}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-        {/* Celular: tarjetas */}
-        <ul className="divide-y divide-admin-border/60 border-t border-admin-border md:hidden">
-          {!loading &&
-            filtrados.map((c) => (
-              <li key={c._id} className="space-y-3 px-5 py-4">
-                <div className="flex items-start justify-between gap-3">
-                  {resumen(c)}
-                  <EstadoCursoBadge estado={c.estado ?? "BORRADOR"} />
-                </div>
-                {detalles(c, true)}
-                <div className="flex flex-wrap items-center gap-2">{acciones(c)}</div>
-              </li>
-            ))}
-        </ul>
-
-        {(loading || filtrados.length === 0) && (
-          <p className="border-t border-admin-border px-6 py-10 text-center text-sm text-admin-muted">
-            {loading
-              ? "Cargando..."
-              : q || estado
-                ? "No hay cursos que coincidan con la búsqueda."
-                : "Aún no hay cursos."}
-          </p>
+            {/* Celular: tarjetas */}
+            <ul className="divide-y divide-luwi-linea/60 md:hidden">
+              {filtrados.map((c) => (
+                <li key={c._id} className="space-y-3 px-5 py-4">
+                  <div className="flex items-start justify-between gap-3">
+                    {resumen(c)}
+                    <EstadoCursoBadge estado={estadoDe(c)} />
+                  </div>
+                  {detalles(c, true)}
+                  <div className="flex flex-wrap items-center gap-1.5">{acciones(c)}</div>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
-      </section>
+      </TableCard>
 
       <ConfirmModal
         open={!!aDesactivar}

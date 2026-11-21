@@ -2,6 +2,18 @@
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* Identidad visual LUWI (login y nuevas pantallas) */
+  --color-luwi-profundo: #0b3a8c;      /* Azul profundo: encabezados y elementos principales */
+  --color-luwi-medio: #0b5bd3;         /* Paso intermedio de los degradados */
+  --color-luwi-tecno: #009cff;         /* Azul tecnológico: botones, indicadores y acciones */
+  --color-luwi-cristal: #dcebff;       /* Azul cristal: transparencias y superficies suaves */
+  --color-luwi-cristal-fondo: #eaf3ff; /* Fondo general de las pantallas de acceso */
+  --color-luwi-texto: #3d5a8a;         /* Texto secundario */
+  --color-luwi-linea: #d5e3f7;         /* Bordes y separadores */
+  --color-luwi-noche: #061a45;         /* Azul noche: menú lateral y tarjetas oscuras */
+  --color-luwi-panel: #f3f7fd;         /* Fondo del panel administrativo */
 
   --color-luwi-navy: #12306e;
   --color-luwi-blue: #2f6bff;
@@ -12,16 +24,18 @@
   --color-luwi-border: #dfe6f3;
   --color-luwi-bg: #f4f7fe;
 
-  /* Paleta de administración (formularios y listados) */
-  --color-admin-ink: #312e81;
-  --color-admin-blue: #1d4ed8;
-  --color-admin-purple: #7c3aed;
+  /* Paleta de administración (formularios y listados).
+     Ahora usa los azules de la identidad LUWI: así todas las pantallas
+     que usan "admin-*" se actualizan solas. */
+  --color-admin-ink: #0b3a8c;      /* = luwi-profundo */
+  --color-admin-blue: #0b5bd3;     /* = luwi-medio */
+  --color-admin-purple: #009cff;   /* = luwi-tecno */
   --color-admin-green: #10b981;
-  --color-admin-muted: #6b7280;
-  --color-admin-border: #e5e7eb;
-  --color-admin-bg: #f3f4f6;
-  --color-admin-soft: #e0e7ff;
-  --color-admin-line: #c7d2fe;
+  --color-admin-muted: #5a719a;
+  --color-admin-border: #e3ecf8;
+  --color-admin-bg: #f3f7fd;       /* = luwi-panel */
+  --color-admin-soft: #dcebff;     /* = luwi-cristal */
+  --color-admin-line: #d5e3f7;     /* = luwi-linea */
   --color-admin-danger: #b42318;
 
   --shadow-card: 0 10px 30px -12px rgb(18 48 110 / 0.18);
@@ -46,4 +60,44 @@
 
 body {
   @apply bg-luwi-bg font-sans text-luwi-ink antialiased;
+}
+/* Barra de desplazamiento fina y discreta (menú lateral oscuro) */
+.scroll-oscuro {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.18) transparent;
+}
+.scroll-oscuro::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-oscuro::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-oscuro::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.18);
+  border-radius: 999px;
+}
+.scroll-oscuro::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 0.32);
+}
+
+/* Movimiento suave de las tarjetas flotantes del login */
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Autocompletado del navegador: mantiene el fondo blanco de los campos */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0b3a8c;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  caret-color: #0b3a8c;
+  transition: background-color 9999s ease-out 0s;
 }

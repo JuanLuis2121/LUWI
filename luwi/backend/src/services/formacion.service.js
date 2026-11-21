@@ -41,7 +41,7 @@ export function responderError(res, error, mensaje500) {
 // Cuando Wallan entregue sus controles reutilizables, esto puede sustituirse por ellos.
 export async function perfilDeSesion(req) {
   const user = await User.findById(req.user._id)
-    .select("rol empresa candidato estadoCuenta")
+    .select("role rol empresa candidato estadoCuenta")
     .lean();
   if (!user)
     throw new ErrorFormacion(401, "El usuario de esta sesión ya no existe.");
@@ -52,7 +52,9 @@ export async function perfilDeSesion(req) {
       "CUENTA_DESACTIVADA",
     );
   }
-  return { ...user, rol: user.rol ?? "RRHH" };
+  // El campo se renombró de "rol" a "role": se aceptan ambos por si hay usuarios antiguos.
+  const role = user.role ?? user.rol ?? "RRHH";
+  return { ...user, role, rol: role };
 }
 
 // Perfil de postulante (Candidato) asociado al usuario.

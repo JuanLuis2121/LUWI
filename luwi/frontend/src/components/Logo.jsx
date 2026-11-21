@@ -1,34 +1,53 @@
-import { useId } from "react";
+// Logo de LUWI: "LU" azul profundo, "W" en degradado e "i" azul tecnológico.
+// size: "sm" (menú lateral), "md" (por defecto) o "lg" (login).
+// tagline: muestra "Learn · Upgrade · Work · Improve" debajo del logo.
+// variant: "dark" (sobre fondo claro, por defecto) o "light" (sobre fondo oscuro).
 
-export default function Logo({ className = "" }) {
-  const id = useId();
+const SIZES = {
+  sm: { word: "text-[32px]", tagline: "text-[8px]" },
+  md: { word: "text-[40px]", tagline: "text-[9px]" },
+  lg: { word: "text-[52px]", tagline: "text-[11px]" },
+};
+
+const PALABRAS = ["Learn", "Upgrade", "Work", "Improve"];
+
+export default function Logo({ size = "md", tagline = true, variant = "dark", className = "" }) {
+  const s = SIZES[size] ?? SIZES.md;
+  const claro = variant === "light";
+
   return (
-    <div className={`flex flex-col items-center ${className}`}>
-      <svg viewBox="0 0 220 70" className="h-14 w-auto" role="img" aria-label="LUWI">
-        <defs>
-          <linearGradient id={`${id}-g`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#12306e" />
-            <stop offset="55%" stopColor="#8b5cf6" />
-            <stop offset="80%" stopColor="#2f6bff" />
-            <stop offset="100%" stopColor="#14c9a5" />
-            
-
-          </linearGradient>
-        </defs>
-        <text
-          x="50%"
-          y="65"
-          textAnchor="middle"
-          fontSize="64"
-          fontWeight="800"
-          fill={`url(#${id}-g)`}
-          fontFamily="'Plus Jakarta Sans'"
-          letterSpacing="2"
+    <div className={`inline-flex flex-col items-start font-poppins ${className}`}>
+      <span
+        role="img"
+        aria-label="LUWI"
+        className={`${s.word} font-extrabold leading-none tracking-[-0.045em]`}
+      >
+        <span aria-hidden="true" className={claro ? "text-white" : "text-luwi-profundo"}>LU</span>
+        <span
+          aria-hidden="true"
+          className={`bg-gradient-to-br bg-clip-text text-transparent ${
+            claro ? "from-[#7cc8ff] to-luwi-tecno" : "from-luwi-medio to-luwi-tecno"
+          }`}
         >
-          LUWI
-        </text>
-      </svg>
-      
+          W
+        </span>
+        <span aria-hidden="true" className="text-luwi-tecno">i</span>
+      </span>
+
+      {tagline && (
+        <span
+          className={`${s.tagline} mt-1.5 flex items-center gap-1.5 font-medium ${
+            claro ? "text-white/70" : "text-luwi-profundo"
+          }`}
+        >
+          {PALABRAS.map((palabra, i) => (
+            <span key={palabra} className="flex items-center gap-1.5">
+              {i > 0 && <span aria-hidden="true" className="h-[3px] w-[3px] rounded-full bg-luwi-tecno" />}
+              {palabra}
+            </span>
+          ))}
+        </span>
+      )}
     </div>
   );
 }

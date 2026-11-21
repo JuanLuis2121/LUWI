@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Icon from "./Icon";
 import FormField from "./FormField";
 import { ActionButton } from "./AdminUI";
+import { ChevronLeftIcon } from "./dashboard/icons";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -193,48 +193,44 @@ export default function ModuleFormPage({ config, mode }) {
     }
   }
 
+  const IconoModulo = config.icon;
+
   return (
     <div className="max-w-3xl">
       <Link
         to={basePath}
-        className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-admin-muted transition hover:text-admin-ink"
+        className="mb-5 inline-flex items-center gap-1.5 rounded-lg py-1 pr-2 text-sm font-semibold text-luwi-texto transition hover:text-luwi-profundo focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
       >
-        <Icon name="arrow-left" className="h-4 w-4" />
+        <ChevronLeftIcon className="h-4 w-4" />
         {config.backLabel}
       </Link>
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-admin-ink">
-          {config.formTitles[mode]}
-        </h1>
-
-        {mode === "create" && (
-          <p className="mt-1 text-sm text-admin-muted">
-            Completa los datos para crear un nuevo registro.
-          </p>
+      <div className="mb-6 flex items-center gap-4">
+        {IconoModulo && (
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(0,110,230,0.7)]">
+            <IconoModulo className="h-[22px] w-[22px]" />
+          </span>
         )}
-
-        {mode === "edit" && (
-          <p className="mt-1 text-sm text-admin-muted">
-            Modifica los datos del registro.
+        <div>
+          <h1 className="text-[26px] font-bold leading-tight tracking-[-0.02em] text-luwi-profundo">
+            {config.formTitles[mode]}
+          </h1>
+          <p className="mt-0.5 text-sm text-luwi-texto">
+            {mode === "create" && "Completa los datos para crear un nuevo registro."}
+            {mode === "edit" && "Modifica los datos del registro."}
+            {mode === "view" && "Consulta los detalles del registro."}
           </p>
-        )}
-
-        {mode === "view" && (
-          <p className="mt-1 text-sm text-admin-muted">
-            Consulta los detalles del registro.
-          </p>
-        )}
+        </div>
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border-2 border-admin-line bg-admin-bg p-8 text-center">
-          <p className="text-sm text-admin-muted">
-            Cargando...
-          </p>
+        <div className="space-y-4 rounded-[28px] border border-white bg-white/90 p-7 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)]">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-12 animate-pulse rounded-2xl bg-luwi-cristal-fondo" />
+          ))}
         </div>
       ) : notFound ? (
-        <div className="rounded-2xl border-2 border-admin-line bg-admin-bg p-8 text-center">
+        <div className="rounded-[28px] border border-white bg-white/90 p-8 text-center shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)]">
           <p className="font-semibold text-admin-ink">
             No se encontró el registro.
           </p>
@@ -250,7 +246,7 @@ export default function ModuleFormPage({ config, mode }) {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="rounded-2xl border-2 border-admin-line bg-admin-bg p-6"
+          className="rounded-[28px] border border-white bg-white/90 p-6 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)] sm:p-8"
         >
           {saveError && (
             <div className="mb-6 rounded-xl border border-admin-danger/30 bg-admin-danger/5 px-4 py-3 text-sm text-admin-danger">
@@ -294,7 +290,7 @@ export default function ModuleFormPage({ config, mode }) {
           <div className="mt-8 flex items-center justify-end gap-3 border-t border-admin-line pt-5">
             <Link
               to={basePath}
-              className="rounded-xl px-5 py-2.5 text-sm font-semibold text-admin-muted transition hover:bg-admin-line/40 hover:text-admin-ink"
+              className="rounded-xl px-5 py-2.5 text-sm font-semibold text-luwi-texto transition hover:bg-luwi-cristal-fondo hover:text-luwi-profundo"
             >
               {readOnly ? "Volver" : "Cancelar"}
             </Link>
@@ -309,7 +305,7 @@ export default function ModuleFormPage({ config, mode }) {
                   ? "Guardando..."
                   : mode === "edit"
                     ? "Guardar cambios"
-                    : "Crear curso"}
+                    : `Crear ${config.countWords?.[0] ?? "registro"}`}
               </ActionButton>
             )}
           </div>

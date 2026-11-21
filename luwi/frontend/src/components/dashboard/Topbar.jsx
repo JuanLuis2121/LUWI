@@ -1,34 +1,27 @@
 import { MenuIcon } from "./icons";
 
-/** Barra superior: botón de menú (celular) y nombre del usuario. */
-export default function Topbar({ username, onMenuClick, subtitle = "Panel de control" }) {
-  const name = username || "Usuario";
-  const initial = name.charAt(0).toUpperCase();
-
+/**
+ * Barra superior del panel.
+ * - left: contenido junto al botón de menú (ej. buscador). Si no hay, muestra `subtitle`.
+ * - children: acciones a la derecha (ej. botón "Crear").
+ */
+export default function Topbar({ onMenuClick, subtitle = "Panel de control", left, children }) {
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-luwi-border bg-white/90 px-4 backdrop-blur sm:px-8">
-      <button
-        type="button"
-        onClick={onMenuClick}
-        aria-label="Abrir menú"
-        className="rounded-lg p-2 text-luwi-ink hover:bg-luwi-bg lg:hidden"
-      >
-        <MenuIcon className="h-6 w-6" />
-      </button>
-
-      <p className="hidden text-sm text-luwi-muted lg:block">{subtitle}</p>
-
-      <div className="flex items-center gap-3">
-        <span className="max-w-[10rem] truncate text-sm font-semibold text-luwi-navy sm:max-w-xs">
-          {name}
-        </span>
-        <span
-          aria-hidden="true"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-luwi-blue to-luwi-purple text-sm font-bold text-white"
+    <header className="sticky top-0 z-20 flex h-[68px] items-center justify-between gap-4 border-b border-luwi-linea/80 bg-white/75 px-4 font-poppins backdrop-blur-xl sm:px-8">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Abrir menú"
+          className="rounded-lg p-2 text-luwi-profundo hover:bg-luwi-cristal-fondo lg:hidden"
         >
-          {initial}
-        </span>
+          <MenuIcon className="h-6 w-6" />
+        </button>
+
+        {left ?? <p className="truncate text-sm font-semibold text-luwi-profundo">{subtitle}</p>}
       </div>
+
+      {children && <div className="flex shrink-0 items-center gap-3">{children}</div>}
     </header>
   );
 }

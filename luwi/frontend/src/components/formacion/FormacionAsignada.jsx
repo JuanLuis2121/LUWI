@@ -56,7 +56,7 @@ function Avance({ titulo, avance, cargando }) {
         className="mt-1 h-2 overflow-hidden rounded-full bg-admin-line/60"
       >
         <div
-          className="h-full rounded-full bg-[linear-gradient(90deg,#1D4ED8,#7C3AED)]"
+          className="h-full rounded-full bg-gradient-to-r from-luwi-medio to-luwi-tecno"
           style={{ width: `${avance.porcentaje}%` }}
         />
       </div>
