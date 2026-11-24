@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireAuth } from "../middlewares/auth.middleware.js";
+import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
 import {
   obtenerMiFormacion,
   obtenerCursoAsignado,
@@ -11,7 +11,7 @@ import {
 // que la asignación sea suya, que el proceso esté activo y que el curso esté habilitado.
 const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireRol("POSTULANTE")); // Todas las rutas requieren autenticación y rol POSTULANTE
 
 /**
  * @swagger

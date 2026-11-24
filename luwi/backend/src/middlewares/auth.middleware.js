@@ -32,6 +32,7 @@ export const requireAuth = async (req, res, next) => {
   }
 
   if (
+    !payload ||
     typeof payload !== "object" ||
     typeof payload.id !== "string" ||
     !/^[a-fA-F0-9]{24}$/.test(payload.id)
@@ -43,7 +44,9 @@ export const requireAuth = async (req, res, next) => {
 
   try {
     const user = await User.findById(payload.id)
-      .select("_id username email role empresa candidato estadoCuenta")
+      .select(
+        "_id nombreCompleto username email role empresa candidato estadoCuenta",
+      )
       .populate("empresa", "_id nombre")
       .lean();
 
@@ -107,6 +110,13 @@ export const requireRol =
         message: "Debes iniciar sesión.",
       });
     }
+
+    // Verificar si el rol del usuario está en la lista de roles permitidos Y lo lanza por consola para depuración
+    console.log("Verificación de rol", {
+      ruta: req.originalUrl,
+      rolActual: req.user.role,
+      rolesPermitidos,
+    });
 
     if (!rolesPermitidos.includes(req.user.role)) {
       return res.status(403).json({

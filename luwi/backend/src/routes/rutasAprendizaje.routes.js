@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireAuth } from "../middlewares/auth.middleware.js";
+import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
 import {
   listarRutas,
   obtenerRuta,
@@ -11,7 +11,7 @@ import {
 
 const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH"));
 
 router.get("/opciones", obtenerOpciones);
 router.get("/", listarRutas);

@@ -6,6 +6,11 @@ export const ESTADOS_CUENTA = ["PENDIENTE", "ACTIVA", "DESACTIVADA"];
 
 const userSchema = new mongoose.Schema(
   {
+    nombreCompleto: {
+      type: String,
+      trim: true,
+      maxlength: 120,
+    },
     username: {
       type: String,
       required: true,

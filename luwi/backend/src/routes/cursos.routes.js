@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireAuth } from "../middlewares/auth.middleware.js";
+import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
 import { validateSchema } from "../middlewares/validate.middleware.js";
 import {
   cursoValidator,
@@ -25,7 +25,7 @@ import {
 
 const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireRol("RRHH"));
 
 /**
  * @swagger

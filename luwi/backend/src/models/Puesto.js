@@ -26,7 +26,7 @@ const puestoSchema = new mongoose.Schema(
       trim: true,
       maxlength: 2000,
     },
-// Competencias que pide el puesto (del catálogo)
+    // Competencias que pide el puesto (del catálogo)
     competencias: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +34,7 @@ const puestoSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Puesto", puestoSchema);

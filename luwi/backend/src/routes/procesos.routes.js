@@ -9,8 +9,7 @@ import {
 // Se monta en /api/procesos-formacion junto al router de progreso (Marlon).
 // Express permite varios routers en el mismo prefijo: aquí solo están "/" y "/:id/estado".
 const router = Router();
-
-router.use(requireAuth, requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH"));
+const gestionarProcesos = requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH");
 
 /**
  * @swagger
@@ -19,7 +18,8 @@ router.use(requireAuth, requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH"));
  *     summary: Pipeline de postulantes
  *     description: >
  *       Procesos de formación con su etapa (POR_ASIGNAR, EN_FORMACION, LISTO), la ruta activa
- *       y su avance, más los postulantes que todavía no tienen proceso. RRHH solo ve su empresa.
+ *       y su avance, más los postulantes que todavía no tienen proceso.
+ *       ADMIN-EMPRESA y RRHH solo ven su empresa.
  *     tags: [Procesos de formación]
  *     security: [{ cookieAuth: [] }]
  *     responses:
@@ -42,8 +42,8 @@ router.use(requireAuth, requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH"));
  *       201: { description: "Proceso creado" }
  *       409: { description: "Ya existe un proceso vigente para ese puesto" }
  */
-router.get("/", listarPipeline);
-router.post("/", crearProceso);
+router.get("/", requireAuth, gestionarProcesos, listarPipeline);
+router.post("/", requireAuth, gestionarProcesos, crearProceso);
 
 /**
  * @swagger
@@ -65,6 +65,11 @@ router.post("/", crearProceso);
  *       200: { description: "Proceso actualizado" }
  *       409: { description: "Cambio de estado no permitido" }
  */
-router.patch("/:procesoId/estado", cambiarEstadoProceso);
+router.patch(
+  "/:procesoId/estado",
+  requireAuth,
+  gestionarProcesos,
+  cambiarEstadoProceso,
+);
 
 export default router;

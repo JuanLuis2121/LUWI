@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const registerValidator = z.object({
+/* export const registerValidator = z.object({
   username: z
     .string()
     .trim()
@@ -25,7 +25,7 @@ export const registerValidator = z.object({
     .string()
     .regex(/^[a-fA-F0-9]{24}$/, "ID de empresa inválido")
     .optional(),
-});
+}); */
 
 export const loginValidator = z.object({
   email: z
@@ -42,9 +42,31 @@ export const activarCuentaValidator = z.object({
 
   password: z
     .string()
-    .min(8, "La contraseña debe tener mínimo 8 caracteres")
-    .max(64, "La contraseña no puede superar los 64 caracteres")
-    .regex(/[A-Z]/, "Debe contener una mayúscula")
-    .regex(/[a-z]/, "Debe contener una minúscula")
-    .regex(/[0-9]/, "Debe contener un número"),
+    .min(8, "La contraseña debe tener mínimo 8 caracteres.")
+    .max(64, "La contraseña no puede superar los 64 caracteres.")
+    .regex(/[A-Z]/, "Debe contener una mayúscula.")
+    .regex(/[a-z]/, "Debe contener una minúscula.")
+    .regex(/[0-9]/, "Debe contener un número."),
+
+  nombreCompleto: z
+    .string()
+    .trim()
+    .min(2, "Escribe tu nombre completo.")
+    .max(120, "El nombre no puede superar los 120 caracteres.")
+    .optional(),
+
+  telefono: z
+    .string()
+    .trim()
+    .min(1, "Escribe tu teléfono de contacto.")
+    .max(30, "El teléfono no puede superar los 30 caracteres.")
+    .optional(),
 });
+
+export const ROLES_ACTIVABLES = ["ADMIN-EMPRESA", "RRHH", "POSTULANTE"];
+
+export const errorActivacion = (message) => {
+  const error = new Error(message);
+  error.status = 400;
+  return error;
+};

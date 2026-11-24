@@ -5,11 +5,44 @@ import Curso from "../models/Curso.js";
 import "../models/Empresa.js";
 
 const esIdValido = (id) =>
-  typeof id === "string" &&
-  mongoose.isObjectIdOrHexString(id);
+  typeof id === "string" && mongoose.isObjectIdOrHexString(id);
 
-// Comprueba los campos y las relaciones antes de guardar.
-async function validarDatos(body) {
+function filtroPuestos(user) {
+  if (user?.role === "ADMIN") {
+    return {};
+  }
+
+  const empresaId = user?.empresa?._id ?? user?.empresa;
+  const rolesEmpresa = ["ADMIN-EMPRESA", "RRHH"];
+
+  if (
+    !rolesEmpresa.includes(user?.role) ||
+    !mongoose.isObjectIdOrHexString(empresaId)
+  ) {
+    const error = new Error("No tienes acceso a las rutas de esta empresa.");
+    error.status = 403;
+    throw error;
+  }
+
+  return { empresa: empresaId };
+}
+
+async function filtroRutas(user) {
+  if (user?.role === "ADMIN") {
+    return {};
+  }
+
+  const puestosIds = await Puesto.distinct("_id", filtroPuestos(user));
+  return { puesto: { $in: puestosIds } };
+}
+
+function cursosCompatibles(empresaId) {
+  return {
+    $or: [{ empresa: null }, { empresa: empresaId }],
+  };
+}
+
+async function validarDatos(body, user) {
   const { nombre, descripcion, puesto, cursos } = body ?? {};
 
   if (
@@ -17,9 +50,7 @@ async function validarDatos(body) {
     nombre.trim().length < 3 ||
     nombre.trim().length > 120
   ) {
-    return {
-      error: "El nombre debe tener entre 3 y 120 caracteres.",
-    };
+    return { error: "El nombre debe tener entre 3 y 120 caracteres." };
   }
 
   if (
@@ -33,71 +64,53 @@ async function validarDatos(body) {
   }
 
   if (!esIdValido(puesto)) {
-    return {
-      error: "Selecciona un puesto válido.",
-    };
+    return { error: "Selecciona un puesto válido." };
   }
 
   if (!Array.isArray(cursos) || cursos.length === 0) {
-    return {
-      error: "Debes agregar al menos un curso.",
-    };
+    return { error: "Debes agregar al menos un curso." };
   }
 
   if (!cursos.every(esIdValido)) {
-    return {
-      error: "Uno o más identificadores de cursos no son válidos.",
-    };
+    return { error: "Uno o más identificadores de cursos no son válidos." };
   }
 
-  // Normalizar evita aceptar el mismo ID con distintas mayúsculas.
   const cursosNormalizados = cursos.map((id) => id.toLowerCase());
 
   if (new Set(cursosNormalizados).size !== cursosNormalizados.length) {
-    return {
-      error: "No puedes repetir cursos en la ruta.",
-    };
+    return { error: "No puedes repetir cursos en la ruta." };
   }
 
-  const [puestoExiste, cantidadCursos] = await Promise.all([
-    Puesto.exists({ _id: puesto }),
-    Curso.countDocuments({
-      _id: { $in: cursosNormalizados },
-    }),
-  ]);
+  const puestoDoc = await Puesto.findOne({
+    _id: puesto,
+    ...filtroPuestos(user),
+  })
+    .select("empresa")
+    .lean();
 
-  if (!puestoExiste) {
-    return {
-      error: "El puesto seleccionado ya no existe.",
-    };
+  if (!puestoDoc?.empresa) {
+    return { error: "El puesto seleccionado no está disponible." };
   }
 
-  if (cantidadCursos !== cursosNormalizados.length) {
-    return {
-      error: "Uno o más cursos seleccionados ya no existen.",
-    };
+  const cursosDocs = await Curso.find({
+    _id: { $in: cursosNormalizados },
+    ...cursosCompatibles(puestoDoc.empresa),
+  })
+    .select("titulo estado")
+    .lean();
+
+  if (cursosDocs.length !== cursosNormalizados.length) {
+    return { error: "Uno o más cursos no están disponibles para este puesto." };
   }
 
-  // Compatibilidad con el puesto (entrega 4, Marlon): cada curso debe estar
-  // PUBLICADO y ser global (sin empresa) o de la misma empresa que el puesto.
-  const [puestoDoc, cursosDocs] = await Promise.all([
-    Puesto.findById(puesto).select("empresa").lean(),
-    Curso.find({ _id: { $in: cursosNormalizados } }).select("titulo estado empresa").lean(),
-  ]);
-
-  const noPublicados = cursosDocs.filter((c) => (c.estado ?? "BORRADOR") !== "PUBLICADO");
-  if (noPublicados.length > 0) {
-    return {
-      error: `Solo se pueden agregar cursos publicados. Revisa: ${noPublicados.map((c) => `"${c.titulo}"`).join(", ")}.`,
-    };
-  }
-
-  const deOtraEmpresa = cursosDocs.filter(
-    (c) => c.empresa && String(c.empresa) !== String(puestoDoc?.empresa)
+  const noPublicados = cursosDocs.filter(
+    (curso) => curso.estado !== "PUBLICADO",
   );
-  if (deOtraEmpresa.length > 0) {
+
+  if (noPublicados.length > 0) {
+    const titulos = noPublicados.map((curso) => `"${curso.titulo}"`).join(", ");
     return {
-      error: `Estos cursos pertenecen a otra empresa y no son compatibles con el puesto: ${deOtraEmpresa.map((c) => `"${c.titulo}"`).join(", ")}.`,
+      error: `Solo se pueden agregar cursos publicados. Revisa: ${titulos}.`,
     };
   }
 
@@ -105,14 +118,15 @@ async function validarDatos(body) {
     datos: {
       nombre: nombre.trim(),
       descripcion: descripcion.trim(),
-      puesto: puesto.toLowerCase(),
+      puesto: puestoDoc._id,
       cursos: cursosNormalizados,
     },
   };
 }
 
-// Incluye los datos necesarios para mostrarlos en el frontend.
-function conRelaciones(consulta) {
+function conRelaciones(consulta, user) {
+  const alcance = filtroPuestos(user);
+
   return consulta
     .populate({
       path: "puesto",
@@ -125,6 +139,7 @@ function conRelaciones(consulta) {
     .populate({
       path: "cursos",
       select: "titulo descripcion competencia nivel duracionHoras",
+      ...(alcance.empresa && { match: cursosCompatibles(alcance.empresa) }),
     });
 }
 
@@ -133,14 +148,7 @@ function prepararRespuesta(ruta) {
 
   const duracionTotalHoras = datos.cursos.reduce((total, curso) => {
     const horas = curso?.duracionHoras;
-
-    return total + (
-      typeof horas === "number" &&
-      Number.isFinite(horas) &&
-      horas > 0
-        ? horas
-        : 0
-    );
+    return total + (Number.isFinite(horas) && horas > 0 ? horas : 0);
   }, 0);
 
   return {
@@ -150,43 +158,50 @@ function prepararRespuesta(ruta) {
 }
 
 function responderError(res, error) {
+  if (error.status === 403) {
+    return res.status(403).json({ message: error.message });
+  }
+
   if (error.name === "ValidationError") {
     return res.status(400).json({
-      message: Object.values(error.errors)[0].message,
+      message: Object.values(error.errors)[0]?.message ?? error.message,
     });
   }
 
+  console.error("Error en rutas de aprendizaje:", error);
   return res.status(500).json({
     message: "No se pudo completar la operación. Inténtalo de nuevo.",
   });
 }
 
-// GET /api/rutas-aprendizaje
 export const listarRutas = async (req, res) => {
   try {
+    const filtro = await filtroRutas(req.user);
     const rutas = await conRelaciones(
-      RutaAprendizaje.find().sort({ createdAt: -1, _id: -1 })
+      RutaAprendizaje.find(filtro).sort({ createdAt: -1, _id: -1 }),
+      req.user,
     );
 
-    return res.json({
-      data: rutas.map(prepararRespuesta),
-    });
+    return res.json({ data: rutas.map(prepararRespuesta) });
   } catch (error) {
     return responderError(res, error);
   }
 };
 
-// GET /api/rutas-aprendizaje/:id
 export const obtenerRuta = async (req, res) => {
-  if (!esIdValido(req.params.id)) {
+  const { id } = req.params;
+
+  if (!esIdValido(id)) {
     return res.status(400).json({
       message: "El identificador de la ruta no es válido.",
     });
   }
 
   try {
+    const filtro = await filtroRutas(req.user);
     const ruta = await conRelaciones(
-      RutaAprendizaje.findById(req.params.id)
+      RutaAprendizaje.findOne({ _id: id, ...filtro }),
+      req.user,
     );
 
     if (!ruta) {
@@ -195,23 +210,18 @@ export const obtenerRuta = async (req, res) => {
       });
     }
 
-    return res.json({
-      data: prepararRespuesta(ruta),
-    });
+    return res.json({ data: prepararRespuesta(ruta) });
   } catch (error) {
     return responderError(res, error);
   }
 };
 
-// POST /api/rutas-aprendizaje
 export const crearRuta = async (req, res) => {
   try {
-    const resultado = await validarDatos(req.body);
+    const resultado = await validarDatos(req.body, req.user);
 
     if (resultado.error) {
-      return res.status(400).json({
-        message: resultado.error,
-      });
+      return res.status(400).json({ message: resultado.error });
     }
 
     const ruta = await RutaAprendizaje.create(resultado.datos);
@@ -225,34 +235,34 @@ export const crearRuta = async (req, res) => {
   }
 };
 
-// PUT /api/rutas-aprendizaje/:id
-// Recibe todos los campos del formulario.
 export const actualizarRuta = async (req, res) => {
-  if (!esIdValido(req.params.id)) {
+  const { id } = req.params;
+
+  if (!esIdValido(id)) {
     return res.status(400).json({
       message: "El identificador de la ruta no es válido.",
     });
   }
 
   try {
-    const ruta = await RutaAprendizaje.findById(req.params.id);
+    const filtro = await filtroRutas(req.user);
+    const resultado = await validarDatos(req.body, req.user);
+
+    if (resultado.error) {
+      return res.status(400).json({ message: resultado.error });
+    }
+
+    const ruta = await RutaAprendizaje.findOneAndUpdate(
+      { _id: id, ...filtro },
+      { $set: resultado.datos },
+      { new: true, runValidators: true },
+    );
 
     if (!ruta) {
       return res.status(404).json({
         message: "No encontramos esta ruta de aprendizaje.",
       });
     }
-
-    const resultado = await validarDatos(req.body);
-
-    if (resultado.error) {
-      return res.status(400).json({
-        message: resultado.error,
-      });
-    }
-
-    ruta.set(resultado.datos);
-    await ruta.save();
 
     return res.json({
       message: "Ruta de aprendizaje actualizada correctamente.",
@@ -263,16 +273,21 @@ export const actualizarRuta = async (req, res) => {
   }
 };
 
-// DELETE /api/rutas-aprendizaje/:id
 export const eliminarRuta = async (req, res) => {
-  if (!esIdValido(req.params.id)) {
+  const { id } = req.params;
+
+  if (!esIdValido(id)) {
     return res.status(400).json({
       message: "El identificador de la ruta no es válido.",
     });
   }
 
   try {
-    const ruta = await RutaAprendizaje.findByIdAndDelete(req.params.id);
+    const filtro = await filtroRutas(req.user);
+    const ruta = await RutaAprendizaje.findOneAndDelete({
+      _id: id,
+      ...filtro,
+    });
 
     if (!ruta) {
       return res.status(404).json({
@@ -288,31 +303,30 @@ export const eliminarRuta = async (req, res) => {
   }
 };
 
-// GET /api/rutas-aprendizaje/opciones
 export const obtenerOpciones = async (req, res) => {
   try {
+    const alcance = filtroPuestos(req.user);
+    const filtroCursos = { estado: "PUBLICADO" };
+
+    if (alcance.empresa) {
+      Object.assign(filtroCursos, cursosCompatibles(alcance.empresa));
+    }
+
     const [puestos, cursos] = await Promise.all([
-      Puesto.find()
+      Puesto.find(alcance)
         .select("titulo empresa")
         .populate("empresa", "nombre")
         .sort({ titulo: 1 })
         .lean(),
 
-      Curso.find()
+      Curso.find(filtroCursos)
         .select("titulo competencia nivel duracionHoras estado empresa")
         .sort({ titulo: 1 })
         .lean(),
     ]);
 
-    return res.json({
-      data: {
-        puestos,
-        cursos,
-      },
-    });
-  } catch {
-    return res.status(500).json({
-      message: "No se pudieron cargar los puestos y cursos.",
-    });
+    return res.json({ data: { puestos, cursos } });
+  } catch (error) {
+    return responderError(res, error);
   }
 };

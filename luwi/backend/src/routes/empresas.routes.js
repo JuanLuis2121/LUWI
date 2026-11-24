@@ -8,7 +8,12 @@ import {
 } from "../controllers/empresa.Controller.js";
 import { validateSchema } from "../middlewares/validate.middleware.js";
 import { empresaSchema } from "../validators/empresa.validator.js";
-import { requireAuth } from "../middlewares/auth.middleware.js";
+import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
+import { invitarUsuarioValidator } from "../validators/email.validator.js";
+import {
+  invitarAdminEmpresa,
+  invitarRRHH,
+} from "../controllers/email.controller.js";
 
 const router = Router();
 /**
@@ -17,7 +22,7 @@ const router = Router();
  *   name: Empresas
  *   description: Gestión de empresas registradas en LUWI
  */
-
+router.use(requireAuth); // Todas las rutas requieren autenticación
 /**
  * @swagger
  * /api/empresas:
@@ -64,7 +69,7 @@ router.get("/", requireAuth, getEmpresas);
  *       500:
  *         description: Error al consultar la empresa
  */
-router.get("/:id", requireAuth, getEmpresa);
+router.get("/:id", requireAuth, requireRol("ADMIN-EMPRESA"), getEmpresa);
 /**
  * @swagger
  * /api/empresas:
@@ -163,7 +168,13 @@ router.post("/", requireAuth, validateSchema(empresaSchema), createEmpresa);
  *       500:
  *         description: Error al actualizar la empresa
  */
-router.put("/:id", requireAuth, validateSchema(empresaSchema), updateEmpresa);
+router.put(
+  "/:id",
+  requireAuth,
+  requireRol("ADMIN-EMPRESA"),
+  validateSchema(empresaSchema),
+  updateEmpresa,
+);
 /**
  * @swagger
  * /api/empresas/{id}:
@@ -195,5 +206,21 @@ router.put("/:id", requireAuth, validateSchema(empresaSchema), updateEmpresa);
  *         description: Error al eliminar la empresa
  */
 router.delete("/:id", requireAuth, deleteEmpresa);
+
+router.post(
+  "/:id/invitaciones/admin-empresa",
+  requireAuth,
+  requireRol("ADMIN"),
+  validateSchema(invitarUsuarioValidator),
+  invitarAdminEmpresa,
+);
+
+router.post(
+  "/invitaciones/rrhh",
+  requireAuth,
+  requireRol("ADMIN-EMPRESA"),
+  validateSchema(invitarUsuarioValidator),
+  invitarRRHH,
+);
 
 export default router;
