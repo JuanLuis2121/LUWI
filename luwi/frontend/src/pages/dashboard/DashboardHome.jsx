@@ -40,9 +40,9 @@ const ICONO_PENDIENTE = {
 };
 
 const COLORES_ESTADO = {
-  publicados: "#0b3a8c",
-  borradores: "#009cff",
-  inactivos: "#c3d6ef",
+  publicados: "#222bb8",
+  borradores: "#d1b17c",
+  inactivos: "#e5d5bf",
 };
 
 // ---------- Utilidades ----------
@@ -88,21 +88,13 @@ function Bienvenida({ nombre, datos, cargando }) {
     : [];
 
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-white bg-[radial-gradient(ellipse_at_82%_78%,#A9D5FD_0%,#B9DCFD_22%,#DCEBFF_48%,#F3F8FF_72%,#FFFFFF_100%)] p-6 shadow-[0_20px_50px_-30px_rgba(11,58,140,0.55)] sm:p-8 lg:min-h-[300px]">
+    <section className="relative flex flex-col justify-center overflow-hidden rounded-[28px] border border-luwi-linea bg-[radial-gradient(ellipse_at_85%_80%,#F8E6D2_0%,#FBF2E6_32%,#FDF8F2_68%,#FFFFFF_100%)] p-6 shadow-[0_20px_50px_-30px_rgba(17,22,82,0.3)] sm:p-8">
       {/* Decoración */}
       <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 right-[18%] h-80 w-80 rounded-full border-[40px] border-white/30" />
 
-      {/* Ilustración (solo pantallas medianas en adelante) */}
-      <img
-        src="/LUWI-login-illustration.png"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-6 -right-6 hidden w-[46%] max-w-[440px] md:block [mask-image:radial-gradient(ellipse_62%_64%_at_55%_55%,black_55%,transparent_100%)]"
-      />
-
-      <div className="relative max-w-[480px]">
+      <div className="relative max-w-[600px]">
         <span className="inline-flex items-center gap-2 rounded-full border border-white bg-white/70 px-3 py-1 text-[11.5px] font-medium text-luwi-texto backdrop-blur">
-          <span className="h-1.5 w-1.5 rounded-full bg-luwi-tecno shadow-[0_0_6px_2px_rgba(0,156,255,0.5)]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-luwi-tecno shadow-[0_0_6px_2px_rgba(59,69,201,0.5)]" />
           {fechaHoy()}
         </span>
 
@@ -122,7 +114,7 @@ function Bienvenida({ nombre, datos, cargando }) {
           {pendientes > 0 && (
             <a
               href="#pendientes"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(11,58,140,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(17,22,82,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30"
             >
               Revisar pendientes
               <ChevronRightIcon className="h-4 w-4" />
@@ -160,15 +152,15 @@ function Bienvenida({ nombre, datos, cargando }) {
 
 function Preparacion({ datos, cargando }) {
   return (
-    <section className="relative flex flex-col overflow-hidden rounded-[28px] bg-[linear-gradient(160deg,#0B3A8C_0%,#082C6E_50%,#061A45_100%)] p-6 text-white shadow-[0_20px_50px_-25px_rgba(6,26,69,0.8)]">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-luwi-tecno/25 blur-3xl" />
+    <section className="relative flex flex-col overflow-hidden rounded-[28px] bg-colonial-hero p-6 text-white shadow-[0_20px_50px_-25px_rgba(15,20,76,0.7)]">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-luwi-fawn/30 blur-3xl" />
 
       <div className="relative flex items-start justify-between gap-3">
         <div>
           <h2 className="text-[15px] font-semibold">Índice de preparación</h2>
           <p className="mt-0.5 text-xs text-white/60">Qué tan lista está la plataforma para formar</p>
         </div>
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-[#7cc8ff]">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-[#F0D4A4]">
           <TrendUpIcon className="h-[18px] w-[18px]" />
         </span>
       </div>
@@ -192,8 +184,8 @@ function Preparacion({ datos, cargando }) {
                   {i.valor}/{i.total}
                 </span>
               </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#7cc8ff] to-luwi-tecno" style={{ width: `${p}%` }} />
+              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/15">
+                <div className="h-full rounded-full bg-colonial-fawn" style={{ width: `${p}%` }} />
               </div>
             </li>
           );
@@ -211,7 +203,7 @@ function Pendientes({ pendientes, cargando }) {
   if (!pendientes.length) {
     return (
       <div className="flex flex-col items-center py-10 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-luwi-antique text-luwi-fawn-deep">
           <CheckCircleIcon className="h-7 w-7" />
         </span>
         <p className="mt-3 text-sm font-semibold text-luwi-profundo">Todo al día</p>
@@ -229,7 +221,7 @@ function Pendientes({ pendientes, cargando }) {
         return (
           <li
             key={p.id}
-            className="group relative overflow-hidden rounded-2xl border border-luwi-linea/70 bg-gradient-to-r from-white to-luwi-panel/60 p-4 pl-5 transition hover:border-luwi-tecno/40 hover:shadow-[0_10px_24px_-18px_rgba(11,58,140,0.6)]"
+            className="group relative overflow-hidden rounded-2xl border border-luwi-linea/70 bg-gradient-to-r from-white to-luwi-panel/60 p-4 pl-5 transition hover:border-luwi-tecno/40 hover:shadow-[0_10px_24px_-18px_rgba(17,22,82,0.6)]"
           >
             <span aria-hidden="true" className="absolute inset-y-3 left-0 w-1 rounded-r-full bg-gradient-to-b from-amber-400 to-orange-400" />
             <div className="flex items-start gap-4">
@@ -455,9 +447,27 @@ function ActividadReciente({ recientes, cargando }) {
 
 export default function DashboardHome() {
   const { user } = useAuth();
-  const { datos, error, cargando, recargar } = useDashboardAdmin();
+  const [filtroEmpresa, setFiltroEmpresa] = useState("");
+  const [filtroPuesto, setFiltroPuesto] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("");
+
+  const { datos, error, cargando, recargar } = useDashboardAdmin({
+    empresa: filtroEmpresa,
+    puesto: filtroPuesto,
+    estado: filtroEstado,
+  });
   const listo = !cargando && datos;
   const t = datos?.totales;
+  const f = datos?.formacion;
+  const esAdmin = user?.rol === "admin";
+  const empresasLista = datos?.listas?.empresas ?? [];
+  const puestosLista = useMemo(() => {
+    const todos = datos?.listas?.puestos ?? [];
+    if (!filtroEmpresa) return todos;
+    return todos.filter((p) => String(p.empresa?._id ?? p.empresa?.id ?? p.empresa ?? "") === filtroEmpresa);
+  }, [datos?.listas?.puestos, filtroEmpresa]);
+  const hayFiltrosFormacion = Boolean(filtroEmpresa || filtroPuesto || filtroEstado);
+
   const [periodo, setPeriodoState] = useState(leerPeriodo);
 
   const setPeriodo = (p) => {
@@ -555,6 +565,163 @@ export default function DashboardHome() {
               conector={i < pasos.length - 1}
             />
           ))}
+        </div>
+      </section>
+
+      {/* Seguimiento de formación y evaluaciones (datos reales /api/dashboard/resumen con filtros) */}
+      <section aria-labelledby="seguimiento-formacion-titulo" className="rounded-[26px] border border-luwi-linea bg-white p-5 shadow-[0_14px_38px_-22px_rgba(17,22,82,0.14)] sm:p-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-luwi-fawn-deep">Seguimiento en vivo</p>
+            <h2 id="seguimiento-formacion-titulo" className="mt-0.5 text-lg font-extrabold text-luwi-profundo">
+              Formación, procesos y evaluaciones
+            </h2>
+            <p className="text-xs text-luwi-texto">
+              Cifras calculadas en tiempo real desde la base de datos. Filtra por empresa, puesto o estado del proceso.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {esAdmin && empresasLista.length > 0 && (
+              <select
+                aria-label="Filtrar resumen por empresa"
+                value={filtroEmpresa}
+                onChange={(e) => {
+                  setFiltroEmpresa(e.target.value);
+                  setFiltroPuesto("");
+                }}
+                className="h-9 rounded-xl border border-luwi-linea bg-luwi-panel px-3 text-xs font-medium text-luwi-profundo outline-none focus:border-luwi-medio focus:bg-white"
+              >
+                <option value="">Todas las empresas</option>
+                {empresasLista.map((emp) => {
+                  const eid = String(emp._id ?? emp.id);
+                  return (
+                    <option key={eid} value={eid}>
+                      {emp.nombre}
+                    </option>
+                  );
+                })}
+              </select>
+            )}
+
+            <select
+              aria-label="Filtrar resumen por puesto"
+              value={filtroPuesto}
+              onChange={(e) => setFiltroPuesto(e.target.value)}
+              className="h-9 rounded-xl border border-luwi-linea bg-luwi-panel px-3 text-xs font-medium text-luwi-profundo outline-none focus:border-luwi-medio focus:bg-white"
+            >
+              <option value="">Todos los puestos</option>
+              {puestosLista.map((pu) => {
+                const pid = String(pu._id ?? pu.id);
+                return (
+                  <option key={pid} value={pid}>
+                    {pu.titulo ?? pu.nombre}
+                  </option>
+                );
+              })}
+            </select>
+
+            <select
+              aria-label="Filtrar resumen por estado del proceso"
+              value={filtroEstado}
+              onChange={(e) => setFiltroEstado(e.target.value)}
+              className="h-9 rounded-xl border border-luwi-linea bg-luwi-panel px-3 text-xs font-medium text-luwi-profundo outline-none focus:border-luwi-medio focus:bg-white"
+            >
+              <option value="">Todos los estados</option>
+              <option value="ACTIVO">Activos</option>
+              <option value="SUSPENDIDO">Suspendidos</option>
+              <option value="FINALIZADO">Finalizados</option>
+            </select>
+
+            {hayFiltrosFormacion && (
+              <button
+                type="button"
+                onClick={() => {
+                  setFiltroEmpresa("");
+                  setFiltroPuesto("");
+                  setFiltroEstado("");
+                }}
+                className="h-9 rounded-xl border border-luwi-linea bg-white px-3 text-xs font-semibold text-luwi-medio transition hover:bg-luwi-cristal"
+              >
+                Limpiar
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {/* Postulantes y procesos */}
+          <Link
+            to="/dashboard/postulantes"
+            className="group rounded-2xl border border-luwi-linea bg-luwi-panel/70 p-4 transition hover:-translate-y-0.5 hover:border-luwi-medio/35 hover:bg-white hover:shadow-md"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-luwi-texto/75">Postulantes</p>
+            <p className="mt-1.5 text-3xl font-extrabold text-luwi-profundo">
+              {cargando ? "—" : f?.postulantes ?? 0}
+            </p>
+            <p className="mt-2 text-xs text-luwi-texto">
+              <strong className="text-luwi-medio">{f?.procesos?.activos ?? 0}</strong> activos ·{" "}
+              <strong className="text-luwi-fawn-deep">{f?.procesos?.suspendidos ?? 0}</strong> suspendidos ·{" "}
+              {f?.procesos?.finalizados ?? 0} finalizados
+            </p>
+          </Link>
+
+          {/* Cursos asignados */}
+          <Link
+            to="/dashboard/postulantes"
+            className="group rounded-2xl border border-luwi-linea bg-luwi-panel/70 p-4 transition hover:-translate-y-0.5 hover:border-luwi-medio/35 hover:bg-white hover:shadow-md"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-luwi-texto/75">Cursos asignados</p>
+            <p className="mt-1.5 text-3xl font-extrabold text-luwi-profundo">
+              {cargando ? "—" : f?.cursosAsignados?.total ?? 0}
+            </p>
+            <p className="mt-2 text-xs text-luwi-texto">
+              <strong className="text-luwi-medio">{f?.cursosAsignados?.habilitados ?? 0}</strong> habilitados ·{" "}
+              <strong className="text-luwi-fawn-deep">{f?.cursosAsignados?.pendientes ?? 0}</strong> pendientes
+            </p>
+          </Link>
+
+          {/* Progreso promedio */}
+          <div className="rounded-2xl border border-luwi-linea bg-luwi-panel/70 p-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-luwi-texto/75">Progreso de formación</p>
+            <p className="mt-1.5 text-3xl font-extrabold text-luwi-profundo">
+              {cargando ? "—" : `${f?.progreso?.promedio ?? 0}%`}
+            </p>
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-luwi-antique">
+              <div
+                className="h-full rounded-full bg-colonial-progress transition-all duration-500"
+                style={{ width: `${Math.min(100, f?.progreso?.promedio ?? 0)}%` }}
+              />
+            </div>
+            <p className="mt-2 text-xs text-luwi-texto">
+              {f?.progreso?.completos ?? 0} de {f?.progreso?.asignaciones ?? 0} rutas completadas
+            </p>
+          </div>
+
+          {/* Resultados de evaluaciones */}
+          <Link
+            to="/dashboard/evaluaciones"
+            className="group rounded-2xl border border-luwi-linea bg-luwi-panel/70 p-4 transition hover:-translate-y-0.5 hover:border-luwi-medio/35 hover:bg-white hover:shadow-md"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-luwi-texto/75">Evaluaciones</p>
+            <div className="mt-1.5 flex items-baseline gap-2">
+              <p className="text-3xl font-extrabold text-luwi-profundo">
+                {cargando
+                  ? "—"
+                  : f?.evaluaciones?.resultados?.promedio != null
+                    ? `${f.evaluaciones.resultados.promedio}%`
+                    : `${f?.evaluaciones?.publicadas ?? 0}`}
+              </p>
+              <span className="text-xs font-medium text-luwi-texto">
+                {f?.evaluaciones?.resultados?.promedio != null ? "promedio" : "publicadas"}
+              </span>
+            </div>
+            <p className="mt-2 text-xs text-luwi-texto">
+              <strong className="text-luwi-medio">{f?.evaluaciones?.resultados?.aprobados ?? 0}</strong> aprob. ·{" "}
+              <strong className="text-red-600">{f?.evaluaciones?.resultados?.reprobados ?? 0}</strong> reprob. ·{" "}
+              {f?.evaluaciones?.publicadas ?? 0} publicadas
+            </p>
+          </Link>
         </div>
       </section>
 

@@ -78,8 +78,8 @@ export default function Input({
   return (
     <div className={`w-full ${className}`}>
       <div
-        className={`flex h-[50px] items-center gap-3.5 rounded-2xl border bg-white/80 px-5 shadow-[0_4px_14px_rgba(11,58,140,0.05)] transition duration-200 focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,156,255,0.12)] ${
-          error ? "border-red-400" : "border-luwi-linea"
+        className={`flex h-[50px] items-center gap-3.5 rounded-2xl border bg-luwi-panel px-5 shadow-[0_4px_14px_rgba(17,22,82,0.04)] transition duration-200 focus-within:border-luwi-medio focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(34,43,184,0.12)] ${
+          error ? "border-red-400" : "border-admin-line"
         }`}
       >
         {icon && <Icon name={icon} />}
@@ -90,7 +90,7 @@ export default function Input({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
           aria-label={props["aria-label"] ?? props.placeholder}
-          className="h-full w-full min-w-0 bg-transparent text-[14px] text-luwi-profundo outline-none placeholder:text-[#8A9BB8]"
+          className="h-full w-full min-w-0 bg-transparent text-[14px] text-luwi-profundo outline-none placeholder:text-[#7a7d9b]"
           {...props}
         />
 
@@ -99,7 +99,7 @@ export default function Input({
             type="button"
             onClick={() => setVisible((v) => !v)}
             aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
-            className="shrink-0 rounded-md p-1 text-[#7C8CA8] transition hover:text-luwi-profundo focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
+            className="shrink-0 rounded-md p-1 text-[#7a7d9b] transition hover:text-luwi-profundo focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
           >
             <EyeIcon open={visible} />
           </button>

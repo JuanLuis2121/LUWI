@@ -26,7 +26,7 @@ function AccesoBadge({ acceso }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-0.5 text-xs font-semibold ${
-        habilitado ? "border-emerald-300 bg-emerald-50 text-emerald-700" : "border-admin-line bg-admin-bg text-admin-muted"
+        habilitado ? "border-luwi-medio/30 bg-luwi-cristal text-luwi-medio" : "border-admin-line bg-admin-bg text-admin-muted"
       }`}
     >
       <Icon name={habilitado ? "unlock" : "lock"} className="h-3 w-3" />

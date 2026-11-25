@@ -11,7 +11,7 @@ const ESTADO_CURSO = {
   BLOQUEADO: { label: "Bloqueado", cls: "text-luwi-texto/60" },
   SIN_INICIAR: { label: "Sin iniciar", cls: "text-luwi-medio" },
   EN_CURSO: { label: "En curso", cls: "text-luwi-tecno" },
-  CONTENIDOS_REVISADOS: { label: "Revisado", cls: "text-emerald-600" },
+  CONTENIDOS_REVISADOS: { label: "Revisado", cls: "text-luwi-fawn-deep" },
 };
 
 // Recorrido del postulante por las cuatro etapas.
@@ -128,7 +128,7 @@ function CursosDeRuta({ procesoId, suspendido, onCambio }) {
           <li key={c.cursoAsignadoId} className="flex items-center gap-3 rounded-xl border border-luwi-linea/70 bg-white px-3 py-2.5">
             <span
               className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold ${
-                c.estado === "CONTENIDOS_REVISADOS" ? "bg-emerald-50 text-emerald-600" : habilitado ? "bg-luwi-cristal-fondo text-luwi-medio" : "bg-luwi-panel text-luwi-texto/60"
+                c.estado === "CONTENIDOS_REVISADOS" ? "bg-luwi-antique text-luwi-fawn-deep" : habilitado ? "bg-luwi-cristal text-luwi-medio" : "bg-luwi-panel text-luwi-texto/60"
               }`}
             >
               {c.estado === "CONTENIDOS_REVISADOS" ? "✓" : i + 1}
@@ -227,7 +227,7 @@ export default function FichaPostulanteDrawer({ tarjeta, onClose, onIniciar, onA
 
   return (
     <Drawer open onClose={onClose} title={tarjeta.nombre} subtitle={tarjeta.correo} icon={UsersIcon} footer={footer}>
-      <div className="rounded-[22px] bg-[radial-gradient(ellipse_at_0%_0%,#EAF3FF_0%,#F3F7FD_60%)] p-4 ring-1 ring-inset ring-luwi-linea/60">
+      <div className="rounded-[22px] bg-[radial-gradient(ellipse_at_0%_0%,#F8E6D2_0%,#FDF8F2_60%)] p-4 ring-1 ring-inset ring-luwi-linea/70">
         <div className="flex items-center gap-3.5">
           <Avatar nombre={tarjeta.nombre} size="lg" />
           <div className="min-w-0 flex-1">

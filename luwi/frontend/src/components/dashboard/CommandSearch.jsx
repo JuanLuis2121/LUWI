@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, HomeIcon, PlusIcon } from "./icons";
+import { BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, HomeIcon, PlusIcon, CheckCircleIcon } from "./icons";
 import { empresasService } from "../../services/empresasService";
 import { puestosService } from "../../services/puestosService";
 import { getCursos } from "../../services/cursosService";
@@ -11,11 +11,15 @@ const DESTINOS = [
   { label: "Inicio", grupo: "Ir a", to: "/dashboard", icon: HomeIcon },
   { label: "Empresas", grupo: "Ir a", to: "/dashboard/empresas", icon: BuildingIcon },
   { label: "Puestos", grupo: "Ir a", to: "/dashboard/puestos", icon: BriefcaseIcon },
+  { label: "Postulantes", grupo: "Ir a", to: "/dashboard/postulantes", icon: BuildingIcon },
+  { label: "Recomendaciones IA", grupo: "Ir a", to: "/dashboard/recomendaciones-ia", icon: CheckCircleIcon },
   { label: "Cursos", grupo: "Ir a", to: "/dashboard/cursos", icon: BookIcon },
+  { label: "Evaluaciones", grupo: "Ir a", to: "/dashboard/evaluaciones", icon: CheckCircleIcon },
   { label: "Rutas de aprendizaje", grupo: "Ir a", to: "/dashboard/rutas", icon: RouteIcon },
   { label: "Nueva empresa", grupo: "Crear", to: "/dashboard/empresas/nuevo", icon: PlusIcon },
   { label: "Nuevo puesto", grupo: "Crear", to: "/dashboard/puestos/nuevo", icon: PlusIcon },
   { label: "Nuevo curso", grupo: "Crear", to: "/dashboard/cursos/nuevo", icon: PlusIcon },
+  { label: "Nueva evaluación", grupo: "Crear", to: "/dashboard/evaluaciones/nuevo", icon: PlusIcon },
   { label: "Nueva ruta de aprendizaje", grupo: "Crear", to: "/dashboard/rutas/nuevo", icon: PlusIcon },
 ];
 
@@ -149,7 +153,7 @@ export default function CommandSearch() {
 
   return (
     <div ref={cajaRef} className="relative w-full max-w-md">
-      <div className="flex h-10 items-center gap-2.5 rounded-xl border border-luwi-linea bg-luwi-panel px-3.5 transition focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,156,255,0.10)]">
+      <div className="flex h-10 items-center gap-2.5 rounded-xl border border-luwi-linea bg-luwi-panel px-3.5 transition focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(59,69,201,0.10)]">
         <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] shrink-0 text-luwi-texto/70" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" />
@@ -182,7 +186,7 @@ export default function CommandSearch() {
       </div>
 
       {abierto && (
-        <div className="absolute left-0 right-0 top-12 z-30 overflow-hidden rounded-2xl border border-luwi-linea bg-white shadow-[0_20px_50px_-12px_rgba(11,58,140,0.35)]">
+        <div className="absolute left-0 right-0 top-12 z-30 overflow-hidden rounded-2xl border border-luwi-linea bg-white shadow-[0_20px_50px_-12px_rgba(17,22,82,0.35)]">
           <ul ref={listaRef} id="buscador-resultados" role="listbox" className="max-h-96 overflow-y-auto p-2">
             {resultados.length === 0 && (
               <li className="px-3 py-6 text-center text-sm text-luwi-texto/70">

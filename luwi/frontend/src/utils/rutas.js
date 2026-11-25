@@ -2,9 +2,9 @@
 
 // Nivel de los cursos: orden recomendado y colores del roadmap.
 export const NIVELES = {
-  "básico": { orden: 1, label: "Básico", nodo: "from-[#5fb8ff] to-luwi-tecno", punto: "bg-luwi-tecno", chip: "bg-luwi-tecno/10 text-luwi-medio ring-luwi-tecno/25" },
-  intermedio: { orden: 2, label: "Intermedio", nodo: "from-luwi-medio to-[#3d7ff0]", punto: "bg-luwi-medio", chip: "bg-luwi-medio/10 text-luwi-medio ring-luwi-medio/25" },
-  avanzado: { orden: 3, label: "Avanzado", nodo: "from-luwi-profundo to-[#1a4fb0]", punto: "bg-luwi-profundo", chip: "bg-luwi-profundo/10 text-luwi-profundo ring-luwi-profundo/25" },
+  "básico": { orden: 1, label: "Básico", nodo: "from-[#d1b17c] to-[#8c6a34]", punto: "bg-luwi-fawn", chip: "bg-luwi-antique text-luwi-fawn-deep ring-luwi-fawn/40" },
+  intermedio: { orden: 2, label: "Intermedio", nodo: "from-luwi-medio to-luwi-tecno", punto: "bg-luwi-medio", chip: "bg-luwi-cristal text-luwi-medio ring-luwi-medio/25" },
+  avanzado: { orden: 3, label: "Avanzado", nodo: "from-luwi-profundo to-[#222bb8]", punto: "bg-luwi-profundo", chip: "bg-luwi-profundo/10 text-luwi-profundo ring-luwi-profundo/25" },
 };
 
 export const nivelDe = (curso) => NIVELES[curso?.nivel] ?? NIVELES["básico"];

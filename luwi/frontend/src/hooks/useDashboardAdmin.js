@@ -11,7 +11,8 @@ const idDe = (x) => String(x?._id ?? x?.id ?? x ?? "");
  * Reúne y calcula los datos del dashboard administrativo.
  * Solo usa endpoints que ya existen; si alguno falla, el resto del panel sigue funcionando.
  */
-export default function useDashboardAdmin() {
+export default function useDashboardAdmin(filtros = {}) {
+  const { empresa = "", puesto = "", estado = "" } = filtros;
   const [datos, setDatos] = useState(null);
   const [error, setError] = useState(false);
   const [cargando, setCargando] = useState(true);
@@ -21,7 +22,7 @@ export default function useDashboardAdmin() {
     setError(false);
 
     const [resumen, cursos, rutas, puestos, empresas] = await Promise.allSettled([
-      getResumen(),
+      getResumen({ empresa, puesto, estado }),
       getCursos(),
       getRutas(),
       puestosService.list(),
@@ -144,6 +145,18 @@ export default function useDashboardAdmin() {
     setDatos({
       totales: { empresas: r.empresas ?? 0, puestos: r.puestos ?? 0, cursos: r.cursos ?? 0, rutas: r.rutas ?? 0 },
       recientes: r.recientes ?? [],
+      // Métricas reales de formación y evaluaciones (entrega 5 de Marlon)
+      formacion: {
+        postulantes: r.postulantes ?? 0,
+        procesos: r.procesos ?? { total: 0, activos: 0, suspendidos: 0, finalizados: 0 },
+        cursosAsignados: r.cursosAsignados ?? { total: 0, habilitados: 0, pendientes: 0 },
+        progreso: r.progreso ?? { asignaciones: 0, promedio: 0, completos: 0, sinIniciar: 0 },
+        evaluaciones: r.evaluaciones ?? {
+          publicadas: 0,
+          resultados: { total: 0, aprobados: 0, reprobados: 0, enCurso: 0, promedio: null },
+        },
+        filtros: r.filtros ?? { empresa: empresa || null, puesto: puesto || null, estado: estado || null },
+      },
       cursosEstado: {
         publicados: publicados.length,
         borradores: borradores.length,
@@ -165,11 +178,11 @@ export default function useDashboardAdmin() {
       totalRutas: listaRutas.length,
       preparacion,
       indicadores,
-      // Listas completas para los cálculos por periodo (tendencias y actividad)
+      // Listas completas para los cálculos por periodo (tendencias y actividad) y selectores de filtro
       listas: { empresas: listaEmpresas, puestos: listaPuestos, cursos: listaCursos, rutas: listaRutas },
     });
     setCargando(false);
-  }, []);
+  }, [empresa, puesto, estado]);
 
   useEffect(() => {
     cargar();

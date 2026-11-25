@@ -30,7 +30,7 @@ export default function TarjetaRuta({ ruta, indice = 0, seleccionada, onSeleccio
       onMouseEnter={() => setEncima(true)}
       onMouseLeave={() => setEncima(false)}
       onClick={() => onAbrir(ruta)}
-      className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-[24px] border bg-white p-5 shadow-[0_10px_30px_-22px_rgba(11,58,140,0.55)] transition-[box-shadow,border-color,transform] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_-24px_rgba(11,58,140,0.6)] ${
+      className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-[24px] border bg-white p-5 shadow-[0_10px_30px_-22px_rgba(17,22,82,0.55)] transition-[box-shadow,border-color,transform] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_-24px_rgba(17,22,82,0.6)] ${
         ancha ? "sm:col-span-2" : ""
       } ${seleccionada ? "border-luwi-tecno ring-2 ring-luwi-tecno/30" : "border-luwi-linea/70 hover:border-luwi-tecno/40"}`}
     >
@@ -60,7 +60,7 @@ export default function TarjetaRuta({ ruta, indice = 0, seleccionada, onSeleccio
         {ruta.descripcion}
       </p>
 
-      <div className="relative mt-4 rounded-2xl bg-[linear-gradient(180deg,#F3F7FD_0%,#FFFFFF_100%)] px-1 py-2 ring-1 ring-inset ring-luwi-linea/50">
+      <div className="relative mt-4 rounded-2xl bg-[linear-gradient(180deg,#FBF2E6_0%,#FFFFFF_100%)] px-1 py-2 ring-1 ring-inset ring-luwi-linea/60">
         <CaminoSerpiente cursos={ruta.cursos} viajero={encima} max={ancha ? 12 : 6} />
       </div>
 

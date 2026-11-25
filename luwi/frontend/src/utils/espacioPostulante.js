@@ -138,12 +138,12 @@ export const guardarAnimo = (uid, valor) => guardar(uid, "animo", { fecha: diaDe
 // ---------- avatar ----------
 
 export const PALETAS_AVATAR = [
-  "from-luwi-tecno to-luwi-medio",
-  "from-luwi-profundo to-luwi-tecno",
-  "from-[#5b8def] to-[#0b3a8c]",
-  "from-[#7cc8ff] to-[#0b5bd3]",
-  "from-[#00b4d8] to-[#0b5bd3]",
-  "from-[#1d4fb8] to-[#061a45]",
+  "from-[#111652] to-[#222bb8]",
+  "from-[#222bb8] to-[#5c5b94]",
+  "from-[#1e278e] to-[#d1b17c]",
+  "from-[#8c6a34] to-[#d1b17c]",
+  "from-[#3b45c9] to-[#111652]",
+  "from-[#5c5b94] to-[#141964]",
 ];
 export const leerAvatar = (uid) => leer(uid, "avatar", 0);
 export const guardarAvatar = (uid, v) => guardar(uid, "avatar", v);

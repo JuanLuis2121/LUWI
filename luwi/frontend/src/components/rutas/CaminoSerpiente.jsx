@@ -19,12 +19,12 @@ const MEDIDAS = {
 };
 
 const COLORES = {
-  claro: { camino: "#dcebff", borde: "#eaf3ff", linea: "#009cff", anillo: "ring-white", viajero: "#009cff" },
-  oscuro: { camino: "rgba(255,255,255,0.10)", borde: "rgba(255,255,255,0.04)", linea: "#7cc8ff", anillo: "ring-[#082c6e]", viajero: "#ffffff" },
+  claro: { camino: "#efe2d1", borde: "#f8efe4", linea: "#222bb8", anillo: "ring-white", viajero: "#d1b17c" },
+  oscuro: { camino: "rgba(255,255,255,0.12)", borde: "rgba(255,255,255,0.04)", linea: "#f0d4a4", anillo: "ring-[#141964]", viajero: "#f8e6d2" },
 };
 
 const NODO_ESTADO = {
-  hecho: "bg-gradient-to-br from-emerald-400 to-emerald-500 text-white",
+  hecho: "bg-gradient-to-br from-[#d1b17c] to-[#8c6a34] text-white",
   actual: "bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white",
   disponible: "bg-white text-luwi-medio !ring-luwi-cristal",
   bloqueado: "bg-luwi-panel text-luwi-texto/45 !ring-luwi-linea",
@@ -125,8 +125,8 @@ export default function CaminoSerpiente({
         <svg width={ancho} height={m.alto} viewBox={`0 0 ${ancho} ${m.alto}`} className="absolute inset-0 overflow-visible" aria-hidden="true">
           <defs>
             <linearGradient id={idGradiente} x1="0" x2="1" y1="0" y2="0">
-              <stop offset="0%" stopColor="#34d399" />
-              <stop offset="100%" stopColor="#009cff" />
+              <stop offset="0%" stopColor="#222bb8" />
+              <stop offset="100%" stopColor="#d1b17c" />
             </linearGradient>
           </defs>
           {vacio ? (
@@ -217,7 +217,7 @@ export default function CaminoSerpiente({
 
             <span
               title={`${i + 1}. ${curso.titulo} · ${estado ? TEXTO_ESTADO[estado] : nivel.label}`}
-              className={`relative flex h-full w-full items-center justify-center rounded-full font-bold ring-[3px] shadow-[0_6px_14px_-6px_rgba(6,26,69,0.7)] transition-transform duration-200 hover:scale-110 ${c.anillo} ${claseNodo} ${m.texto}`}
+              className={`relative flex h-full w-full items-center justify-center rounded-full font-bold ring-[3px] shadow-[0_6px_14px_-6px_rgba(15,20,76,0.7)] transition-transform duration-200 hover:scale-110 ${c.anillo} ${claseNodo} ${m.texto}`}
             >
               {ultimoConResto ? (
                 `+${resto + 1}`
@@ -238,7 +238,7 @@ export default function CaminoSerpiente({
                 animate={reducido ? undefined : { y: arriba ? [0, 4, 0] : [0, -4, 0] }}
                 transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="relative flex items-center rounded-full bg-luwi-profundo px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_8px_18px_-6px_rgba(11,58,140,0.8)]">
+                <span className="relative flex items-center rounded-full bg-luwi-profundo px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_8px_18px_-6px_rgba(17,22,82,0.8)]">
                   Tú
                   <span
                     className={`absolute left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-luwi-profundo ${arriba ? "-top-1" : "-bottom-1"}`}

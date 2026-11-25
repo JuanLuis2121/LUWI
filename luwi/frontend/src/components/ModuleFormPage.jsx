@@ -207,7 +207,7 @@ export default function ModuleFormPage({ config, mode }) {
 
       <div className="mb-6 flex items-center gap-4">
         {IconoModulo && (
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(0,110,230,0.7)]">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(34,43,184,0.7)]">
             <IconoModulo className="h-[22px] w-[22px]" />
           </span>
         )}
@@ -224,13 +224,13 @@ export default function ModuleFormPage({ config, mode }) {
       </div>
 
       {loading ? (
-        <div className="space-y-4 rounded-[28px] border border-white bg-white/90 p-7 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)]">
+        <div className="space-y-4 rounded-[28px] border border-white bg-white/90 p-7 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.6)]">
           {[0, 1, 2].map((i) => (
             <div key={i} className="h-12 animate-pulse rounded-2xl bg-luwi-cristal-fondo" />
           ))}
         </div>
       ) : notFound ? (
-        <div className="rounded-[28px] border border-white bg-white/90 p-8 text-center shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)]">
+        <div className="rounded-[28px] border border-white bg-white/90 p-8 text-center shadow-[0_14px_40px_-28px_rgba(17,22,82,0.6)]">
           <p className="font-semibold text-admin-ink">
             No se encontró el registro.
           </p>
@@ -246,7 +246,7 @@ export default function ModuleFormPage({ config, mode }) {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="rounded-[28px] border border-white bg-white/90 p-6 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)] sm:p-8"
+          className="rounded-[28px] border border-white bg-white/90 p-6 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.6)] sm:p-8"
         >
           {saveError && (
             <div className="mb-6 rounded-xl border border-admin-danger/30 bg-admin-danger/5 px-4 py-3 text-sm text-admin-danger">

@@ -30,7 +30,7 @@ export default function AvatarPostulante({ nombre, paleta = 0, onPaleta }) {
         aria-haspopup="true"
         aria-expanded={abierto}
         title="Cambiar color del avatar"
-        className={`group relative flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br text-4xl font-bold text-white shadow-[0_16px_30px_-12px_rgba(0,110,230,0.8)] ring-[6px] ring-white transition hover:scale-[1.03] focus:outline-none focus-visible:ring-luwi-tecno/40 ${
+        className={`group relative flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br text-4xl font-bold text-white shadow-[0_16px_30px_-12px_rgba(17,22,82,0.55)] ring-[6px] ring-white transition hover:scale-[1.03] focus:outline-none focus-visible:ring-luwi-tecno/40 ${
           PALETAS_AVATAR[paleta] ?? PALETAS_AVATAR[0]
         }`}
       >
@@ -54,7 +54,7 @@ export default function AvatarPostulante({ nombre, paleta = 0, onPaleta }) {
             transition={{ duration: 0.15 }}
             role="radiogroup"
             aria-label="Color del avatar"
-            className="absolute left-0 top-full z-20 mt-3 w-56 rounded-2xl border border-luwi-linea bg-white p-3 shadow-[0_20px_50px_-12px_rgba(11,58,140,0.35)]"
+            className="absolute left-0 top-full z-20 mt-3 w-56 rounded-2xl border border-luwi-linea bg-white p-3 shadow-[0_20px_50px_-12px_rgba(17,22,82,0.28)]"
           >
             <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-luwi-texto/60">Color del avatar</p>
             <div className="grid grid-cols-6 gap-2">

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 export default function Panel({ title, subtitle, icon: Icon, action, children, className = "" }) {
   return (
     <section
-      className={`rounded-3xl border border-white bg-white/90 p-5 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)] sm:p-6 ${className}`}
+      className={`rounded-3xl border border-white bg-white/90 p-5 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.4)] sm:p-6 ${className}`}
     >
       <header className="mb-5 flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">

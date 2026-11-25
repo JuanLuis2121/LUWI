@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, PlusIcon } from "./icons";
+import { BuildingIcon, BriefcaseIcon, BookIcon, RouteIcon, PlusIcon, CheckCircleIcon } from "./icons";
 
 const OPCIONES = [
   { to: "/dashboard/empresas/nuevo", label: "Empresa", detalle: "Registrar una organización", icon: BuildingIcon },
   { to: "/dashboard/puestos/nuevo", label: "Puesto", detalle: "Definir un cargo de la empresa", icon: BriefcaseIcon },
   { to: "/dashboard/cursos/nuevo", label: "Curso", detalle: "Crear contenido de formación", icon: BookIcon },
+  { to: "/dashboard/evaluaciones/nuevo", label: "Evaluación", detalle: "Crear evaluación y sus preguntas", icon: CheckCircleIcon },
   { to: "/dashboard/rutas/nuevo", label: "Ruta de aprendizaje", detalle: "Ordenar cursos para un puesto", icon: RouteIcon },
 ];
 
@@ -33,7 +34,7 @@ export default function CreateMenu() {
         onClick={() => setAbierto((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={abierto}
-        className="flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-4 text-sm font-semibold text-white shadow-[0_8px_20px_-8px_rgba(11,58,140,0.6)] transition hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30"
+        className="flex h-10 items-center gap-2 rounded-xl bg-colonial-btn px-4 text-sm font-semibold text-white shadow-[0_8px_20px_-8px_rgba(34,43,184,0.5)] transition hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-medio/25"
       >
         <PlusIcon className="h-4 w-4" />
         Crear
@@ -42,7 +43,7 @@ export default function CreateMenu() {
       {abierto && (
         <div
           role="menu"
-          className="absolute right-0 top-12 z-30 w-72 rounded-2xl border border-luwi-linea bg-white p-2 shadow-[0_20px_50px_-12px_rgba(11,58,140,0.35)]"
+          className="absolute right-0 top-12 z-30 w-72 rounded-2xl border border-luwi-linea bg-white p-2 shadow-[0_20px_50px_-12px_rgba(17,22,82,0.35)]"
         >
           {OPCIONES.map(({ to, label, detalle, icon: Icon }) => (
             <Link

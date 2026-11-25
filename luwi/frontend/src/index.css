@@ -2,45 +2,47 @@
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: "Plus Jakarta Sans", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
-  /* Identidad visual LUWI (login y nuevas pantallas) */
-  --color-luwi-profundo: #0b3a8c;      /* Azul profundo: encabezados y elementos principales */
-  --color-luwi-medio: #0b5bd3;         /* Paso intermedio de los degradados */
-  --color-luwi-tecno: #009cff;         /* Azul tecnológico: botones, indicadores y acciones */
-  --color-luwi-cristal: #dcebff;       /* Azul cristal: transparencias y superficies suaves */
-  --color-luwi-cristal-fondo: #eaf3ff; /* Fondo general de las pantallas de acceso */
-  --color-luwi-texto: #3d5a8a;         /* Texto secundario */
-  --color-luwi-linea: #d5e3f7;         /* Bordes y separadores */
-  --color-luwi-noche: #061a45;         /* Azul noche: menú lateral y tarjetas oscuras */
-  --color-luwi-panel: #f3f7fd;         /* Fondo del panel administrativo */
+  /* Identidad visual LUWI 2.0 · Colonial Cobalt (suavizado) + Soft Fawn + Antique White */
+  --color-luwi-profundo: #111652;      /* Twilight Colonial Navy: encabezados y texto fuerte */
+  --color-luwi-medio: #222bb8;         /* Colonial Cobalt suavizado: acciones primarias */
+  --color-luwi-tecno: #3b45c9;         /* Cobalto suave vivo: acentos, foco e indicadores */
+  --color-luwi-fawn: #d1b17c;          /* Soft Fawn: acento cálido editorial */
+  --color-luwi-fawn-deep: #8c6a34;     /* Oro Arena: alto contraste sobre fondos claros */
+  --color-luwi-antique: #f8e6d2;       /* Antique White: acentos cálidos y superficies suaves */
+  --color-luwi-cristal: #ebecfe;       /* Tinte cobalto suave */
+  --color-luwi-cristal-fondo: #f6efe6; /* Superficie cálida derivada de Antique White */
+  --color-luwi-texto: #474b6e;         /* Texto secundario */
+  --color-luwi-linea: #efe2d1;         /* Bordes cálidos sutiles */
+  --color-luwi-noche: #0e1346;         /* Fondo oscuro profundo del menú lateral */
+  --color-luwi-panel: #fdf8f2;         /* Canvas cálido luminoso del panel */
 
-  --color-luwi-navy: #12306e;
-  --color-luwi-blue: #2f6bff;
-  --color-luwi-purple: #8b5cf6;
-  --color-luwi-teal: #14c9a5;
-  --color-luwi-ink: #1e2a4a;
-  --color-luwi-muted: #7a869f;
-  --color-luwi-border: #dfe6f3;
-  --color-luwi-bg: #f4f7fe;
+  --color-luwi-navy: #111652;
+  --color-luwi-blue: #222bb8;
+  --color-luwi-purple: #3b45c9;
+  --color-luwi-teal: #d1b17c;
+  --color-luwi-ink: #111652;
+  --color-luwi-muted: #7a7d9b;
+  --color-luwi-border: #efe2d1;
+  --color-luwi-bg: #fdf8f2;
 
-  /* Paleta de administración (formularios y listados).
-     Ahora usa los azules de la identidad LUWI: así todas las pantallas
-     que usan "admin-*" se actualizan solas. */
-  --color-admin-ink: #0b3a8c;      /* = luwi-profundo */
-  --color-admin-blue: #0b5bd3;     /* = luwi-medio */
-  --color-admin-purple: #009cff;   /* = luwi-tecno */
-  --color-admin-green: #10b981;
-  --color-admin-muted: #5a719a;
-  --color-admin-border: #e3ecf8;
-  --color-admin-bg: #f3f7fd;       /* = luwi-panel */
-  --color-admin-soft: #dcebff;     /* = luwi-cristal */
-  --color-admin-line: #d5e3f7;     /* = luwi-linea */
+  /* Paleta de administración (formularios y listados) alineada a Colonial Cobalt */
+  --color-admin-ink: #111652;
+  --color-admin-blue: #222bb8;
+  --color-admin-purple: #3b45c9;
+  --color-admin-green: #8c6a34;
+  --color-admin-muted: #585c7e;
+  --color-admin-border: #efe2d1;
+  --color-admin-bg: #fdf8f2;
+  --color-admin-soft: #f8e6d2;
+  --color-admin-line: #e5d5bf;
   --color-admin-danger: #b42318;
 
-  --shadow-card: 0 10px 30px -12px rgb(18 48 110 / 0.18);
+  --shadow-card: 0 12px 32px -16px rgb(17 22 82 / 0.14);
 
-  /* Nueva paleta de la landing */
+  /* Nueva paleta de la landing (intocable) */
   --color-fondo: #16131f;
   --color-superficie: #221e30;
   --color-teal: #2dc8b8;
@@ -48,6 +50,29 @@
   --color-morado: #9b7bde;
   --color-claro: #f6f3fc;
   --color-tinta: #1e1b2e;
+}
+
+/* Degradados firma Colonial Cobalt -> Soft Fawn -> Antique White */
+.bg-colonial-hero {
+  background: linear-gradient(128deg, #0f144c 0%, #1e278e 46%, #5c5b94 76%, #c7a676 100%);
+}
+.bg-colonial-banner {
+  background: linear-gradient(108deg, #10154e 0%, #212b9c 48%, #6e6894 80%, #cbb084 100%);
+}
+.bg-colonial-sidebar {
+  background: linear-gradient(180deg, #0d1242 0%, #182070 68%, #3b375e 100%);
+}
+.bg-colonial-btn {
+  background: linear-gradient(102deg, #2028b2 0%, #333dc7 65%, #5b5fa8 100%);
+}
+.bg-colonial-fawn {
+  background: linear-gradient(102deg, #d1b17c 0%, #ebd2ae 100%);
+}
+.bg-colonial-progress {
+  background: linear-gradient(90deg, #222bb8 0%, #746fa8 55%, #d1b17c 100%);
+}
+.bg-colonial-auth {
+  background: linear-gradient(135deg, #e7e9fa 0%, #f6ede1 40%, #f8e6d2 74%, #ead6bc 100%);
 }
 
 @layer base {
@@ -95,10 +120,10 @@ body {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #0b3a8c;
+  -webkit-text-fill-color: #111652;
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
   box-shadow: 0 0 0 1000px #ffffff inset;
-  caret-color: #0b3a8c;
+  caret-color: #111652;
   transition: background-color 9999s ease-out 0s;
 }
 

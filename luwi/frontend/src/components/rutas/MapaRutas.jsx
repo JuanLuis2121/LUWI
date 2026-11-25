@@ -31,7 +31,7 @@ export default function MapaRutas({ rutas, seleccion, onSeleccionar, onAbrir, on
         return (
           <section key={g.nombre} aria-label={g.nombre}>
             <header className="mb-4 flex items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_8px_18px_-8px_rgba(0,110,230,0.7)]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_8px_18px_-8px_rgba(34,43,184,0.7)]">
                 <BuildingIcon className="h-5 w-5" />
               </span>
               <div className="min-w-0">

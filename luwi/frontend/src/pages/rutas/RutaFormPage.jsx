@@ -198,11 +198,11 @@ export default function RutaFormPage({ mode }) {
       </Link>
 
       {/* Encabezado */}
-      <header className="relative mb-6 overflow-hidden rounded-[28px] border border-white bg-[radial-gradient(ellipse_at_100%_0%,#CFE4FF_0%,#EEF5FF_40%,#FFFFFF_75%)] p-6 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)] sm:p-7">
+      <header className="relative mb-6 overflow-hidden rounded-[28px] border border-luwi-linea bg-[radial-gradient(ellipse_at_100%_0%,#F8E6D2_0%,#FBF2E6_40%,#FFFFFF_75%)] p-6 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.4)] sm:p-7">
         <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full border-[28px] border-white/60" />
         <div className="relative flex flex-wrap items-start justify-between gap-5">
           <div className="flex min-w-0 items-start gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_12px_24px_-10px_rgba(0,110,230,0.75)]">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-colonial-btn text-white shadow-[0_12px_24px_-10px_rgba(34,43,184,0.6)]">
               <RouteIcon className="h-6 w-6" />
             </span>
             <div className="min-w-0">
@@ -219,7 +219,7 @@ export default function RutaFormPage({ mode }) {
         {!loading && !notFound && (
           <dl className="relative mt-6 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
             {resumen.map((s) => (
-              <div key={s.label} className="flex min-w-[170px] items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_6px_16px_-10px_rgba(11,58,140,0.35)] ring-1 ring-inset ring-luwi-linea/70">
+              <div key={s.label} className="flex min-w-[170px] items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_6px_16px_-10px_rgba(17,22,82,0.35)] ring-1 ring-inset ring-luwi-linea/70">
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-luwi-cristal-fondo text-luwi-medio">
                   <s.icon className="h-[18px] w-[18px]" />
                 </span>
@@ -230,7 +230,7 @@ export default function RutaFormPage({ mode }) {
               </div>
             ))}
             {/* Distribución por nivel */}
-            <div className="col-span-2 flex min-w-[220px] flex-col justify-center rounded-2xl bg-white px-4 py-3 shadow-[0_6px_16px_-10px_rgba(11,58,140,0.35)] ring-1 ring-inset ring-luwi-linea/70 sm:col-span-1">
+            <div className="col-span-2 flex min-w-[220px] flex-col justify-center rounded-2xl bg-white px-4 py-3 shadow-[0_6px_16px_-10px_rgba(17,22,82,0.35)] ring-1 ring-inset ring-luwi-linea/70 sm:col-span-1">
               <dt className="text-[11px] font-medium text-luwi-texto/80">Niveles</dt>
               <dd className="mt-1.5">
                 <div className="flex h-2 overflow-hidden rounded-full bg-luwi-cristal-fondo">

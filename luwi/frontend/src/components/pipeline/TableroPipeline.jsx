@@ -11,7 +11,7 @@ export default function TableroPipeline({ tarjetas, seleccion, onSeleccionar, on
   const porKey = new Map(tarjetas.map((t) => [t.key, t]));
 
   return (
-    <div className="flex snap-x gap-4 overflow-x-auto p-5 [scrollbar-color:#d5e3f7_transparent] [scrollbar-width:thin]">
+    <div className="flex snap-x gap-4 overflow-x-auto p-5 [scrollbar-color:#e5d5bf_transparent] [scrollbar-width:thin]">
       {ETAPAS.map((etapa) => {
         const lista = tarjetas.filter((t) => t.etapa === etapa.key);
         const activa = sobre === etapa.key;
@@ -55,7 +55,7 @@ export default function TableroPipeline({ tarjetas, seleccion, onSeleccionar, on
               <div className={`mt-2.5 h-1 rounded-full bg-gradient-to-r ${etapa.barra} opacity-80`} />
             </header>
 
-            <ul className="flex-1 [scrollbar-color:#d5e3f7_transparent] [scrollbar-width:thin] space-y-2.5 overflow-y-auto pr-0.5 xl:max-h-[calc(100vh-300px)]">
+            <ul className="flex-1 [scrollbar-color:#e5d5bf_transparent] [scrollbar-width:thin] space-y-2.5 overflow-y-auto pr-0.5 xl:max-h-[calc(100vh-300px)]">
               {lista.length === 0 && (
                 <li className="rounded-2xl border-2 border-dashed border-luwi-linea px-4 py-8 text-center text-xs leading-relaxed text-luwi-texto/60">
                   {etapa.vacio}

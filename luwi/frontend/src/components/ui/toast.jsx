@@ -9,7 +9,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 const ToastContext = createContext(null);
 
 const ESTILOS = {
-  success: { barra: "bg-emerald-500", icono: "bg-emerald-50 text-emerald-600", path: "M5 12l5 5L20 7" },
+  success: { barra: "bg-luwi-fawn", icono: "bg-luwi-antique text-luwi-fawn-deep", path: "M5 12l5 5L20 7" },
   error: { barra: "bg-red-500", icono: "bg-red-50 text-red-600", path: "M12 8v5M12 16.5v.01M12 3l9.5 17H2.5L12 3z" },
   info: { barra: "bg-luwi-tecno", icono: "bg-luwi-cristal-fondo text-luwi-medio", path: "M12 11v5M12 7.5v.01M12 21a9 9 0 100-18 9 9 0 000 18z" },
 };
@@ -36,7 +36,7 @@ function ToastItem({ toast, onClose }) {
       role={toast.variant === "error" ? "alert" : "status"}
       onMouseEnter={() => setPausado(true)}
       onMouseLeave={() => setPausado(false)}
-      className="pointer-events-auto relative w-[360px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-luwi-linea/80 bg-white font-poppins shadow-[0_20px_50px_-16px_rgba(6,26,69,0.45)] animate-[entrar-toast_220ms_ease-out] motion-reduce:animate-none"
+      className="pointer-events-auto relative w-[360px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-luwi-linea/80 bg-white font-poppins shadow-[0_20px_50px_-16px_rgba(15,20,76,0.45)] animate-[entrar-toast_220ms_ease-out] motion-reduce:animate-none"
     >
       <div className="flex items-start gap-3 p-4 pr-3">
         <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${estilo.icono}`}>

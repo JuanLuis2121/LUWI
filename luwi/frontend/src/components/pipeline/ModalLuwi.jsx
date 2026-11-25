@@ -9,8 +9,8 @@ import { createPortal } from "react-dom";
  * Se cierra con Escape o haciendo clic en el fondo (salvo si `bloqueado`).
  */
 const TONOS = {
-  azul: "bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(0,110,230,0.7)]",
-  verde: "bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-100",
+  azul: "bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(34,43,184,0.7)]",
+  verde: "bg-luwi-antique text-luwi-fawn-deep ring-1 ring-inset ring-luwi-fawn/40",
   ambar: "bg-amber-50 text-amber-600 ring-1 ring-inset ring-amber-100",
 };
 
@@ -48,7 +48,7 @@ export default function ModalLuwi({ open, onClose, title, subtitle, icon: Icon, 
         aria-modal="true"
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
-        className={`flex max-h-[calc(100vh-2rem)] w-full flex-col rounded-[28px] border border-white bg-white shadow-[0_30px_80px_-20px_rgba(6,26,69,0.45)] outline-none animate-[entrar-toast_200ms_ease-out] motion-reduce:animate-none ${ancho}`}
+        className={`flex max-h-[calc(100vh-2rem)] w-full flex-col rounded-[28px] border border-white bg-white shadow-[0_30px_80px_-20px_rgba(15,20,76,0.45)] outline-none animate-[entrar-toast_200ms_ease-out] motion-reduce:animate-none ${ancho}`}
       >
         <header className="flex items-start gap-4 px-7 pb-2 pt-7">
           {Icon && (

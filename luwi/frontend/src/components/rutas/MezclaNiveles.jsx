@@ -1,7 +1,7 @@
 import DonutChart from "../dashboard/DonutChart";
 import { NIVELES, nivelDe, formatoHoras } from "../../utils/rutas";
 
-const COLOR = { Básico: "#009cff", Intermedio: "#0b5bd3", Avanzado: "#0b3a8c" };
+const COLOR = { Básico: "#d1b17c", Intermedio: "#3b45c9", Avanzado: "#111652" };
 
 /**
  * Resumen visual del catálogo de rutas: cursos por nivel, ruta más larga
@@ -31,7 +31,7 @@ export default function MezclaNiveles({ rutas, onFiltrarSinCursos }) {
   const maxHoras = porEmpresa[0]?.[1] || 1;
 
   return (
-    <section className="flex flex-col rounded-[28px] border border-white bg-white/90 p-6 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)]">
+    <section className="flex flex-col rounded-[28px] border border-white bg-white/90 p-6 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.6)]">
       <h2 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-luwi-tecno">Mezcla de niveles</h2>
       <p className="mt-0.5 text-sm text-luwi-texto">Cursos en todas las rutas</p>
 

@@ -14,7 +14,7 @@ export default function BulkBar({ count, actions, onClear }) {
       <div
         role="toolbar"
         aria-label="Acciones para la selección"
-        className="pointer-events-auto flex items-center gap-1 rounded-2xl bg-[linear-gradient(135deg,#0B3A8C_0%,#082C6E_60%,#061A45_100%)] p-1.5 pl-4 text-white shadow-[0_24px_50px_-16px_rgba(6,26,69,0.7)] animate-[entrar-toast_200ms_ease-out] motion-reduce:animate-none"
+        className="pointer-events-auto flex items-center gap-1 rounded-2xl bg-colonial-banner p-1.5 pl-4 text-white shadow-[0_24px_50px_-16px_rgba(15,20,76,0.65)] animate-[entrar-toast_200ms_ease-out] motion-reduce:animate-none"
       >
         <span className="mr-2 flex items-center gap-2 text-sm font-semibold">
           <span className="flex h-6 min-w-6 items-center justify-center rounded-md bg-luwi-tecno px-1.5 text-xs">{count}</span>

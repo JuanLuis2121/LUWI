@@ -48,12 +48,12 @@ export default function Drawer({ open, onClose, title, subtitle, icon: Icon, foo
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="absolute inset-y-0 right-0 flex w-full max-w-[480px] flex-col bg-white shadow-[-30px_0_80px_-30px_rgba(6,26,69,0.5)] outline-none animate-[entrar-drawer_220ms_ease-out] motion-reduce:animate-none"
+        className="absolute inset-y-0 right-0 flex w-full max-w-[480px] flex-col bg-white shadow-[-30px_0_80px_-30px_rgba(17,22,82,0.4)] outline-none animate-[entrar-drawer_220ms_ease-out] motion-reduce:animate-none"
       >
-        <header className="relative overflow-hidden border-b border-luwi-linea/70 bg-[radial-gradient(ellipse_at_100%_0%,#DCEBFF_0%,#FFFFFF_70%)] px-6 pb-5 pt-6">
+        <header className="relative overflow-hidden border-b border-luwi-linea/70 bg-[radial-gradient(ellipse_at_100%_0%,#F8E6D2_0%,#FFFFFF_70%)] px-6 pb-5 pt-6">
           <div className="flex items-start gap-4">
             {Icon && (
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(0,110,230,0.7)]">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-colonial-btn text-white shadow-[0_10px_20px_-8px_rgba(34,43,184,0.55)]">
                 <Icon className="h-[22px] w-[22px]" />
               </span>
             )}

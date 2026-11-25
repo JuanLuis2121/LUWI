@@ -5,7 +5,7 @@ import { ANIMOS, OPCIONES_META, consejoDelDia } from "../../utils/espacioPostula
 // Tarjetas interactivas del espacio del postulante (racha, meta, ánimo y consejo).
 // Todo lo que guardan queda en este navegador; no se envía a la base de datos.
 
-const tarjeta = "relative flex flex-col overflow-hidden rounded-3xl border border-white bg-white/90 p-5 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)] sm:p-6";
+const tarjeta = "relative flex flex-col overflow-hidden rounded-3xl border border-luwi-linea/80 bg-white/95 p-5 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.28)] sm:p-6";
 
 function Encabezado({ titulo, subtitulo, icono }) {
   return (
@@ -118,13 +118,13 @@ export function MetaSemanal({ meta, hechas, onMeta }) {
       <div className="flex items-center gap-5">
         <div className="relative h-[104px] w-[104px] shrink-0">
           <svg viewBox="0 0 104 104" className="-rotate-90" aria-hidden="true">
-            <circle cx="52" cy="52" r={radio} fill="none" stroke="#eaf3ff" strokeWidth="10" />
+            <circle cx="52" cy="52" r={radio} fill="none" stroke="#efe2d1" strokeWidth="10" />
             <motion.circle
               cx="52"
               cy="52"
               r={radio}
               fill="none"
-              stroke={cumplida ? "#10b981" : "url(#meta-g)"}
+              stroke={cumplida ? "#d1b17c" : "url(#meta-g)"}
               strokeWidth="10"
               strokeLinecap="round"
               strokeDasharray={circ}
@@ -134,8 +134,8 @@ export function MetaSemanal({ meta, hechas, onMeta }) {
             />
             <defs>
               <linearGradient id="meta-g" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stopColor="#0b5bd3" />
-                <stop offset="100%" stopColor="#009cff" />
+                <stop offset="0%" stopColor="#222bb8" />
+                <stop offset="100%" stopColor="#d1b17c" />
               </linearGradient>
             </defs>
           </svg>
@@ -149,7 +149,7 @@ export function MetaSemanal({ meta, hechas, onMeta }) {
         </div>
         <p className="text-sm leading-relaxed text-luwi-texto">
           {cumplida ? (
-            <span className="font-semibold text-emerald-600">¡Meta cumplida! 🎉 Todo lo que sumes ahora es extra.</span>
+            <span className="font-semibold text-luwi-fawn-deep">¡Meta cumplida! 🎉 Todo lo que sumes ahora es extra.</span>
           ) : (
             <>
               Te {meta - hechas === 1 ? "falta" : "faltan"} <strong className="font-semibold text-luwi-profundo">{meta - hechas}</strong>{" "}
@@ -234,11 +234,11 @@ export function ConsejoDelDia() {
   const consejo = consejoDelDia(desplazamiento);
 
   return (
-    <section className="relative flex flex-col overflow-hidden rounded-3xl bg-[linear-gradient(150deg,#0B5BD3_0%,#0B3A8C_60%,#061A45_100%)] p-6 text-white shadow-[0_20px_44px_-24px_rgba(6,26,69,0.85)]">
+    <section className="relative flex flex-col overflow-hidden rounded-3xl bg-colonial-hero p-6 text-white shadow-[0_20px_44px_-24px_rgba(15,20,76,0.75)]">
       <div aria-hidden="true" className="pointer-events-none absolute -right-14 -top-14 h-44 w-44 rounded-full border-[22px] border-white/10" />
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-16 left-6 h-40 w-40 rounded-full bg-luwi-tecno/30 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-16 left-6 h-40 w-40 rounded-full bg-luwi-fawn/25 blur-3xl" />
 
-      <p className="relative flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7cc8ff]">
+      <p className="relative flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#F0D4A4]">
         <span className="text-base">💡</span>
         Consejo del día
       </p>

@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 
 const variants = {
   primary:
-    "border-transparent bg-gradient-to-r from-luwi-profundo via-luwi-medio to-luwi-tecno text-white shadow-[0_10px_24px_-10px_rgba(11,58,140,0.75)] hover:-translate-y-0.5 hover:brightness-110",
+    "border-transparent bg-colonial-btn text-white shadow-[0_10px_24px_-10px_rgba(34,43,184,0.55)] hover:-translate-y-0.5 hover:brightness-110",
+  fawn:
+    "border-transparent bg-colonial-fawn text-luwi-profundo shadow-[0_10px_24px_-10px_rgba(209,177,124,0.55)] hover:-translate-y-0.5 hover:brightness-105",
   secondary:
-    "border-luwi-linea bg-white text-luwi-texto hover:border-luwi-tecno/40 hover:bg-luwi-cristal-fondo hover:text-luwi-profundo",
-  edit: "border-luwi-cristal bg-luwi-cristal-fondo text-luwi-medio hover:border-luwi-tecno/50 hover:bg-luwi-cristal hover:text-luwi-profundo",
+    "border-luwi-linea bg-white text-luwi-texto hover:border-luwi-medio/35 hover:bg-luwi-cristal-fondo hover:text-luwi-profundo",
+  edit: "border-luwi-cristal bg-luwi-cristal text-luwi-medio hover:border-luwi-medio/40 hover:bg-[#e1e4fd] hover:text-luwi-profundo",
   danger: "border-red-100 bg-white text-red-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600",
 };
 
@@ -74,24 +76,25 @@ export function Bubble({ children }) {
  */
 export function PageHeader({ icon: IconCmp, seccion, title, subtitle, stats = [], action }) {
   return (
-    <header className="relative mb-6 overflow-hidden rounded-[28px] border border-white bg-[radial-gradient(ellipse_at_100%_0%,#CFE4FF_0%,#EEF5FF_40%,#FFFFFF_75%)] p-6 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)] sm:p-7">
-      {/* Decoración */}
-      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full border-[28px] border-white/60" />
-      <div aria-hidden="true" className="pointer-events-none absolute -right-4 top-10 h-20 w-20 rounded-full bg-luwi-tecno/10 blur-2xl" />
+    <header className="relative mb-6 overflow-hidden rounded-[26px] bg-colonial-banner p-6 text-white shadow-[0_22px_50px_-24px_rgba(15,20,76,0.55)] sm:p-7">
+      {/* Brillos atmosféricos Colonial Cobalt + Antique White */}
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-luwi-antique/25 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-luwi-tecno/30 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full border-[26px] border-white/[0.06]" />
 
       <div className="relative flex flex-wrap items-start justify-between gap-5">
         <div className="flex min-w-0 items-start gap-4">
           {IconCmp && (
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_12px_24px_-10px_rgba(0,110,230,0.75)]">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-colonial-btn text-white shadow-[0_12px_24px_-8px_rgba(34,43,184,0.6)] ring-1 ring-white/20">
               <IconCmp className="h-6 w-6" />
             </span>
           )}
           <div className="min-w-0">
             {seccion && (
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-luwi-tecno">{seccion}</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-luwi-fawn">{seccion}</p>
             )}
-            <h1 className="mt-0.5 text-[28px] font-bold leading-tight tracking-[-0.02em] text-luwi-profundo">{title}</h1>
-            {subtitle && <p className="mt-1 max-w-xl text-sm text-luwi-texto">{subtitle}</p>}
+            <h1 className="mt-0.5 text-[28px] font-extrabold leading-tight tracking-[-0.025em] text-white">{title}</h1>
+            {subtitle && <p className="mt-1 max-w-xl text-sm text-luwi-antique/85">{subtitle}</p>}
           </div>
         </div>
         {action && <div className="shrink-0">{action}</div>}
@@ -102,10 +105,10 @@ export function PageHeader({ icon: IconCmp, seccion, title, subtitle, stats = []
           {stats.map((s) => (
             <div
               key={s.label}
-              className="min-w-[150px] rounded-2xl bg-white px-4 py-3 shadow-[0_6px_16px_-10px_rgba(11,58,140,0.35)] ring-1 ring-inset ring-luwi-linea/70"
+              className="min-w-[164px] rounded-2xl bg-luwi-antique/[0.10] px-4 py-3 backdrop-blur-md ring-1 ring-inset ring-luwi-fawn/30"
             >
-              <dt className="text-[11px] font-medium text-luwi-texto/80">{s.label}</dt>
-              <dd className="mt-0.5 text-xl font-bold leading-tight text-luwi-profundo">{s.value}</dd>
+              <dt className="text-[11px] font-medium text-luwi-antique/85">{s.label}</dt>
+              <dd className="mt-0.5 text-2xl font-extrabold leading-tight tracking-tight text-white">{s.value}</dd>
             </div>
           ))}
         </dl>
@@ -119,7 +122,7 @@ export function PageHeader({ icon: IconCmp, seccion, title, subtitle, stats = []
 /** Contenedor blanco de las tablas de listado. */
 export function TableCard({ children }) {
   return (
-    <section className="overflow-hidden rounded-[28px] border border-white bg-white/90 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)]">
+    <section className="overflow-hidden rounded-[28px] border border-white bg-white/90 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.6)]">
       {children}
     </section>
   );
@@ -129,7 +132,7 @@ export function TableCard({ children }) {
 export function SearchBox({ value, onChange, placeholder, className = "" }) {
   return (
     <label
-      className={`flex h-11 items-center gap-3 rounded-xl border border-luwi-linea bg-luwi-panel px-4 transition focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,156,255,0.10)] ${className}`}
+      className={`flex h-11 items-center gap-3 rounded-xl border border-luwi-linea bg-luwi-panel px-4 transition focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(59,69,201,0.10)] ${className}`}
     >
       <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] shrink-0 text-luwi-texto/70" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
         <circle cx="11" cy="11" r="7" />

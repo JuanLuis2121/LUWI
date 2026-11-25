@@ -52,7 +52,7 @@ export default function LogrosGrid({ logros, columnas = "grid-cols-2 sm:grid-col
               <span className={l.logrado ? "" : "opacity-40"}>{ICONOS[l.id] ?? "⭐"}</span>
             </span>
             {l.logrado ? (
-              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-600 ring-1 ring-inset ring-emerald-200">
+              <span className="rounded-full bg-luwi-antique px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-luwi-fawn-deep ring-1 ring-inset ring-luwi-fawn/45">
                 Logrado
               </span>
             ) : (

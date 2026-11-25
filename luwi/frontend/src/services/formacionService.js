@@ -45,6 +45,38 @@ export async function guardarUltimaConsulta(asignacionId, { cursoAsignadoId, uni
   return res.data;
 }
 
+// ---------------- Evaluaciones del postulante (entrega 5 de Marlon) ----------------
+
+export async function getEvaluacionesDeCurso(asignacionId, cursoAsignadoId) {
+  const res = await request(`${BASE}/${asignacionId}/cursos/${cursoAsignadoId}/evaluaciones`, {
+    fallback: "No pudimos cargar las evaluaciones del curso.",
+  });
+  return res.data;
+}
+
+export async function iniciarIntentoEvaluacion(asignacionId, cursoAsignadoId, evaluacionId) {
+  const res = await request(
+    `${BASE}/${asignacionId}/cursos/${cursoAsignadoId}/evaluaciones/${evaluacionId}/intentos`,
+    {
+      method: "POST",
+      fallback: "No se pudo iniciar la evaluación.",
+    }
+  );
+  return { message: res.message, ...res.data };
+}
+
+export async function enviarRespuestasEvaluacion(asignacionId, cursoAsignadoId, evaluacionId, intentoId, respuestas) {
+  const res = await request(
+    `${BASE}/${asignacionId}/cursos/${cursoAsignadoId}/evaluaciones/${evaluacionId}/intentos/${intentoId}`,
+    {
+      method: "PUT",
+      body: { respuestas },
+      fallback: "No se pudieron enviar tus respuestas. Inténtalo nuevamente.",
+    }
+  );
+  return { message: res.message, ...res.data };
+}
+
 const rutaCurso = (asignacionId, cursoAsignadoId) =>
   `/mi-formacion/${asignacionId}/cursos/${cursoAsignadoId}`;
 

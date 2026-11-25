@@ -28,7 +28,7 @@ export default function TarjetaPipeline({ tarjeta, seleccionada, onSeleccionar, 
       }}
       tabIndex={0}
       aria-label={`${tarjeta.nombre}. Abrir ficha`}
-      className={`group relative overflow-hidden rounded-2xl border bg-white p-3.5 shadow-[0_6px_16px_-12px_rgba(11,58,140,0.5)] transition hover:-translate-y-0.5 hover:border-luwi-tecno/40 hover:shadow-[0_14px_26px_-16px_rgba(11,58,140,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40 ${
+      className={`group relative overflow-hidden rounded-2xl border bg-white p-3.5 shadow-[0_6px_16px_-12px_rgba(17,22,82,0.5)] transition hover:-translate-y-0.5 hover:border-luwi-tecno/40 hover:shadow-[0_14px_26px_-16px_rgba(17,22,82,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40 ${
         arrastrable ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
       } ${ocupada ? "pointer-events-none opacity-60" : ""} ${suspendido ? "bg-[repeating-linear-gradient(135deg,#fff,#fff_10px,#fbfcfe_10px,#fbfcfe_20px)]" : ""} ${
         seleccionada ? "border-luwi-tecno ring-2 ring-luwi-tecno/25" : "border-luwi-linea/80"

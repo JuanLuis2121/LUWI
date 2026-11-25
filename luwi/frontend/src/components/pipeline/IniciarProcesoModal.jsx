@@ -69,7 +69,7 @@ export default function IniciarProcesoModal({ tarjeta, puestos, continuarConRuta
       {puestos.length === 0 ? (
         <p className="rounded-2xl bg-luwi-panel px-4 py-3 text-sm text-luwi-texto">No hay puestos registrados. Crea uno en Organización › Puestos.</p>
       ) : (
-        <div id="puesto-proceso" role="radiogroup" aria-label="Puesto" className="max-h-72 space-y-2 overflow-y-auto pr-1 [scrollbar-color:#d5e3f7_transparent] [scrollbar-width:thin]">
+        <div id="puesto-proceso" role="radiogroup" aria-label="Puesto" className="max-h-72 space-y-2 overflow-y-auto pr-1 [scrollbar-color:#e5d5bf_transparent] [scrollbar-width:thin]">
           {ordenados.map((p) => {
             const elegido = puestoId === p.id;
             return (

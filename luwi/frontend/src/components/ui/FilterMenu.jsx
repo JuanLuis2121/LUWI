@@ -48,7 +48,7 @@ export default function FilterMenu({ label, options, value, onChange }) {
       </button>
 
       {abierto && (
-        <div role="listbox" aria-label={label} aria-multiselectable="true" className="absolute left-0 top-12 z-30 w-64 rounded-2xl border border-luwi-linea bg-white p-2 shadow-[0_20px_50px_-12px_rgba(11,58,140,0.35)]">
+        <div role="listbox" aria-label={label} aria-multiselectable="true" className="absolute left-0 top-12 z-30 w-64 rounded-2xl border border-luwi-linea bg-white p-2 shadow-[0_20px_50px_-12px_rgba(17,22,82,0.35)]">
           <div className="max-h-72 overflow-y-auto">
             {options.length === 0 && <p className="px-3 py-4 text-center text-xs text-luwi-texto/70">Sin opciones</p>}
             {options.map((o) => (

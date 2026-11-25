@@ -24,24 +24,15 @@ function saludo() {
   return "Buenas noches";
 }
 
-// ---------- Bienvenida ilustrada ----------
+// ---------- Bienvenida ----------
 
 function Bienvenida({ nombre, datos, asignacion, suspendido, racha }) {
   const reducido = useReducedMotion();
   const primerNombre = nombre.split(" ")[0];
 
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-white bg-[radial-gradient(ellipse_at_82%_78%,#A9D5FD_0%,#B9DCFD_22%,#DCEBFF_48%,#F3F8FF_72%,#FFFFFF_100%)] p-6 shadow-[0_20px_50px_-30px_rgba(11,58,140,0.55)] sm:p-8 lg:min-h-[300px]">
+    <section className="relative flex flex-col justify-center overflow-hidden rounded-[28px] border border-luwi-linea bg-[radial-gradient(ellipse_at_85%_80%,#F8E6D2_0%,#FBF2E6_32%,#FDF8F2_68%,#FFFFFF_100%)] p-6 shadow-[0_20px_50px_-30px_rgba(17,22,82,0.3)] sm:p-8">
       <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 right-[18%] h-80 w-80 rounded-full border-[40px] border-white/30" />
-
-      <motion.img
-        src="/LUWI-login-illustration.png"
-        alt=""
-        aria-hidden="true"
-        animate={reducido ? undefined : { y: [0, -10, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute -bottom-6 -right-6 hidden w-[46%] max-w-[440px] md:block [mask-image:radial-gradient(ellipse_62%_64%_at_55%_55%,black_55%,transparent_100%)]"
-      />
 
       {/* Chip flotante de racha */}
       {racha > 0 && (
@@ -50,16 +41,16 @@ function Bienvenida({ nombre, datos, asignacion, suspendido, racha }) {
           initial={reducido ? false : { opacity: 0, scale: 0.8 }}
           animate={reducido ? { opacity: 1 } : { opacity: 1, scale: 1, y: [0, -6, 0] }}
           transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" }, default: { duration: 0.4 } }}
-          className="absolute right-8 top-8 hidden items-center gap-2 rounded-2xl bg-white/85 px-3.5 py-2 text-xs font-semibold text-luwi-profundo shadow-[0_12px_30px_-14px_rgba(11,58,140,0.55)] backdrop-blur md:flex"
+          className="absolute right-8 top-8 hidden items-center gap-2 rounded-2xl bg-white/85 px-3.5 py-2 text-xs font-semibold text-luwi-profundo shadow-[0_12px_30px_-14px_rgba(17,22,82,0.55)] backdrop-blur md:flex"
         >
           <span className="text-lg">🔥</span>
           {racha} {racha === 1 ? "día" : "días"} de racha
         </motion.div>
       )}
 
-      <div className="relative max-w-[480px]">
+      <div className="relative max-w-[600px] md:pr-36">
         <span className="inline-flex items-center gap-2 rounded-full border border-white bg-white/70 px-3 py-1 text-[11.5px] font-medium text-luwi-texto backdrop-blur">
-          <span className="h-1.5 w-1.5 rounded-full bg-luwi-tecno shadow-[0_0_6px_2px_rgba(0,156,255,0.5)]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-luwi-tecno shadow-[0_0_6px_2px_rgba(59,69,201,0.5)]" />
           {saludo()}
         </span>
 
@@ -87,7 +78,7 @@ function Bienvenida({ nombre, datos, asignacion, suspendido, racha }) {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               to={destinoFormacion(asignacion)}
-              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(11,58,140,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30"
+              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(17,22,82,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30"
             >
               {asignacion.tieneAvance ? "Continuar formación" : "Comenzar formación"}
               <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -132,15 +123,15 @@ function MiAvance({ asignacion, resumen, ritmo, onRitmo }) {
     : [];
 
   return (
-    <section className="relative flex flex-col overflow-hidden rounded-[28px] bg-[linear-gradient(160deg,#0B3A8C_0%,#082C6E_50%,#061A45_100%)] p-6 text-white shadow-[0_20px_50px_-25px_rgba(6,26,69,0.8)]">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-luwi-tecno/25 blur-3xl" />
+    <section className="relative flex flex-col overflow-hidden rounded-[28px] bg-colonial-hero p-6 text-white shadow-[0_20px_50px_-25px_rgba(15,20,76,0.7)]">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-luwi-fawn/30 blur-3xl" />
 
       <div className="relative flex items-start justify-between gap-3">
         <div>
           <h2 className="text-[15px] font-semibold">Mi avance</h2>
           <p className="mt-0.5 text-xs text-white/60">{asignacion?.ruta?.nombre ?? "Sin ruta asignada"}</p>
         </div>
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-[#7cc8ff]">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-[#F0D4A4]">
           <TrendUpIcon className="h-[18px] w-[18px]" />
         </span>
       </div>
@@ -162,7 +153,7 @@ function MiAvance({ asignacion, resumen, ritmo, onRitmo }) {
         <div className="relative mt-3 rounded-2xl bg-white/[0.07] p-3.5 ring-1 ring-inset ring-white/10">
           <div className="flex items-center justify-between gap-2 text-sm">
             <span className="text-white/65">Terminarías el</span>
-            <span className="font-bold text-[#7cc8ff]">{finEstimado(resumen.horasRestantes, ritmo)}</span>
+            <span className="font-bold text-[#F0D4A4]">{finEstimado(resumen.horasRestantes, ritmo)}</span>
           </div>
           <div className="mt-2.5">
             <p className="mb-1.5 text-[11px] text-white/50">Si estudias al día</p>
@@ -180,7 +171,7 @@ function Continuar({ asignacion, curso, suspendido }) {
   if (!curso) {
     return (
       <div className="flex flex-col items-center py-8 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-luwi-antique text-luwi-fawn-deep">
           <CheckIcon className="h-7 w-7" />
         </span>
         <p className="mt-3 text-sm font-semibold text-luwi-profundo">No tienes cursos pendientes habilitados</p>
@@ -193,7 +184,7 @@ function Continuar({ asignacion, curso, suspendido }) {
 
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-      <span className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_12px_24px_-10px_rgba(0,110,230,0.75)]">
+      <span className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_12px_24px_-10px_rgba(34,43,184,0.75)]">
         <BookIcon className="h-7 w-7" />
         <span className="absolute -right-1.5 -top-1.5 flex h-6 min-w-6 items-center justify-center rounded-full bg-white px-1 text-[11px] font-bold text-luwi-medio shadow ring-1 ring-luwi-linea">
           {curso.orden}
@@ -224,7 +215,7 @@ function Continuar({ asignacion, curso, suspendido }) {
       {!suspendido && (
         <Link
           to={rutaCurso(asignacion.id, curso.cursoAsignadoId)}
-          className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(11,58,140,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30"
+          className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(17,22,82,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30"
         >
           {curso.estado === "EN_CURSO" ? "Continuar" : "Comenzar"}
           <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />

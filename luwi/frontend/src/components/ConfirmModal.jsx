@@ -29,7 +29,7 @@ export default function ConfirmModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-title"
-        className="w-full max-w-md rounded-[28px] border border-white bg-white p-7 shadow-[0_30px_80px_-20px_rgba(6,26,69,0.45)]"
+        className="w-full max-w-md rounded-[28px] border border-white bg-white p-7 shadow-[0_30px_80px_-20px_rgba(15,20,76,0.45)]"
         onClick={(e) => e.stopPropagation()}
       >
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-500 ring-1 ring-inset ring-red-100">

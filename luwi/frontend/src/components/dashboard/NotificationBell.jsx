@@ -71,7 +71,7 @@ export default function NotificationBell() {
         <div
           role="dialog"
           aria-label="Notificaciones"
-          className="absolute right-0 top-12 z-30 w-[380px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-luwi-linea bg-white font-poppins shadow-[0_24px_60px_-16px_rgba(11,58,140,0.4)]"
+          className="absolute right-0 top-12 z-30 w-[380px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-luwi-linea bg-white font-poppins shadow-[0_24px_60px_-16px_rgba(17,22,82,0.4)]"
         >
           <header className="flex items-center justify-between gap-3 border-b border-luwi-linea/70 px-4 py-3">
             <div>
@@ -109,7 +109,7 @@ export default function NotificationBell() {
             {cargando && <li className="px-4 py-8 text-center text-xs text-luwi-texto/70">Cargando…</li>}
             {!cargando && lista.length === 0 && (
               <li className="flex flex-col items-center px-4 py-10 text-center">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-luwi-antique text-luwi-fawn-deep">
                   <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M5 12l5 5L20 7" />
                   </svg>

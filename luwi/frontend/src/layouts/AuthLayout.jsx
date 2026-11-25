@@ -1,6 +1,5 @@
-import Logo from "../components/Logo";
-
-// ---------- Íconos pequeños de las tarjetas flotantes ----------
+import { motion, useReducedMotion } from "motion/react";
+import Logo, { LuwiIsotipo } from "../components/Logo";
 
 const trazo = {
   viewBox: "0 0 24 24",
@@ -18,95 +17,54 @@ const RutaIcon = (p) => (
 const ChispaIcon = (p) => (
   <svg {...trazo} {...p}><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" /></svg>
 );
-const CheckIcon = (p) => (
-  <svg {...trazo} {...p}><path d="M5 12l5 5L20 7" /></svg>
-);
 
-/** Tarjeta de cristal que flota alrededor del login (solo pantallas muy anchas). */
 function TarjetaFlotante({ className = "", retraso = "0s", children }) {
   return (
     <div
       aria-hidden="true"
       style={{ animationDelay: retraso }}
-      className={`pointer-events-none absolute hidden rounded-2xl border border-white/80 bg-white/60 p-3.5 shadow-[0_18px_40px_-20px_rgba(11,58,140,0.45)] backdrop-blur-xl animate-[flotar_7s_ease-in-out_infinite] motion-reduce:animate-none min-[1720px]:[@media(min-height:820px)]:block ${className}`}
+      className={`pointer-events-none absolute hidden rounded-2xl border border-luwi-linea bg-white/85 p-3.5 shadow-[0_18px_40px_-20px_rgba(17,22,82,0.3)] backdrop-blur-xl animate-[flotar_7s_ease-in-out_infinite] motion-reduce:animate-none min-[1720px]:[@media(min-height:820px)]:block ${className}`}
     >
       {children}
     </div>
   );
 }
 
-// ---------- Fondo de la página ----------
-
 function Fondo() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* Malla de color */}
-      <div className="absolute -left-40 -top-48 h-[620px] w-[620px] rounded-full bg-[#CFE4FF] opacity-80 blur-3xl" />
-      <div className="absolute -right-32 -top-40 h-[520px] w-[520px] rounded-full bg-luwi-tecno/25 blur-3xl" />
-      <div className="absolute -bottom-56 -right-40 h-[640px] w-[640px] rounded-full bg-luwi-medio/20 blur-3xl" />
-      <div className="absolute -bottom-48 -left-24 h-[480px] w-[480px] rounded-full bg-[#BBD7FF] opacity-70 blur-3xl" />
-      <div className="absolute left-1/2 top-1/2 h-[560px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/70 blur-3xl" />
+      <div className="absolute -left-40 -top-48 h-[600px] w-[600px] rounded-full bg-luwi-medio/15 blur-3xl" />
+      <div className="absolute -right-32 -top-40 h-[520px] w-[520px] rounded-full bg-luwi-fawn/30 blur-3xl" />
+      <div className="absolute -bottom-56 -right-40 h-[620px] w-[620px] rounded-full bg-luwi-fawn/35 blur-3xl" />
+      <div className="absolute -bottom-48 -left-24 h-[480px] w-[480px] rounded-full bg-luwi-antique opacity-80 blur-3xl" />
 
-      {/* Cuadrícula fina que se desvanece hacia los bordes */}
       <div
-        className="absolute inset-0 opacity-70"
+        className="absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(11,58,140,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(11,58,140,0.06) 1px, transparent 1px)",
+            "linear-gradient(rgba(17,22,82,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(17,22,82,0.045) 1px, transparent 1px)",
           backgroundSize: "44px 44px",
           maskImage: "radial-gradient(ellipse 75% 70% at 50% 50%, black 30%, transparent 85%)",
           WebkitMaskImage: "radial-gradient(ellipse 75% 70% at 50% 50%, black 30%, transparent 85%)",
         }}
       />
-
-      {/* Anillos concéntricos en las esquinas */}
-      <svg viewBox="0 0 600 600" className="absolute -right-48 -top-48 h-[600px] w-[600px] text-luwi-tecno opacity-[0.18]">
-        {[120, 180, 240, 300].map((r) => (
-          <circle key={r} cx="300" cy="300" r={r} fill="none" stroke="currentColor" strokeWidth="1.2" strokeDasharray={r === 240 ? "4 8" : undefined} />
-        ))}
-      </svg>
-      <svg viewBox="0 0 600 600" className="absolute -bottom-56 -left-56 h-[600px] w-[600px] text-luwi-medio opacity-[0.14]">
-        {[140, 200, 260].map((r) => (
-          <circle key={r} cx="300" cy="300" r={r} fill="none" stroke="currentColor" strokeWidth="1.2" strokeDasharray={r === 200 ? "4 8" : undefined} />
-        ))}
-      </svg>
-
-      {/* Curva con flecha, inspirada en el isotipo de LUWI */}
-      <svg viewBox="0 0 400 220" className="absolute bottom-[8%] right-[3%] hidden w-[360px] opacity-[0.22] xl:block">
-        <defs>
-          <linearGradient id="auth-curva" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stopColor="#0b5bd3" stopOpacity="0" />
-            <stop offset="100%" stopColor="#009cff" />
-          </linearGradient>
-        </defs>
-        <path d="M10 200 C120 200 150 90 230 110 C300 128 320 60 370 30" fill="none" stroke="url(#auth-curva)" strokeWidth="6" strokeLinecap="round" />
-        <path d="M350 22 L380 24 L372 52" fill="none" stroke="#009cff" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-
-      {/* Puntos de luz */}
-      <span className="absolute left-[14%] top-[22%] h-2 w-2 rounded-full bg-luwi-tecno shadow-[0_0_12px_4px_rgba(0,156,255,0.45)]" />
-      <span className="absolute right-[18%] top-[12%] h-1.5 w-1.5 rounded-full bg-luwi-medio shadow-[0_0_10px_3px_rgba(11,91,211,0.4)]" />
-      <span className="absolute bottom-[18%] left-[9%] h-1.5 w-1.5 rounded-full bg-luwi-tecno shadow-[0_0_10px_3px_rgba(0,156,255,0.4)]" />
-      <span className="absolute bottom-[10%] right-[30%] h-2 w-2 rounded-full bg-white shadow-[0_0_12px_4px_rgba(255,255,255,0.9)]" />
     </div>
   );
 }
 
 /**
- * Estructura de las pantallas de acceso (login y registro).
- * - Escritorio: tarjeta de cristal con panel ilustrado (izquierda) y formulario (derecha).
- * - Celular: solo el formulario, con el logo arriba.
- * - footer: texto opcional al pie del formulario (ej. "¿No tienes cuenta? Regístrate").
+ * Estructura de las pantallas de acceso (login y registro) con identidad LUWI 2.0 Colonial Cobalt.
  */
 export default function AuthLayout({ title, subtitle, footer, children }) {
+  const reducido = useReducedMotion();
+
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#F4F8FF] px-4 py-8 font-poppins sm:px-6">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-colonial-auth px-4 py-8 font-poppins sm:px-6">
       <Fondo />
 
-      {/* Tarjetas flotantes alrededor del login */}
-      <TarjetaFlotante className="left-[4%] top-[16%] w-[270px]">
+      <TarjetaFlotante className="left-[4%] top-[16%] w-[264px]">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-colonial-btn text-white">
             <RutaIcon className="h-5 w-5" />
           </span>
           <div>
@@ -116,96 +74,131 @@ export default function AuthLayout({ title, subtitle, footer, children }) {
         </div>
       </TarjetaFlotante>
 
-      <TarjetaFlotante className="bottom-[14%] left-[6%] w-[250px]" retraso="-2.5s">
-        <p className="text-xs font-semibold text-luwi-profundo">Tu progreso</p>
-        <div className="mt-2 flex items-center gap-2">
-          <div className="h-2 flex-1 overflow-hidden rounded-full bg-luwi-cristal">
-            <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-luwi-medio to-luwi-tecno" />
-          </div>
-          <CheckIcon className="h-4 w-4 text-emerald-500" />
-        </div>
-        <div className="mt-3 flex gap-1.5">
-          {["Learn", "Upgrade", "Work", "Improve"].map((p, i) => (
-            <span
-              key={p}
-              className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${i < 3 ? "bg-luwi-cristal text-luwi-medio" : "bg-white text-luwi-texto/60 ring-1 ring-luwi-linea"}`}
-            >
-              {p}
-            </span>
-          ))}
-        </div>
-      </TarjetaFlotante>
-
-      <TarjetaFlotante className="right-[4%] top-[20%] w-[270px]" retraso="-4s">
+      <TarjetaFlotante className="right-[4%] top-[20%] w-[264px]" retraso="-3.5s">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-luwi-tecno ring-1 ring-luwi-cristal">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-luwi-antique text-luwi-fawn-deep">
             <ChispaIcon className="h-5 w-5" />
           </span>
           <div>
             <p className="text-sm font-semibold text-luwi-profundo">Formación con IA</p>
-            <p className="text-xs text-luwi-texto">Detecta lo que te falta aprender</p>
+            <p className="text-xs text-luwi-texto">Detecta brechas y sugiere cursos</p>
           </div>
         </div>
       </TarjetaFlotante>
 
-      {/* Tarjeta principal */}
-      <div className="relative w-full max-w-md lg:max-w-[960px]">
-        {/* Halo de luz detrás de la tarjeta */}
-        <div aria-hidden="true" className="pointer-events-none absolute -inset-6 rounded-[44px] bg-gradient-to-br from-white via-luwi-tecno/15 to-luwi-medio/20 opacity-80 blur-2xl" />
+      <div className="relative w-full max-w-md lg:max-w-[1040px]">
+        <div aria-hidden="true" className="pointer-events-none absolute -inset-6 rounded-[44px] bg-gradient-to-br from-luwi-medio/15 via-white/40 to-luwi-fawn/30 opacity-85 blur-2xl" />
 
-        <section className="relative grid w-full overflow-hidden rounded-[32px] border border-white/90 bg-white/60 shadow-[0_40px_90px_-30px_rgba(11,58,140,0.4)] ring-1 ring-luwi-tecno/5 backdrop-blur-xl lg:min-h-[560px] lg:grid-cols-[1.05fr_1fr]">
-
-          {/* ===== Panel izquierdo (solo escritorio) ===== */}
-          <div className="relative hidden overflow-hidden bg-[linear-gradient(180deg,#EEF5FF_0%,#D3E7FF_38%,#A9D5FD_64%,#A9D5FD_100%)] px-11 pt-10 lg:block">
-            <div aria-hidden="true" className="pointer-events-none absolute -left-24 -top-28 h-[420px] w-[420px] rounded-full bg-white/50" />
-
-            {/* Ondas azules de la esquina inferior izquierda */}
-            <div aria-hidden="true" className="pointer-events-none absolute -bottom-[200px] -left-[170px] z-[1] h-[340px] w-[360px] rounded-[50%] bg-gradient-to-tr from-luwi-medio to-[#3D8BFF] opacity-80" />
-            <div aria-hidden="true" className="pointer-events-none absolute -bottom-[230px] -left-[140px] z-[1] h-[320px] w-[300px] rounded-[50%] bg-luwi-profundo" />
+        <section className="relative grid w-full overflow-hidden rounded-[28px] border border-luwi-linea bg-white shadow-[0_36px_80px_-28px_rgba(15,20,76,0.34)] lg:min-h-[620px] lg:grid-cols-[1.02fr_1fr]">
+          {/* ===== Panel izquierdo: Colonial Cobalt -> Soft Fawn ===== */}
+          <div className="relative hidden flex-col justify-between overflow-hidden bg-colonial-hero px-11 py-10 text-white lg:flex">
+            <div aria-hidden="true" className="pointer-events-none absolute -left-24 bottom-12 h-[380px] w-[380px] rounded-full bg-luwi-tecno/30 blur-3xl" />
+            <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-[320px] w-[320px] rounded-full bg-luwi-fawn/35 blur-3xl" />
 
             <div className="relative z-10">
-              <Logo size="md" />
+              <Logo size="md" variant="light" />
 
-              <h2 className="mt-8 max-w-[340px] text-[30px] font-semibold leading-[1.18] tracking-[-0.02em] text-luwi-profundo">
+              <h2 className="mt-9 max-w-[360px] text-[34px] font-extrabold leading-[1.15] tracking-[-0.025em] text-white">
                 Tu camino de
-                <span className="block font-bold text-luwi-tecno">aprendizaje,</span>
+                <span className="block text-[#F0D4A4]">aprendizaje,</span>
                 en un solo lugar.
               </h2>
 
-              <p className="mt-3 max-w-[280px] text-[14px] leading-relaxed text-luwi-texto">
+              <p className="mt-3.5 max-w-[330px] text-[14.5px] leading-relaxed text-luwi-antique/85">
                 Conecta, aprende y sigue tu progreso con LUWI.
               </p>
             </div>
 
-            <img
-              src="/LUWI-login-illustration.png"
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-2 right-0 z-0 w-[80%] max-w-[420px] [mask-image:radial-gradient(ellipse_70%_72%_at_55%_55%,black_62%,transparent_100%)]"
-            />
+            {/* Hero animado con isotipo LUWI + tarjeta de progreso flotante */}
+            <div className="relative z-10 mt-8">
+              <div className="relative flex h-[212px] w-[312px] items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/[0.12] via-[#1B2385]/45 to-[#D1B17C]/20 shadow-[0_24px_48px_-18px_rgba(12,16,72,0.65)] backdrop-blur-md">
+                {/* Halo y anillos orbitales */}
+                <motion.div
+                  aria-hidden="true"
+                  animate={reducido ? undefined : { scale: [1, 1.12, 1], opacity: [0.45, 0.7, 0.45] }}
+                  transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="pointer-events-none absolute h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(209,177,124,0.38)_0%,rgba(59,69,201,0.22)_52%,transparent_74%)] blur-xl"
+                />
+                <motion.div
+                  aria-hidden="true"
+                  animate={reducido ? undefined : { rotate: 360 }}
+                  transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+                  className="pointer-events-none absolute h-[176px] w-[176px] rounded-full border border-dashed border-white/20"
+                >
+                  <span className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-[#F8E6D2] shadow-[0_0_10px_2px_rgba(248,230,210,0.85)]" />
+                </motion.div>
+                <motion.div
+                  aria-hidden="true"
+                  animate={reducido ? undefined : { rotate: -360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="pointer-events-none absolute h-[126px] w-[126px] rounded-full border border-[#D1B17C]/30"
+                >
+                  <span className="absolute -bottom-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-[#D1B17C]" />
+                </motion.div>
+
+                {/* Etiquetas sutiles del ecosistema */}
+                <motion.span
+                  aria-hidden="true"
+                  animate={reducido ? undefined : { y: [0, -4, 0] }}
+                  transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="pointer-events-none absolute left-3.5 top-3.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-luwi-antique backdrop-blur-md"
+                >
+                  Learn · Upgrade
+                </motion.span>
+                <motion.span
+                  aria-hidden="true"
+                  animate={reducido ? undefined : { y: [0, 4, 0] }}
+                  transition={{ duration: 5, delay: 0.6, repeat: Infinity, ease: "easeInOut" }}
+                  className="pointer-events-none absolute bottom-10 left-3.5 rounded-full border border-[#D1B17C]/35 bg-[#D1B17C]/15 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-[#F8E6D2] backdrop-blur-md"
+                >
+                  Work · Improve
+                </motion.span>
+
+                {/* Isotipo central con levitación suave */}
+                <motion.div
+                  initial={reducido ? false : { opacity: 0, scale: 0.9 }}
+                  animate={reducido ? { opacity: 1 } : { opacity: 1, scale: 1, y: [0, -7, 0] }}
+                  transition={{
+                    y: { duration: 4.8, repeat: Infinity, ease: "easeInOut" },
+                    default: { duration: 0.55, ease: "easeOut" },
+                  }}
+                  className="relative flex h-[96px] w-[112px] items-center justify-center rounded-[24px] border border-white/25 bg-white/[0.12] shadow-[0_18px_36px_-14px_rgba(10,14,68,0.65)] backdrop-blur-xl"
+                >
+                  <LuwiIsotipo className="h-[64px] w-[78px] drop-shadow-[0_10px_20px_rgba(12,16,80,0.45)]" />
+                </motion.div>
+              </div>
+
+              <motion.div
+                initial={reducido ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+                className="absolute -bottom-3 right-0 w-[236px] rounded-2xl border border-luwi-linea/80 bg-white p-4 text-luwi-profundo shadow-[0_20px_40px_-14px_rgba(15,20,76,0.35)]"
+              >
+                <div className="flex items-center justify-between text-xs font-bold">
+                  <span>Tu ruta activa</span>
+                  <span className="text-luwi-medio">78%</span>
+                </div>
+                <p className="mt-1 text-xs text-luwi-texto">Formación personalizada</p>
+                <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-luwi-antique">
+                  <motion.div
+                    initial={reducido ? { width: "78%" } : { width: "0%" }}
+                    animate={{ width: "78%" }}
+                    transition={{ duration: 1.1, delay: 0.3, ease: "easeOut" }}
+                    className="h-full rounded-full bg-colonial-progress"
+                  />
+                </div>
+                <p className="mt-2 text-[11px] text-luwi-muted">Avance sincronizado con RR. HH.</p>
+              </motion.div>
+            </div>
           </div>
 
-          {/* ===== Panel derecho: formulario ===== */}
-          <div className="relative z-10 flex flex-col justify-center bg-[#F4F8FF] px-7 py-9 sm:px-11 lg:py-10">
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 100 640"
-              preserveAspectRatio="none"
-              className="pointer-events-none absolute inset-y-0 right-full hidden h-full w-[90px] lg:block"
-            >
-              <path
-                d="M100 0 H62 C18 70 78 150 46 250 C18 340 82 420 52 520 C38 570 52 610 70 640 H100 Z"
-                className="fill-[#F4F8FF]"
-              />
-            </svg>
-
-            <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/80 blur-2xl" />
-
-            <div className="relative mx-auto w-full max-w-[340px]">
+          {/* ===== Panel derecho: formulario limpio ===== */}
+          <div className="relative z-10 flex flex-col justify-center bg-white px-7 py-10 sm:px-12 lg:py-12">
+            <div className="relative mx-auto w-full max-w-[360px]">
               <Logo size="md" className="mb-8 lg:hidden" />
 
               <header className="mb-6">
-                <h1 className="text-[26px] font-bold leading-tight tracking-[-0.02em] text-luwi-profundo">{title}</h1>
+                <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.025em] text-luwi-profundo">{title}</h1>
                 {subtitle && <p className="mt-2 text-[14px] leading-relaxed text-luwi-texto">{subtitle}</p>}
               </header>
 
@@ -219,8 +212,7 @@ export default function AuthLayout({ title, subtitle, footer, children }) {
         </section>
       </div>
 
-      {/* Pie de página */}
-      <p className="relative mt-6 text-center text-xs text-luwi-texto/70">
+      <p className="relative mt-6 text-center text-xs font-medium text-luwi-texto/80">
         © {new Date().getFullYear()} LUWI · Learn · Upgrade · Work · Improve
       </p>
     </main>

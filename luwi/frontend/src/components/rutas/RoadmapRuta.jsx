@@ -23,7 +23,7 @@ function TarjetaCurso({ curso, numero, editable, onRemove, incompatible, avisoNi
   const nivel = nivelDe(curso);
   return (
     <article
-      className={`group relative overflow-hidden rounded-2xl border bg-white p-4 shadow-[0_10px_26px_-18px_rgba(11,58,140,0.55)] transition ${
+      className={`group relative overflow-hidden rounded-2xl border bg-white p-4 shadow-[0_10px_26px_-18px_rgba(17,22,82,0.55)] transition ${
         incompatible ? "border-red-300 ring-2 ring-red-100" : "border-luwi-linea/80 hover:border-luwi-tecno/40"
       }`}
     >
@@ -115,7 +115,7 @@ function Fila({ curso, indice, acumulado, editable, onRemove, incompatible, avis
 
       <div className="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2">
         <span
-          className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-base font-bold text-white shadow-[0_10px_20px_-8px_rgba(0,110,230,0.7)] ring-4 ring-luwi-panel ${nivel.nodo}`}
+          className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-base font-bold text-white shadow-[0_10px_20px_-8px_rgba(34,43,184,0.7)] ring-4 ring-luwi-panel ${nivel.nodo}`}
         >
           {indice + 1}
         </span>
@@ -226,7 +226,7 @@ export default function RoadmapRuta({
 
       {/* Inicio */}
       <div className="relative z-10 flex md:justify-center">
-        <div className="flex items-center gap-3 rounded-2xl border border-white bg-white/90 py-2.5 pl-2.5 pr-4 shadow-[0_10px_26px_-18px_rgba(11,58,140,0.55)]">
+        <div className="flex items-center gap-3 rounded-2xl border border-white bg-white/90 py-2.5 pl-2.5 pr-4 shadow-[0_10px_26px_-18px_rgba(17,22,82,0.55)]">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-luwi-cristal-fondo text-luwi-medio">
             <BriefcaseIcon className="h-5 w-5" />
           </span>
@@ -261,7 +261,7 @@ export default function RoadmapRuta({
 
       {/* Meta */}
       <div className="relative z-10 flex md:justify-center">
-        <div className="flex items-center gap-3 rounded-2xl bg-[linear-gradient(135deg,#0B3A8C_0%,#0B5BD3_60%,#009CFF_100%)] py-2.5 pl-2.5 pr-5 text-white shadow-[0_14px_30px_-14px_rgba(11,58,140,0.8)]">
+        <div className="flex items-center gap-3 rounded-2xl bg-colonial-hero py-2.5 pl-2.5 pr-5 text-white shadow-[0_14px_30px_-14px_rgba(15,20,76,0.65)]">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
             <FlagIcon className="h-5 w-5" />
           </span>

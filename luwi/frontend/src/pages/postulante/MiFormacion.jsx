@@ -11,16 +11,16 @@ import { resumenFormacion, situacionCurso, formatoHoras } from "../../utils/form
 
 // Estilos según la situación del curso
 const NUMERO = {
-  hecho: "bg-gradient-to-br from-emerald-400 to-emerald-500 text-white shadow-[0_8px_16px_-8px_rgba(16,185,129,0.8)]",
-  actual: "bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_0_0_6px_rgba(0,156,255,0.15)]",
+  hecho: "bg-gradient-to-br from-[#d1b17c] to-[#8c6a34] text-white shadow-[0_8px_16px_-8px_rgba(140,106,52,0.75)]",
+  actual: "bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_0_0_6px_rgba(59,69,201,0.15)]",
   disponible: "bg-white text-luwi-medio ring-2 ring-luwi-cristal",
   bloqueado: "bg-luwi-panel text-luwi-texto/50 ring-1 ring-luwi-linea",
 };
 
 const ETIQUETA = {
-  hecho: { texto: "Completado", cls: "bg-emerald-50 text-emerald-700 ring-emerald-200", punto: "bg-emerald-500" },
-  actual: { texto: "En curso", cls: "bg-luwi-tecno/10 text-luwi-medio ring-luwi-tecno/25", punto: "bg-luwi-tecno" },
-  disponible: { texto: "Habilitado", cls: "bg-luwi-cristal-fondo text-luwi-profundo ring-luwi-cristal", punto: "bg-luwi-medio" },
+  hecho: { texto: "Completado", cls: "bg-luwi-antique text-luwi-fawn-deep ring-luwi-fawn/45", punto: "bg-luwi-fawn-deep" },
+  actual: { texto: "En curso", cls: "bg-luwi-cristal text-luwi-medio ring-luwi-medio/25", punto: "bg-luwi-medio" },
+  disponible: { texto: "Habilitado", cls: "bg-luwi-cristal-fondo text-luwi-profundo ring-luwi-linea", punto: "bg-luwi-profundo" },
   bloqueado: { texto: "Bloqueado", cls: "bg-luwi-panel text-luwi-texto ring-luwi-linea", punto: "bg-luwi-texto/50" },
 };
 
@@ -41,7 +41,7 @@ function UnidadesSegmentadas({ total, hechas, completo }) {
         <span
           key={i}
           className={`h-2 flex-1 rounded-full transition-colors duration-500 ${
-            i < hechas ? (completo ? "bg-emerald-400" : "bg-gradient-to-r from-luwi-medio to-luwi-tecno") : "bg-luwi-cristal-fondo"
+            i < hechas ? (completo ? "bg-colonial-fawn" : "bg-colonial-progress") : "bg-luwi-antique"
           }`}
         />
       ))}
@@ -70,7 +70,7 @@ function CursoItem({ curso, situacion, asignacionId, suspendido, ultimo, indice 
       {!ultimo && (
         <span
           aria-hidden="true"
-          className={`absolute left-[23px] top-14 h-[calc(100%-32px)] w-0.5 rounded-full ${revisado ? "bg-emerald-300" : "bg-luwi-linea"}`}
+          className={`absolute left-[23px] top-14 h-[calc(100%-32px)] w-0.5 rounded-full ${revisado ? "bg-luwi-fawn" : "bg-luwi-linea"}`}
         />
       )}
 
@@ -82,10 +82,10 @@ function CursoItem({ curso, situacion, asignacionId, suspendido, ultimo, indice 
       <article
         className={`group relative mb-4 min-w-0 flex-1 overflow-hidden rounded-[24px] border p-5 transition duration-300 sm:p-6 ${
           situacion === "actual"
-            ? "border-luwi-tecno/30 bg-white shadow-[0_18px_40px_-24px_rgba(0,110,230,0.55)]"
+            ? "border-luwi-tecno/30 bg-white shadow-[0_18px_40px_-24px_rgba(34,43,184,0.55)]"
             : bloqueado
             ? "border-white bg-white/60"
-            : "border-white bg-white/90 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)] hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-22px_rgba(11,58,140,0.5)]"
+            : "border-white bg-white/90 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.4)] hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-22px_rgba(17,22,82,0.5)]"
         }`}
       >
         {situacion === "actual" && (
@@ -127,7 +127,7 @@ function CursoItem({ curso, situacion, asignacionId, suspendido, ultimo, indice 
             <span className="text-luwi-texto/80">
               {curso.revisadasObligatorias} de {curso.totalObligatorias} unidades revisadas
             </span>
-            <span className={`font-semibold ${revisado ? "text-emerald-600" : "text-luwi-profundo"}`}>{curso.porcentaje}%</span>
+            <span className={`font-semibold ${revisado ? "text-luwi-fawn-deep" : "text-luwi-profundo"}`}>{curso.porcentaje}%</span>
           </div>
           <UnidadesSegmentadas total={curso.totalObligatorias} hechas={curso.revisadasObligatorias} completo={revisado} />
         </div>
@@ -144,7 +144,7 @@ function CursoItem({ curso, situacion, asignacionId, suspendido, ultimo, indice 
               className={`relative mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30 ${
                 revisado
                   ? "border border-luwi-linea bg-white text-luwi-profundo hover:border-luwi-tecno/40 hover:bg-luwi-cristal-fondo"
-                  : "bg-gradient-to-r from-luwi-profundo to-luwi-medio text-white shadow-[0_10px_24px_-10px_rgba(11,58,140,0.8)] hover:-translate-y-0.5 hover:brightness-110"
+                  : "bg-gradient-to-r from-luwi-profundo to-luwi-medio text-white shadow-[0_10px_24px_-10px_rgba(17,22,82,0.8)] hover:-translate-y-0.5 hover:brightness-110"
               }`}
             >
               {revisado && <CheckCircleIcon className="h-4 w-4" />}
@@ -204,7 +204,7 @@ export default function MiFormacion() {
           <TuCamino resumen={resumen} titulo="Mapa de tu ruta" subtitulo={asignacion.ruta.descripcion || `Vas en el ${asignacion.porcentaje}% de tu ruta`} />
 
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div role="tablist" aria-label="Filtrar cursos" className="inline-flex flex-wrap gap-1 rounded-2xl bg-white/90 p-1.5 shadow-[0_10px_30px_-20px_rgba(11,58,140,0.4)] ring-1 ring-white">
+            <div role="tablist" aria-label="Filtrar cursos" className="inline-flex flex-wrap gap-1 rounded-2xl bg-white/90 p-1.5 shadow-[0_10px_30px_-20px_rgba(17,22,82,0.4)] ring-1 ring-white">
               {FILTROS.map((f) => {
                 const cantidad = conSituacion.filter((x) => f.incluye(x.situacion)).length;
                 const activo = filtro === f.key;
@@ -223,7 +223,7 @@ export default function MiFormacion() {
                       <motion.span
                         layoutId="filtro-formacion"
                         transition={reducido ? { duration: 0 } : { type: "spring", bounce: 0.2, duration: 0.4 }}
-                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio shadow-[0_8px_18px_-8px_rgba(11,58,140,0.8)]"
+                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio shadow-[0_8px_18px_-8px_rgba(17,22,82,0.8)]"
                       />
                     )}
                     <span className="relative">{f.label}</span>

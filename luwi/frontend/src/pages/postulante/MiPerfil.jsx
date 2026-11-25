@@ -13,7 +13,7 @@ import { resumenFormacion, formatoHoras } from "../../utils/formacion";
 import { ANIMOS, OPCIONES_META, OPCIONES_RITMO, finEstimado } from "../../utils/espacioPostulante";
 
 const ESTADO_PROCESO = {
-  ACTIVO: { texto: "Activo", cls: "bg-emerald-50 text-emerald-700 ring-emerald-200", punto: "bg-emerald-500" },
+  ACTIVO: { texto: "Activo", cls: "bg-luwi-cristal text-luwi-medio ring-luwi-medio/20", punto: "bg-luwi-medio" },
   SUSPENDIDO: { texto: "Suspendido", cls: "bg-amber-50 text-amber-700 ring-amber-200", punto: "bg-amber-500" },
   FINALIZADO: { texto: "Finalizado", cls: "bg-luwi-cristal-fondo text-luwi-profundo ring-luwi-cristal", punto: "bg-luwi-medio" },
 };
@@ -49,7 +49,7 @@ function Estadistica({ emoji, label, valor, sufijo = "", detalle, indice }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.05 * indice }}
       whileHover={reducido ? undefined : { y: -3 }}
-      className="relative overflow-hidden rounded-[22px] border border-white bg-white/90 p-5 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)]"
+      className="relative overflow-hidden rounded-[22px] border border-luwi-linea/80 bg-white/95 p-5 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.28)]"
     >
       <span aria-hidden="true" className="pointer-events-none absolute -right-3 -top-3 text-5xl opacity-[0.12]">
         {emoji}
@@ -64,7 +64,7 @@ function Estadistica({ emoji, label, valor, sufijo = "", detalle, indice }) {
   );
 }
 
-const tarjeta = "rounded-[24px] border border-white bg-white/90 p-5 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)] sm:p-6";
+const tarjeta = "rounded-[24px] border border-luwi-linea/80 bg-white/95 p-5 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.28)] sm:p-6";
 
 export default function MiPerfil() {
   const { user } = useAuth();
@@ -89,8 +89,8 @@ export default function MiPerfil() {
       {suspendido && <Aviso>{MENSAJE_SUSPENDIDO}</Aviso>}
 
       {/* Portada del perfil */}
-      <section className="rounded-[28px] border border-white bg-white/90 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)]">
-        <div className="relative h-36 overflow-hidden rounded-t-[28px] bg-[linear-gradient(120deg,#0B3A8C_0%,#0B5BD3_55%,#009CFF_100%)] sm:h-40">
+      <section className="rounded-[28px] border border-luwi-linea/80 bg-white/95 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.4)]">
+        <div className="relative h-36 overflow-hidden rounded-t-[28px] bg-colonial-hero sm:h-40">
           <div aria-hidden="true" className="absolute -right-10 -top-16 h-56 w-56 rounded-full border-[30px] border-white/10" />
           <div aria-hidden="true" className="absolute right-40 top-10 h-24 w-24 rounded-full bg-white/10 blur-xl" />
           <div

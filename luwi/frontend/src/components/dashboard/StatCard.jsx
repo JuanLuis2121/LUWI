@@ -8,7 +8,7 @@ function Delta({ nuevos, texto }) {
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${
-        sube ? "bg-emerald-50 text-emerald-700" : "bg-luwi-panel text-luwi-texto/70"
+        sube ? "bg-luwi-antique text-luwi-fawn-deep" : "bg-luwi-panel text-luwi-texto/70"
       }`}
     >
       {sube && (
@@ -37,7 +37,7 @@ export default function StatCard({ paso, label, value, icon: Icon, detalle, prog
   const body = (
     <>
       <div className="flex items-start justify-between">
-        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(0,110,230,0.7)] transition duration-300 group-hover:scale-105">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(34,43,184,0.7)] transition duration-300 group-hover:scale-105">
           {Icon && <Icon className="h-[22px] w-[22px]" />}
         </span>
         {paso && <span className="text-[13px] font-bold tracking-wider text-luwi-linea transition group-hover:text-luwi-tecno/50">{paso}</span>}
@@ -77,7 +77,7 @@ export default function StatCard({ paso, label, value, icon: Icon, detalle, prog
   );
 
   const cls =
-    "group relative block h-full overflow-hidden rounded-3xl border border-white bg-white/90 p-5 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)] transition duration-300 sm:p-6";
+    "group relative block h-full overflow-hidden rounded-3xl border border-white bg-white/90 p-5 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.4)] transition duration-300 sm:p-6";
 
   return (
     <div className="relative h-full">
@@ -85,7 +85,7 @@ export default function StatCard({ paso, label, value, icon: Icon, detalle, prog
         <Link
           to={to}
           aria-label={`${label}: ${value}`}
-          className={`${cls} hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(11,58,140,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40`}
+          className={`${cls} hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(17,22,82,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40`}
         >
           {body}
         </Link>

@@ -46,10 +46,10 @@ export default function RutaDestacada({ rutas, onAbrir }) {
       onMouseLeave={() => setPausa(false)}
       onFocus={() => setPausa(true)}
       onBlur={() => setPausa(false)}
-      className="relative flex flex-col overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,#0B3A8C_0%,#082C6E_55%,#061A45_100%)] p-6 text-white shadow-[0_24px_60px_-30px_rgba(6,26,69,0.9)] sm:p-7"
+      className="relative flex flex-col overflow-hidden rounded-[28px] bg-colonial-hero p-6 text-white shadow-[0_24px_60px_-30px_rgba(15,20,76,0.8)] sm:p-7"
     >
       {/* Decoración */}
-      <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-luwi-tecno/25 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-luwi-fawn/25 blur-3xl" />
       <div aria-hidden="true" className="pointer-events-none absolute -bottom-28 left-10 h-64 w-64 rounded-full bg-luwi-medio/30 blur-3xl" />
       <div
         aria-hidden="true"
@@ -58,10 +58,10 @@ export default function RutaDestacada({ rutas, onAbrir }) {
 
       <div className="relative flex flex-wrap items-start justify-between gap-4">
         <div className="w-full min-w-0 lg:w-auto lg:flex-1">
-          <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7cc8ff]">
+          <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#F0D4A4]">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-luwi-tecno opacity-60 motion-reduce:animate-none" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-luwi-tecno" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-luwi-fawn opacity-60 motion-reduce:animate-none" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-luwi-fawn" />
             </span>
             Ruta destacada
           </p>
@@ -76,7 +76,7 @@ export default function RutaDestacada({ rutas, onAbrir }) {
               <button
                 type="button"
                 onClick={() => onAbrir(ruta)}
-                className="mt-2 block max-w-full truncate text-left text-2xl font-bold tracking-[-0.01em] transition hover:text-[#bfe3ff] focus:outline-none focus-visible:underline"
+                className="mt-2 block max-w-full truncate text-left text-2xl font-bold tracking-[-0.01em] transition hover:text-[#F8E6D2] focus:outline-none focus-visible:underline"
               >
                 {ruta.nombre}
               </button>
@@ -145,7 +145,7 @@ export default function RutaDestacada({ rutas, onAbrir }) {
           </button>
           <Link
             to={`/dashboard/rutas/${ruta.id}`}
-            className="ml-1 inline-flex h-10 items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-luwi-profundo shadow-[0_10px_24px_-12px_rgba(0,156,255,0.9)] transition hover:-translate-y-0.5"
+            className="ml-1 inline-flex h-10 items-center gap-2 rounded-xl bg-colonial-fawn px-4 text-sm font-bold text-luwi-profundo shadow-[0_10px_24px_-12px_rgba(15,20,76,0.5)] transition hover:-translate-y-0.5 hover:brightness-105"
           >
             Ver roadmap
             <ChevronRightIcon className="h-4 w-4" />

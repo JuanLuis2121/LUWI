@@ -3,7 +3,7 @@ import { PERIODOS } from "../../utils/periodo";
 /** Selector de periodo del dashboard (7 días, 30 días, 90 días, 12 meses). */
 export default function PeriodSelector({ value, onChange }) {
   return (
-    <div role="radiogroup" aria-label="Periodo" className="flex items-center gap-1 rounded-xl bg-white p-1 shadow-[0_6px_16px_-12px_rgba(11,58,140,0.5)] ring-1 ring-inset ring-luwi-linea">
+    <div role="radiogroup" aria-label="Periodo" className="flex items-center gap-1 rounded-xl bg-white p-1 shadow-[0_6px_16px_-12px_rgba(17,22,82,0.5)] ring-1 ring-inset ring-luwi-linea">
       {Object.entries(PERIODOS).map(([key, p]) => {
         const activo = value === key;
         return (

@@ -39,13 +39,13 @@ export default function CoberturaCompetencias({ cobertura, hayPuesto }) {
       <div className="flex items-center gap-4">
         <div className="relative h-[84px] w-[84px] shrink-0">
           <svg viewBox="0 0 84 84" className="-rotate-90" aria-hidden="true">
-            <circle cx="42" cy="42" r={radio} fill="none" stroke="#eaf3ff" strokeWidth="9" />
+            <circle cx="42" cy="42" r={radio} fill="none" stroke="#efe2d1" strokeWidth="9" />
             <circle
               cx="42"
               cy="42"
               r={radio}
               fill="none"
-              stroke={p === 100 ? "#10b981" : "#009cff"}
+              stroke={p === 100 ? "#d1b17c" : "#222bb8"}
               strokeWidth="9"
               strokeLinecap="round"
               strokeDasharray={`${(circ * p) / 100} ${circ}`}
@@ -80,10 +80,10 @@ export default function CoberturaCompetencias({ cobertura, hayPuesto }) {
 
       {cobertura.cubiertas.length > 0 && (
         <>
-          <p className="mt-4 text-xs font-semibold text-emerald-700">Cubiertas</p>
+          <p className="mt-4 text-xs font-semibold text-luwi-medio">Cubiertas</p>
           <ul className="mt-2 flex flex-wrap gap-1.5">
             {cobertura.cubiertas.map((c) => (
-              <li key={c.id} className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-200">
+              <li key={c.id} className="inline-flex items-center gap-1 rounded-lg bg-luwi-cristal px-2.5 py-1 text-xs font-medium text-luwi-medio ring-1 ring-inset ring-luwi-medio/20">
                 <CheckIcon className="h-3 w-3" />
                 {c.nombre}
               </li>

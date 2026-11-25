@@ -25,7 +25,7 @@ export default function CatalogoCursos({ cursos, onAgregar, bloqueado }) {
 
   return (
     <div className="flex h-full flex-col">
-      <label className="flex h-10 items-center gap-2.5 rounded-xl border border-luwi-linea bg-luwi-panel px-3.5 transition focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,156,255,0.10)]">
+      <label className="flex h-10 items-center gap-2.5 rounded-xl border border-luwi-linea bg-luwi-panel px-3.5 transition focus-within:border-luwi-tecno focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(59,69,201,0.10)]">
         <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-luwi-texto/70" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" />
@@ -84,7 +84,7 @@ export default function CatalogoCursos({ cursos, onAgregar, bloqueado }) {
                     e.dataTransfer.setData("text/curso-id", c.id);
                     e.dataTransfer.effectAllowed = "copy";
                   }}
-                  className="group flex cursor-grab items-center gap-3 rounded-xl border border-luwi-linea/80 bg-white p-3 transition hover:border-luwi-tecno/40 hover:shadow-[0_8px_20px_-14px_rgba(11,58,140,0.6)] active:cursor-grabbing"
+                  className="group flex cursor-grab items-center gap-3 rounded-xl border border-luwi-linea/80 bg-white p-3 transition hover:border-luwi-tecno/40 hover:shadow-[0_8px_20px_-14px_rgba(17,22,82,0.6)] active:cursor-grabbing"
                 >
                   <span aria-hidden="true" className={`h-9 w-1.5 shrink-0 rounded-full ${n.punto}`} />
                   <div className="min-w-0 flex-1">

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
-// Piezas de confeti en los azules de LUWI (posiciones fijas: se ve igual cada vez)
-const COLORES = ["#0b3a8c", "#0b5bd3", "#009cff", "#7cc8ff", "#dcebff"];
+// Piezas de confeti en la paleta Colonial Cobalt + Soft Fawn de LUWI
+const COLORES = ["#111652", "#222bb8", "#3b45c9", "#d1b17c", "#f8e6d2"];
 const PIEZAS = Array.from({ length: 42 }, (_, i) => ({
   izquierda: (i * 37) % 100,
   retraso: (i % 7) * 0.12,
@@ -51,8 +51,8 @@ export default function Celebracion({ open, onClose, titulo, mensaje, acciones }
         ))}
       </div>
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-[28px] bg-white text-center shadow-[0_40px_90px_-30px_rgba(6,26,69,0.6)] animate-[entrar-toast_260ms_ease-out] motion-reduce:animate-none">
-        <div className="relative bg-[radial-gradient(ellipse_at_50%_0%,#CFE4FF_0%,#FFFFFF_70%)] px-8 pb-2 pt-10">
+      <div className="relative w-full max-w-md overflow-hidden rounded-[28px] bg-white text-center shadow-[0_40px_90px_-30px_rgba(17,22,82,0.5)] animate-[entrar-toast_260ms_ease-out] motion-reduce:animate-none">
+        <div className="relative bg-[radial-gradient(ellipse_at_50%_0%,#F8E6D2_0%,#FFFFFF_70%)] px-8 pb-2 pt-10">
           <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] bg-gradient-to-br from-amber-300 to-orange-400 text-white shadow-[0_18px_36px_-14px_rgba(251,146,60,0.9)]">
             <svg viewBox="0 0 24 24" className="h-10 w-10" fill="currentColor" aria-hidden="true">
               <path d="M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.9 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8L12 2z" />

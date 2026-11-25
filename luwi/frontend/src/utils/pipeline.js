@@ -29,8 +29,8 @@ export const ETAPAS = [
     key: "LISTO",
     titulo: "Listos",
     ayuda: "Ruta completada",
-    punto: "bg-emerald-500",
-    barra: "from-emerald-400 to-emerald-500",
+    punto: "bg-luwi-fawn-deep",
+    barra: "from-[#d1b17c] to-[#8c6a34]",
     vacio: "Arrastra aquí para finalizar el proceso",
   },
 ];
@@ -38,14 +38,14 @@ export const ETAPAS = [
 export const ETAPA_POR_KEY = Object.fromEntries(ETAPAS.map((e) => [e.key, e]));
 
 export const ESTADO_PROCESO = {
-  ACTIVO: { label: "Activo", cls: "bg-emerald-50 text-emerald-700 ring-emerald-100" },
-  SUSPENDIDO: { label: "Suspendido", cls: "bg-amber-50 text-amber-700 ring-amber-100" },
-  FINALIZADO: { label: "Finalizado", cls: "bg-luwi-cristal-fondo text-luwi-profundo ring-luwi-cristal" },
+  ACTIVO: { label: "Activo", cls: "bg-luwi-cristal text-luwi-medio ring-luwi-medio/20" },
+  SUSPENDIDO: { label: "Suspendido", cls: "bg-luwi-antique text-luwi-fawn-deep ring-luwi-fawn/40" },
+  FINALIZADO: { label: "Finalizado", cls: "bg-luwi-cristal-fondo text-luwi-profundo ring-luwi-linea" },
 };
 
 export const CUENTA = {
-  PENDIENTE: { label: "Invitación pendiente", corto: "Invitado", cls: "bg-amber-50 text-amber-700 ring-amber-100" },
-  ACTIVA: { label: "Cuenta activa", corto: "Activa", cls: "bg-emerald-50 text-emerald-700 ring-emerald-100" },
+  PENDIENTE: { label: "Invitación pendiente", corto: "Invitado", cls: "bg-luwi-antique text-luwi-fawn-deep ring-luwi-fawn/40" },
+  ACTIVA: { label: "Cuenta activa", corto: "Activa", cls: "bg-luwi-cristal text-luwi-medio ring-luwi-medio/20" },
   DESACTIVADA: { label: "Cuenta desactivada", corto: "Desactivada", cls: "bg-red-50 text-red-600 ring-red-100" },
   SIN_CUENTA: { label: "Sin cuenta", corto: "Sin cuenta", cls: "bg-slate-50 text-slate-600 ring-slate-200" },
 };
@@ -127,9 +127,9 @@ export const iniciales = (nombre = "") =>
 const AVATARES = [
   "from-luwi-profundo to-luwi-medio",
   "from-luwi-medio to-luwi-tecno",
-  "from-[#0b5bd3] to-[#5b8def]",
-  "from-[#063a7a] to-[#009cff]",
-  "from-[#1d4fb8] to-[#7cc4ff]",
+  "from-[#1e278e] to-[#d1b17c]",
+  "from-[#5c5b94] to-[#111652]",
+  "from-[#8c6a34] to-[#d1b17c]",
 ];
 export function colorAvatar(nombre = "") {
   let h = 0;

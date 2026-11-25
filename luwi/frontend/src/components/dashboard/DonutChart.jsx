@@ -1,6 +1,6 @@
 /**
  * Gráfica de dona en SVG, sin librerías.
- * segmentos: [{ label, value, color }]  (color = valor CSS, ej. "#0b3a8c")
+ * segmentos: [{ label, value, color }]  (color = valor CSS, ej. "#222bb8")
  */
 export default function DonutChart({ segmentos, centro, subcentro, size = 156, grosor = 18 }) {
   const radio = (size - grosor) / 2;
@@ -13,7 +13,7 @@ export default function DonutChart({ segmentos, centro, subcentro, size = 156, g
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg viewBox={`0 0 ${size} ${size}`} className="-rotate-90" role="img" aria-label={segmentos.map((s) => `${s.label}: ${s.value}`).join(", ")}>
-        <circle cx={size / 2} cy={size / 2} r={radio} fill="none" stroke="#dcebff" strokeWidth={grosor} />
+        <circle cx={size / 2} cy={size / 2} r={radio} fill="none" stroke="#efe2d1" strokeWidth={grosor} />
         {total > 0 &&
           segmentos.map((s) => {
             if (!s.value) return null;

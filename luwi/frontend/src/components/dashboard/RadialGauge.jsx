@@ -17,8 +17,9 @@ export default function RadialGauge({ value = 0, size = 168, grosor = 14, label 
       <svg viewBox={`0 0 ${size} ${size}`} className="rotate-[135deg]" role="img" aria-label={`${label ?? "Valor"}: ${v}%`}>
         <defs>
           <linearGradient id={`${id}-g`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#7cc8ff" />
-            <stop offset="100%" stopColor="#009cff" />
+            <stop offset="0%" stopColor="#3B45C9" />
+            <stop offset="55%" stopColor="#8A82A8" />
+            <stop offset="100%" stopColor="#D1B17C" />
           </linearGradient>
         </defs>
         <circle
@@ -26,7 +27,7 @@ export default function RadialGauge({ value = 0, size = 168, grosor = 14, label 
           cy={size / 2}
           r={radio}
           fill="none"
-          stroke="rgba(255,255,255,0.12)"
+          stroke="rgba(248,230,210,0.16)"
           strokeWidth={grosor}
           strokeLinecap="round"
           strokeDasharray={`${arco} ${circunferencia}`}
@@ -41,7 +42,7 @@ export default function RadialGauge({ value = 0, size = 168, grosor = 14, label 
           strokeLinecap="round"
           strokeDasharray={`${lleno} ${circunferencia}`}
           className="transition-[stroke-dasharray] duration-1000 ease-out"
-          style={{ filter: "drop-shadow(0 0 6px rgba(0,156,255,0.55))" }}
+          style={{ filter: "drop-shadow(0 0 8px rgba(209,177,124,0.45))" }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">

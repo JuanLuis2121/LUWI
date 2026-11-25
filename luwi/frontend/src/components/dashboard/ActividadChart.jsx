@@ -2,10 +2,10 @@ import { useState } from "react";
 
 // Series de la gráfica, en el orden en que se apilan (de abajo hacia arriba)
 export const SERIES_ACTIVIDAD = [
-  { key: "empresas", label: "Empresas", color: "#0b3a8c" },
-  { key: "puestos", label: "Puestos", color: "#0b5bd3" },
-  { key: "rutas", label: "Rutas", color: "#009cff" },
-  { key: "cursos", label: "Cursos", color: "#8fd0ff" },
+  { key: "empresas", label: "Empresas", color: "#111652" },
+  { key: "puestos", label: "Puestos", color: "#222bb8" },
+  { key: "rutas", label: "Rutas", color: "#5c5b94" },
+  { key: "cursos", label: "Cursos", color: "#d1b17c" },
 ];
 
 const ALTO = 200;
@@ -54,8 +54,8 @@ export default function ActividadChart({ datos }) {
         <svg viewBox={`0 0 ${ancho} ${ALTO}`} className="h-auto w-full" role="img" aria-label={`Registros creados por intervalo: ${totalPeriodo} en total`}>
           {marcas.map((m) => (
             <g key={m}>
-              <line x1={IZQ} x2={ancho - 8} y1={yDe(m)} y2={yDe(m)} stroke="#e3ecf8" strokeDasharray={m ? "3 4" : undefined} />
-              <text x={IZQ - 8} y={yDe(m) + 4} textAnchor="end" fontSize="10.5" fill="#7b8fb0">
+              <line x1={IZQ} x2={ancho - 8} y1={yDe(m)} y2={yDe(m)} stroke="#efe2d1" strokeDasharray={m ? "3 4" : undefined} />
+              <text x={IZQ - 8} y={yDe(m) + 4} textAnchor="end" fontSize="10.5" fill="#7a7d9b">
                 {m}
               </text>
             </g>
@@ -71,9 +71,9 @@ export default function ActividadChart({ datos }) {
                 onMouseLeave={() => setActivo(null)}
                 className="cursor-default"
               >
-                <rect x={xDe(i) - zona / datos.length / 2} y={ARRIBA} width={zona / datos.length} height={ALTO - ARRIBA - ABAJO} fill={activo === i ? "#eaf3ff" : "transparent"} rx="6" />
+                <rect x={xDe(i) - zona / datos.length / 2} y={ARRIBA} width={zona / datos.length} height={ALTO - ARRIBA - ABAJO} fill={activo === i ? "#f6efe6" : "transparent"} rx="6" />
                 {totales.at(i) === 0 ? (
-                  <rect x={x} y={yDe(0) - 2} width={anchoBarra} height="2" rx="1" fill="#d5e3f7" />
+                  <rect x={x} y={yDe(0) - 2} width={anchoBarra} height="2" rx="1" fill="#e5d5bf" />
                 ) : (
                   SERIES_ACTIVIDAD.map((s) => {
                     const v = d.valores[s.key] ?? 0;
@@ -85,7 +85,7 @@ export default function ActividadChart({ datos }) {
                   })
                 )}
                 {i % cadaN === 0 && (
-                  <text x={xDe(i)} y={ALTO - 8} textAnchor="middle" fontSize="10.5" fill={activo === i ? "#0b3a8c" : "#7b8fb0"}>
+                  <text x={xDe(i)} y={ALTO - 8} textAnchor="middle" fontSize="10.5" fill={activo === i ? "#111652" : "#7a7d9b"}>
                     {d.etiqueta}
                   </text>
                 )}
@@ -96,7 +96,7 @@ export default function ActividadChart({ datos }) {
 
         {activo != null && (
           <div
-            className="pointer-events-none absolute top-0 z-10 w-44 -translate-x-1/2 rounded-xl bg-luwi-noche px-3 py-2.5 text-xs text-white shadow-[0_12px_30px_-10px_rgba(6,26,69,0.7)]"
+            className="pointer-events-none absolute top-0 z-10 w-44 -translate-x-1/2 rounded-xl bg-luwi-noche px-3 py-2.5 text-xs text-white shadow-[0_12px_30px_-10px_rgba(15,20,76,0.7)]"
             style={{ left: `${Math.min(88, Math.max(12, (xDe(activo) / ancho) * 100))}%` }}
           >
             <p className="mb-1.5 font-semibold">{datos.at(activo).etiqueta}</p>

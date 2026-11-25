@@ -16,7 +16,7 @@ export default function ProgressBar({ value = 0, inverse = false, label = "Avanc
     >
       <div
         className={`h-full rounded-full transition-[width] duration-700 ${
-          inverse ? "bg-gradient-to-r from-[#7cc8ff] to-white" : "bg-gradient-to-r from-luwi-medio to-luwi-tecno"
+          inverse ? "bg-gradient-to-r from-[#d1b17c] to-[#f8e6d2]" : "bg-colonial-progress"
         }`}
         style={{ width: `${pct}%` }}
       />

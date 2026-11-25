@@ -3,7 +3,7 @@ import CaminoSerpiente from "../rutas/CaminoSerpiente";
 import { situacionCurso } from "../../utils/formacion";
 
 const LEYENDA = [
-  { cls: "bg-emerald-500", texto: "Completado" },
+  { cls: "bg-luwi-fawn", texto: "Completado" },
   { cls: "bg-luwi-tecno", texto: "En curso" },
   { cls: "bg-white ring-2 ring-luwi-cristal", texto: "Disponible" },
   { cls: "bg-luwi-linea", texto: "Bloqueado" },
@@ -20,10 +20,10 @@ export default function TuCamino({ resumen, titulo = "Tu camino", subtitulo, acc
   const marcador = resumen.cursos.findIndex((c) => c.cursoAsignadoId === actualId);
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-white bg-[radial-gradient(ellipse_at_10%_0%,#EAF3FF_0%,#FFFFFF_55%)] p-5 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)] sm:p-6">
+    <section className="relative overflow-hidden rounded-3xl border border-luwi-linea/80 bg-[radial-gradient(ellipse_at_10%_0%,#F8E6D2_0%,#FFFFFF_58%)] p-5 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.28)] sm:p-6">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:radial-gradient(circle_at_1px_1px,#d5e3f7_1px,transparent_0)] [background-size:20px_20px]"
+        className="pointer-events-none absolute inset-0 opacity-[0.4] [background-image:radial-gradient(circle_at_1px_1px,#e5d5bf_1px,transparent_0)] [background-size:20px_20px]"
       />
       <header className="relative flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">

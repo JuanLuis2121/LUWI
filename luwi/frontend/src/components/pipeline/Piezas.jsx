@@ -7,7 +7,7 @@ export function Avatar({ nombre, size = "md" }) {
   return (
     <span
       aria-hidden="true"
-      className={`flex shrink-0 items-center justify-center bg-gradient-to-br font-bold text-white shadow-[0_8px_18px_-10px_rgba(11,58,140,0.8)] ${colorAvatar(nombre)} ${medidas}`}
+      className={`flex shrink-0 items-center justify-center bg-gradient-to-br font-bold text-white shadow-[0_8px_18px_-10px_rgba(17,22,82,0.8)] ${colorAvatar(nombre)} ${medidas}`}
     >
       {iniciales(nombre)}
     </span>
@@ -59,11 +59,11 @@ export function BarraAvance({ porcentaje = 0, completa = false, mostrarTexto = t
         className="h-1.5 flex-1 overflow-hidden rounded-full bg-luwi-cristal-fondo"
       >
         <div
-          className={`h-full rounded-full bg-gradient-to-r transition-[width] duration-500 ${lleno ? "from-emerald-400 to-emerald-500" : "from-luwi-medio to-luwi-tecno"}`}
+          className={`h-full rounded-full transition-[width] duration-500 ${lleno ? "bg-colonial-fawn" : "bg-colonial-progress"}`}
           style={{ width: `${valor}%` }}
         />
       </div>
-      {mostrarTexto && <span className={`w-9 text-right text-[11px] font-bold ${lleno ? "text-emerald-600" : "text-luwi-profundo"}`}>{valor}%</span>}
+      {mostrarTexto && <span className={`w-9 text-right text-[11px] font-bold ${lleno ? "text-luwi-fawn-deep" : "text-luwi-profundo"}`}>{valor}%</span>}
     </div>
   );
 }

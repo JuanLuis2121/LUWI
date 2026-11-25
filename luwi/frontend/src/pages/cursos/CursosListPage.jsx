@@ -30,7 +30,7 @@ const FILTROS_ESTADO = [
 
 const COLUMNAS_KANBAN = [
   { estado: "BORRADOR", titulo: "Borrador", ayuda: "En preparación", punto: "bg-amber-500" },
-  { estado: "PUBLICADO", titulo: "Publicado", ayuda: "Disponible para rutas", punto: "bg-emerald-500" },
+  { estado: "PUBLICADO", titulo: "Publicado", ayuda: "Disponible para rutas", punto: "bg-luwi-medio" },
   { estado: "INACTIVO", titulo: "Inactivo", ayuda: "Ya no se agrega a rutas", punto: "bg-luwi-texto/50" },
 ];
 
@@ -56,15 +56,43 @@ const COLUMNAS_CSV = [
 
 // ---------- Piezas visuales ----------
 
-/** Portada de color según el nivel del curso. */
-function Portada({ curso, alto = "h-24" }) {
+/** Portada enriquecida estilo LUWI 2.0 (Colonial Cobalt + píldora de duración flotante). */
+function Portada({ curso, alto = "h-44" }) {
   const n = nivelDe(curso);
+  const gradientes = {
+    básico: "from-[#18207A] via-[#3742B8] to-[#BFA06E]",
+    intermedio: "from-[#101654] via-[#242EC0] to-[#C9A875]",
+    avanzado: "from-[#0E1348] via-[#4A4E99] to-[#D1B17C]",
+  };
+  const grad = gradientes[curso.nivel] ?? "from-[#111652] via-[#222BB8] to-[#D1B17C]";
+
   return (
-    <div className={`relative ${alto} overflow-hidden bg-gradient-to-br ${n.nodo}`}>
-      <div aria-hidden="true" className="absolute -right-6 -top-8 h-28 w-28 rounded-full border-[18px] border-white/15" />
-      <div aria-hidden="true" className="absolute -bottom-10 left-6 h-20 w-20 rounded-full bg-white/10" />
-      <span className="absolute bottom-3 left-4 text-3xl font-bold text-white/90">{(curso.titulo ?? "?").charAt(0).toUpperCase()}</span>
-      <span className="absolute right-3 top-3 rounded-md bg-white/20 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur">{n.label}</span>
+    <div className={`relative ${alto} overflow-hidden rounded-[14px] bg-gradient-to-br ${grad}`}>
+      <div aria-hidden="true" className="absolute -right-8 -top-10 h-36 w-36 rounded-full bg-luwi-antique/25 blur-2xl" />
+      <div aria-hidden="true" className="absolute -bottom-10 -left-6 h-28 w-28 rounded-full border-[18px] border-white/10" />
+
+      {/* Píldora flotante de duración (estilo EduAll / LUWI 2.0) */}
+      <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-colonial-btn px-3 py-1 text-[11.5px] font-bold text-white shadow-[0_8px_18px_-6px_rgba(17,22,82,0.55)] ring-1 ring-white/20">
+        <ClockIcon className="h-3.5 w-3.5" />
+        {formatoHoras(curso.duracionHoras)}
+      </span>
+
+      {/* Nivel en esquina superior derecha */}
+      <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-luwi-profundo shadow-sm">
+        {n.label}
+      </span>
+
+      {/* Monograma sutil editorial */}
+      <div className="absolute inset-x-4 bottom-3.5 flex items-end justify-between">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 text-xl font-extrabold text-luwi-antique backdrop-blur-md ring-1 ring-white/25">
+          {(curso.titulo ?? "?").charAt(0).toUpperCase()}
+        </span>
+        {curso.alcance === "GLOBAL" && (
+          <span className="rounded-full bg-luwi-antique/90 px-2.5 py-0.5 text-[10.5px] font-bold text-luwi-profundo">
+            Global
+          </span>
+        )}
+      </div>
     </div>
   );
 }
@@ -110,7 +138,7 @@ export default function CursosListPage() {
   const [estado, setEstado] = useState("");
   const [niveles, setNiveles] = useState([]);
   const [alcances, setAlcances] = useState([]);
-  const [vista, setVista] = useVistaGuardada("cursos", "tabla", ["tabla", "tarjetas", "kanban"]);
+  const [vista, setVista] = useVistaGuardada("cursos", "tarjetas", ["tarjetas", "tabla", "kanban"]);
   const [seleccion, setSeleccion] = useState(() => new Set());
   const [abierto, setAbierto] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -315,7 +343,7 @@ export default function CursosListPage() {
   };
 
   const botonNuevo = (
-    <ActionButton variant="primary" to="/dashboard/cursos/nuevo" title="Atajo: N">
+    <ActionButton variant="fawn" to="/dashboard/cursos/nuevo" title="Atajo: N">
       <Icon name="plus" className="h-4 w-4" />
       Nuevo curso
     </ActionButton>
@@ -399,35 +427,74 @@ export default function CursosListPage() {
   );
 
   const vistaTarjetas = (
-    <ul className="grid gap-5 p-5 sm:grid-cols-2 xl:grid-cols-3">
-      {filtrados.map((c) => {
+    <ul className="grid gap-6 p-6 sm:grid-cols-2 xl:grid-cols-3">
+      {filtrados.map((c, idx) => {
         const marcado = seleccion.has(c._id);
+        const warmTag = idx % 2 === 1;
         return (
           <li
             key={c._id}
             onClick={() => setAbierto(c)}
-            className={`group cursor-pointer overflow-hidden rounded-[22px] border bg-white shadow-[0_10px_30px_-20px_rgba(11,58,140,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-20px_rgba(11,58,140,0.6)] ${
-              marcado ? "border-luwi-tecno ring-2 ring-luwi-tecno/30" : "border-luwi-linea/80"
+            className={`group flex cursor-pointer flex-col overflow-hidden rounded-[22px] border bg-white p-3.5 shadow-[0_10px_28px_-14px_rgba(17,22,82,0.14)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_38px_-16px_rgba(17,22,82,0.22)] ${
+              marcado ? "border-luwi-medio ring-2 ring-luwi-medio/30" : "border-luwi-linea"
             }`}
           >
             <div className="relative">
-              <Portada curso={c} />
-              <div className="absolute left-3 top-3 rounded-md bg-white/90 p-0.5">
+              <Portada curso={c} alto="h-44" />
+              <div
+                className="absolute bottom-3 right-3 rounded-lg bg-white/95 p-1 shadow-sm"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Checkbox checked={marcado} onChange={() => alternar(c._id)} label={`Seleccionar ${c.titulo}`} />
               </div>
             </div>
-            <div className="p-4">
-              <div className="flex items-start justify-between gap-2">
-                <p className="line-clamp-2 font-semibold leading-snug text-luwi-profundo">{c.titulo}</p>
+
+            <div className="flex flex-1 flex-col px-1.5 pb-1 pt-4">
+              {/* Tag de competencia */}
+              <div className="flex items-center justify-between gap-2">
+                <span
+                  className={`inline-block max-w-[75%] truncate rounded-lg px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.06em] ${
+                    warmTag ? "bg-luwi-antique text-luwi-fawn-deep" : "bg-luwi-cristal text-luwi-medio"
+                  }`}
+                >
+                  {c.competencia || "Formación"}
+                </span>
                 <EstadoCursoBadge estado={estadoDe(c)} />
               </div>
-              <p className="mt-1 line-clamp-2 text-xs text-luwi-texto/80">{c.descripcion}</p>
-              <div className="mt-3">
-                <DatosCurso curso={c} />
+
+              {/* Título */}
+              <h3 className="mt-2.5 line-clamp-2 text-[17px] font-bold leading-snug tracking-[-0.015em] text-luwi-profundo transition-colors group-hover:text-luwi-medio">
+                {c.titulo}
+              </h3>
+
+              {c.descripcion && (
+                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-luwi-texto/80">{c.descripcion}</p>
+              )}
+
+              {/* Metadatos fila 1: Unidades y Nivel */}
+              <div className="mt-4 flex items-center justify-between gap-2 text-xs font-medium text-luwi-texto">
+                <span className="inline-flex items-center gap-1.5">
+                  <Icon name="layers" className="h-3.5 w-3.5 text-luwi-medio" />
+                  {plural(c.totalUnidades ?? 0, "unidad", "unidades")}
+                </span>
+                <span className="inline-flex items-center gap-1.5 capitalize">
+                  <RouteIcon className="h-3.5 w-3.5 text-luwi-fawn-deep" />
+                  {plural((c.rutas ?? []).length, "ruta", "rutas")}
+                </span>
               </div>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-luwi-linea/60 pt-3" onClick={(e) => e.stopPropagation()}>
-                {c.alcance === "GLOBAL" ? <SelloGlobal /> : <span className="text-[11px] text-luwi-texto/60">{c.competencia}</span>}
+
+              {/* Separador cálido + acciones */}
+              <div
+                className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-luwi-linea pt-3.5"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="flex flex-wrap gap-1.5">{acciones(c)}</div>
+                <Link
+                  to={`/dashboard/cursos/${c._id}/unidades`}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-luwi-medio transition hover:text-luwi-profundo"
+                >
+                  Ver curso →
+                </Link>
               </div>
             </div>
           </li>
@@ -483,7 +550,7 @@ export default function CursosListPage() {
                     e.dataTransfer.effectAllowed = "move";
                   }}
                   onClick={() => setAbierto(c)}
-                  className={`group relative cursor-grab overflow-hidden rounded-2xl border bg-white p-3.5 pl-4 shadow-[0_6px_16px_-12px_rgba(11,58,140,0.5)] transition hover:border-luwi-tecno/40 active:cursor-grabbing ${
+                  className={`group relative cursor-grab overflow-hidden rounded-2xl border bg-white p-3.5 pl-4 shadow-[0_6px_16px_-12px_rgba(17,22,82,0.5)] transition hover:border-luwi-tecno/40 active:cursor-grabbing ${
                     ocupado.has(c._id) ? "opacity-60" : ""
                   } ${seleccion.has(c._id) ? "border-luwi-tecno ring-2 ring-luwi-tecno/25" : "border-luwi-linea/80"}`}
                 >

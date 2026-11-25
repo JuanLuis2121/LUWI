@@ -114,7 +114,7 @@ export default function AsignarRutaModal({ tarjeta, onClose, onAsignado }) {
       )}
 
       {rutas?.length > 0 && (
-        <div role="radiogroup" aria-label="Ruta" className="max-h-80 space-y-2 overflow-y-auto pr-1 [scrollbar-color:#d5e3f7_transparent] [scrollbar-width:thin]">
+        <div role="radiogroup" aria-label="Ruta" className="max-h-80 space-y-2 overflow-y-auto pr-1 [scrollbar-color:#e5d5bf_transparent] [scrollbar-width:thin]">
           {rutas.map((r) => {
             const activa = r.id === rutaId;
             return (

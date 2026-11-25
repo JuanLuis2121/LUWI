@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ProgressBar from "../../components/postulante/ProgressBar";
 import Celebracion from "../../components/postulante/Celebracion";
+import EvaluacionesCurso from "../../components/postulante/EvaluacionesCurso";
 import { Aviso, Cargando, ErrorCarga } from "../../components/postulante/Avisos";
 import {
   ArrowRightIcon, BookIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, ExternalLinkIcon,
@@ -73,14 +74,14 @@ const botonSecundario =
   "inline-flex items-center justify-center gap-1.5 rounded-xl border border-luwi-linea bg-white px-4 py-2.5 text-sm font-semibold text-luwi-profundo transition hover:border-luwi-tecno/40 hover:bg-luwi-cristal-fondo focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white";
 
 const botonPrincipal =
-  "inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(11,58,140,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30 disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0";
+  "inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-luwi-profundo to-luwi-medio px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(17,22,82,0.8)] transition hover:-translate-y-0.5 hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-tecno/30 disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0";
 
 // ---------- Índice de unidades ----------
 
 function IndiceUnidades({ unidades, actualId, onSelect }) {
   const revisadas = unidades.filter((u) => u.revisada).length;
   return (
-    <nav aria-label="Unidades del curso" className="rounded-[24px] border border-white bg-white/90 p-3 shadow-[0_10px_30px_-18px_rgba(11,58,140,0.4)]">
+    <nav aria-label="Unidades del curso" className="rounded-[24px] border border-white bg-white/90 p-3 shadow-[0_10px_30px_-18px_rgba(17,22,82,0.4)]">
       <div className="flex items-center justify-between px-2 pb-3 pt-1.5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-luwi-texto/60">Contenido</p>
         <span className="rounded-md bg-luwi-cristal-fondo px-2 py-0.5 text-[11px] font-semibold text-luwi-medio">
@@ -104,7 +105,7 @@ function IndiceUnidades({ unidades, actualId, onSelect }) {
                 <span
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold ${
                     u.revisada
-                      ? "bg-gradient-to-br from-emerald-400 to-emerald-500 text-white"
+                      ? "bg-gradient-to-br from-[#d1b17c] to-[#8c6a34] text-white"
                       : actual
                         ? "bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white"
                         : "bg-luwi-panel text-luwi-texto/70 ring-1 ring-luwi-linea"
@@ -173,7 +174,7 @@ function NotasUnidad({ asignacionId, unidadId }) {
             maxLength={4000}
             placeholder="Apunta ideas, dudas o lo que quieras recordar de esta unidad…"
             aria-label="Mis notas de esta unidad"
-            className="w-full resize-y rounded-xl border border-luwi-linea bg-white px-3.5 py-3 text-sm text-luwi-profundo outline-none transition placeholder:text-luwi-texto/50 focus:border-luwi-tecno focus:shadow-[0_0_0_4px_rgba(0,156,255,0.10)]"
+            className="w-full resize-y rounded-xl border border-luwi-linea bg-white px-3.5 py-3 text-sm text-luwi-profundo outline-none transition placeholder:text-luwi-texto/50 focus:border-luwi-tecno focus:shadow-[0_0_0_4px_rgba(59,69,201,0.10)]"
           />
           <p className="mt-1.5 flex justify-between text-[11px] text-luwi-texto/60">
             <span>Solo tú las ves, en este navegador.</span>
@@ -193,7 +194,7 @@ function ContenidoUnidad({ unidad }) {
   return (
     <>
       {embed && (
-        <div className="mt-5 overflow-hidden rounded-2xl bg-luwi-noche shadow-[0_16px_40px_-20px_rgba(6,26,69,0.7)]">
+        <div className="mt-5 overflow-hidden rounded-2xl bg-luwi-noche shadow-[0_16px_40px_-20px_rgba(15,20,76,0.7)]">
           <div className="relative aspect-video">
             <iframe
               src={embed}
@@ -401,7 +402,7 @@ function CursoContenido() {
 
   // ---------- Tarjeta de la unidad (se usa normal y en modo enfoque) ----------
   const tarjetaUnidad = unidad && (
-    <article ref={contenidoRef} className="scroll-mt-24 rounded-[24px] border border-white bg-white p-6 shadow-[0_14px_40px_-28px_rgba(11,58,140,0.6)] sm:p-8">
+    <article ref={contenidoRef} className="scroll-mt-24 rounded-[24px] border border-white bg-white p-6 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.6)] sm:p-8">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-semibold text-luwi-texto/70">
           Unidad {indice + 1} de {unidades.length}
@@ -418,7 +419,7 @@ function CursoContenido() {
         )}
         {!unidad.obligatoria && <span className="rounded-full bg-luwi-panel px-2.5 py-0.5 text-xs font-semibold text-luwi-texto">Opcional</span>}
         {unidad.revisada && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-luwi-antique px-2.5 py-0.5 text-xs font-semibold text-luwi-fawn-deep">
             <CheckIcon className="h-3.5 w-3.5" strokeWidth={2.6} />
             Revisada
           </span>
@@ -451,7 +452,7 @@ function CursoContenido() {
               <ArrowRightIcon className="h-4 w-4" />
             </button>
           ) : (
-            <span className="order-1 col-span-2 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 sm:order-2">
+            <span className="order-1 col-span-2 inline-flex items-center justify-center gap-2 rounded-xl bg-luwi-antique px-5 py-2.5 text-sm font-semibold text-luwi-fawn-deep sm:order-2">
               <CheckIcon className="h-4 w-4" strokeWidth={2.6} />
               Última unidad revisada
             </span>
@@ -484,7 +485,7 @@ function CursoContenido() {
       </div>
 
       {/* Encabezado del curso */}
-      <header className="relative overflow-hidden rounded-[28px] bg-[linear-gradient(120deg,#0B3A8C_0%,#0B5BD3_55%,#009CFF_100%)] p-6 text-white shadow-[0_20px_50px_-25px_rgba(11,58,140,0.8)] sm:p-8">
+      <header className="relative overflow-hidden rounded-[28px] bg-colonial-banner p-6 text-white shadow-[0_20px_50px_-25px_rgba(15,20,76,0.7)] sm:p-8">
         <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full border-[30px] border-white/10" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-0 right-40 h-24 w-24 rounded-full bg-white/10 blur-xl" />
         <div className="relative flex flex-wrap items-end justify-between gap-6">
@@ -532,6 +533,13 @@ function CursoContenido() {
           {!enfoque && tarjetaUnidad}
         </div>
       )}
+
+      {/* Evaluaciones del curso (disponibles al completar todas las unidades obligatorias) */}
+      <EvaluacionesCurso
+        asignacionId={asignacionId}
+        cursoAsignadoId={cursoAsignadoId}
+        avanceKey={curso.revisadasObligatorias}
+      />
 
       {/* Modo enfoque: la unidad a pantalla completa */}
       {enfoque &&
