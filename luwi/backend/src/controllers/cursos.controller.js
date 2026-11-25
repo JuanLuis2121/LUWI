@@ -37,7 +37,7 @@ export const unidadesActivas = (curso) =>
 //   RRHH con empresa: ve los globales + los de su empresa; solo gestiona los de su empresa.
 //   POSTULANTE: no gestiona cursos (su contenido lo ve en /api/mi-formacion).
 
-const gestionaTodo = (perfil) => perfil.role === "ADMIN" || !perfil.empresa;
+export const gestionaTodo = (perfil) => perfil.role === "ADMIN" || !perfil.empresa;
 
 export async function perfilGestor(req) {
   const perfil = await perfilDeSesion(req);
@@ -51,10 +51,10 @@ export async function perfilGestor(req) {
   return perfil;
 }
 
-const filtroVisibles = (perfil) =>
+export const filtroVisibles = (perfil) =>
   gestionaTodo(perfil) ? {} : { empresa: { $in: [null, perfil.empresa] } };
 
-const puedeVer = (perfil, curso) =>
+export const puedeVer = (perfil, curso) =>
   gestionaTodo(perfil) ||
   !curso.empresa ||
   String(curso.empresa) === String(perfil.empresa);
