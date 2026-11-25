@@ -111,11 +111,17 @@ const contactItems = [
   },
 ];
 
+const navLinks = [
+  { label: "Inicio", href: "#inicio" },
+  { label: "Cómo funciona", href: "#como-funciona" },
+  { label: "Acerca de nosotros", href: "#nosotros" },
+];
+
 const linkClass =
-  "text-base text-white/70 transition-colors hover:text-teal focus-visible:text-teal focus-visible:outline-none";
+  "text-base text-white/75 transition-colors hover:text-amarillo focus-visible:text-amarillo focus-visible:outline-none";
 
 const headingClass =
-  "text-sm font-bold uppercase tracking-widest text-lila";
+  "text-sm font-bold uppercase tracking-widest text-amarillo";
 
 // Desplazamiento suave a la sección (Inicio sube al tope de la página)
 function irASeccion(e, href) {
@@ -133,102 +139,111 @@ function irASeccion(e, href) {
   document.querySelector(href)?.scrollIntoView({ behavior });
 }
 
+// Pie de página con la paleta oficial: panel Twilight Navy con esquinas redondeadas
+// (como el panel del hero).
 export default function Footer() {
   return (
-    <footer className="bg-fondo text-white">
-      <div className="mx-auto grid max-w-6xl gap-12 px-8 py-16 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.3fr]">
-        {/* Marca y redes */}
-        <div>
-          <a
-            href="#inicio"
-            onClick={(e) => irASeccion(e, "#inicio")}
-            className="text-3xl font-extrabold"
-          >
-            <span className="text-teal">LU</span>
-            <span className="text-lila">WI</span>
-          </a>
-          <p className="mt-3 text-sm font-bold uppercase tracking-widest text-white/50">
-            Learn · Upgrade · Work · Improve
-          </p>
-          <p className="mt-5 max-w-xs text-base leading-relaxed text-white/70">
-            Preparamos a los candidatos antes de que lleguen al puesto, con
-            rutas de aprendizaje personalizadas para cada empresa.
-          </p>
+    <footer className="bg-white px-3 pt-16 sm:px-4">
+      <div className="relative rounded-t-[48px] bg-marino text-white md:rounded-t-[64px]">
+        <div className="mx-auto grid max-w-6xl gap-12 px-8 pb-16 pt-16 md:pt-20 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]">
+          {/* Marca y redes */}
+          <div>
+            <a
+              href="#inicio"
+              onClick={(e) => irASeccion(e, "#inicio")}
+              className="text-3xl font-extrabold"
+            >
+              <span className="text-amarillo">LU</span>
+              <span className="text-white">WI</span>
+            </a>
+            <p className="mt-4 max-w-xs text-base leading-relaxed text-white/75">
+              Preparamos a los candidatos antes de que lleguen al puesto, con
+              rutas de aprendizaje personalizadas para cada empresa.
+            </p>
 
-          <ul className="mt-6 flex flex-wrap gap-3" aria-label="Redes sociales">
-            {socials.map((s) => (
-              <li key={s.name}>
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${s.name} de LUWI (${s.handle})`}
-                  title={`${s.name} · ${s.handle}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-teal hover:bg-teal hover:text-tinta focus-visible:border-teal focus-visible:bg-teal focus-visible:text-tinta focus-visible:outline-none"
-                >
-                  {s.icon}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Cuenta */}
-        <div>
-          <h2 className={headingClass}>Tu cuenta</h2>
-          <ul className="mt-5 space-y-3">
-            {accountLinks.map((l) => (
-              <li key={l.label}>
-                <a href={l.href} className={linkClass}>
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a
-            href="/solicitar"
-            className="mt-8 inline-block rounded-full bg-lila px-7 py-3 text-base font-bold text-tinta transition-colors hover:bg-morado"
-          >
-            Inicia hoy
-          </a>
-        </div>
-
-        {/* Contacto */}
-        <div>
-          <h2 className={headingClass}>Contacto</h2>
-          <ul className="mt-5 space-y-4">
-            {contactItems.map((c) => (
-              <li key={c.label} className="flex items-start gap-3 text-white/70">
-                <span className="mt-0.5 text-teal">{c.icon}</span>
-                {c.href ? (
-                  <a href={c.href} className={linkClass}>
-                    {c.label}
+            <ul className="mt-6 flex flex-wrap gap-3" aria-label="Redes sociales">
+              {socials.map((s) => (
+                <li key={s.name}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${s.name} de LUWI (${s.handle})`}
+                    title={`${s.name} · ${s.handle}`}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-amarillo hover:bg-amarillo hover:text-marino focus-visible:border-amarillo focus-visible:bg-amarillo focus-visible:text-marino focus-visible:outline-none"
+                  >
+                    {s.icon}
                   </a>
-                ) : (
-                  <span className="text-base">{c.label}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      {/* Barra inferior */}
-      <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-8 py-6 text-sm text-white/50 md:flex-row">
-          <p>© {new Date().getFullYear()} LUWI. Todos los derechos reservados.</p>
-          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {legalLinks.map((l) => (
-              <li key={l.label}>
-                <a
-                  href={l.href}
-                  className="transition-colors hover:text-teal focus-visible:text-teal focus-visible:outline-none"
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {/* Navegación */}
+          <div>
+            <h2 className={headingClass}>Navegación</h2>
+            <ul className="mt-5 space-y-3">
+              {navLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} onClick={(e) => irASeccion(e, l.href)} className={linkClass}>
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Cuenta */}
+          <div>
+            <h2 className={headingClass}>Tu cuenta</h2>
+            <ul className="mt-5 space-y-3">
+              {accountLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className={linkClass}>
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contacto */}
+          <div>
+            <h2 className={headingClass}>Contacto</h2>
+            <ul className="mt-5 space-y-4">
+              {contactItems.map((c) => (
+                <li key={c.label} className="flex items-start gap-3 text-white/75">
+                  <span className="mt-0.5 text-amarillo">{c.icon}</span>
+                  {c.href ? (
+                    <a href={c.href} className={linkClass}>
+                      {c.label}
+                    </a>
+                  ) : (
+                    <span className="text-base">{c.label}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Barra inferior */}
+        <div className="border-t border-white/10">
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-8 py-6 text-sm text-white/55 md:flex-row">
+            <p>© {new Date().getFullYear()} LUWI. Todos los derechos reservados.</p>
+            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+              {legalLinks.map((l) => (
+                <li key={l.label}>
+                  <a
+                    href={l.href}
+                    className="transition-colors hover:text-amarillo focus-visible:text-amarillo focus-visible:outline-none"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </footer>
