@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 
 const icons = {
   user: (
-    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" />
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4.5 21a7.5 7.5 0 0 1 15 0Z" />
+    </>
   ),
   mail: (
     <>
       <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m3 7 9 6 9-6" />
+      <path d="m3 7 9 6 9-6" fill="none" stroke="white" strokeWidth="1.6" />
     </>
   ),
   lock: (
     <>
-      <rect x="5" y="11" width="14" height="9" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+      <rect x="5" y="10" width="14" height="11" rx="2.5" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="2.2" />
     </>
   ),
 };
@@ -22,68 +25,92 @@ function Icon({ name }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-[18px] w-[18px] shrink-0 text-luwi-muted"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className="h-[18px] w-[18px] shrink-0 text-luwi-profundo"
+      fill="currentColor"
       aria-hidden="true"
     >
-      {icons[name]}
+      {icons[name] || icons.user}
     </svg>
   );
 }
 
-export default function Input({ icon, type = "text", error, className = "", ...props }) {
+function EyeIcon({ open }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-[19px] w-[19px]"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {open ? (
+        <>
+          <path d="M3 3l18 18" />
+          <path d="M10.6 6.1A9.7 9.7 0 0 1 12 6c5 0 9 6 9 6a15 15 0 0 1-3.2 3.7M6.6 7.6A15 15 0 0 0 3 12s4 6 9 6a9 9 0 0 0 3.4-.7" />
+        </>
+      ) : (
+        <>
+          <path d="M3 12s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6Z" />
+          <circle cx="12" cy="12" r="3" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+export default function Input({
+  icon,
+  type = "text",
+  error,
+  className = "",
+  id,
+  ...props
+}) {
   const [visible, setVisible] = useState(false);
+  const autoId = useId();
+  const inputId = id ?? autoId;
+  const errorId = `${inputId}-error`;
   const isPassword = type === "password";
 
   return (
-    <div className={className}>
+    <div className={`w-full ${className}`}>
       <div
-        className={`flex items-center gap-3 rounded-xl border bg-white/80 px-4 py-3 shadow-sm transition focus-within:border-luwi-blue focus-within:ring-4 focus-within:ring-luwi-blue/10 ${
-          error ? "border-red-400" : "border-luwi-border"
+        className={`flex h-[50px] items-center gap-3.5 rounded-2xl border bg-luwi-panel px-5 shadow-[0_4px_14px_rgba(17,22,82,0.04)] transition duration-200 focus-within:border-luwi-medio focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(34,43,184,0.12)] ${
+          error ? "border-red-400" : "border-admin-line"
         }`}
       >
         {icon && <Icon name={icon} />}
+
         <input
+          id={inputId}
           type={isPassword && visible ? "text" : type}
-          className="w-full bg-transparent text-sm text-luwi-ink outline-none placeholder:text-luwi-muted"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
+          aria-label={props["aria-label"] ?? props.placeholder}
+          className="h-full w-full min-w-0 bg-transparent text-[14px] text-luwi-profundo outline-none placeholder:text-[#7a7d9b]"
           {...props}
         />
+
         {isPassword && (
           <button
             type="button"
             onClick={() => setVisible((v) => !v)}
             aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
-            className="text-luwi-muted transition hover:text-luwi-blue"
+            className="shrink-0 rounded-md p-1 text-[#7a7d9b] transition hover:text-luwi-profundo focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
           >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-[18px] w-[18px]"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {visible ? (
-                <>
-                  <path d="M3 3l18 18" />
-                  <path d="M10.6 6.1A9.7 9.7 0 0 1 12 6c5 0 9 6 9 6a15 15 0 0 1-3.2 3.7M6.6 7.6A15 15 0 0 0 3 12s4 6 9 6a9 9 0 0 0 3.4-.7" />
-                </>
-              ) : (
-                <>
-                  <path d="M3 12s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6Z" />
-                  <circle cx="12" cy="12" r="3" />
-                </>
-              )}
-            </svg>
+            <EyeIcon open={visible} />
           </button>
         )}
       </div>
-      {error && <p className="mt-1 pl-1 text-xs text-red-500">{error}</p>}
+
+      {error && (
+        <p id={errorId} className="mt-1.5 pl-2 text-xs text-red-500">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

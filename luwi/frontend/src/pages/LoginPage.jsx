@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
@@ -13,23 +14,42 @@ export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ email: "", password: "", remember: true });
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    remember: true,
+  });
+
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
-  // Mensaje que llega desde el registro (navigate("/login", { state }))
   const [success, setSuccess] = useState(location.state?.message ?? "");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
+
+    setForm((f) => ({
+      ...f,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }));
   };
 
   const validate = () => {
     const e = {};
-    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) e.email = "Ingresa un correo válido";
-    if (!form.password) e.password = "Ingresa tu contraseña";
+
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+      e.email = "Ingresa un correo válido";
+    }
+
+    if (!form.password) {
+      e.password = "Ingresa tu contraseña";
+    }
+
     return e;
   };
 
@@ -40,20 +60,24 @@ export default function LoginPage() {
 
     const e = validate();
     setErrors(e);
+
     if (Object.keys(e).length) return;
 
     setLoading(true);
+
     try {
-      // "remember" todavía no se envía: el backend no lo soporta (la cookie
-      // se crea sin maxAge). Se agrega cuando se defina en el servidor.
       const usuario = await login({
         email: form.email.trim(),
         password: form.password,
       });
 
-      navigate(inicioSegunRol(usuario.rol), { replace: true });
+      navigate(inicioSegunRol(usuario.rol), {
+        replace: true,
+      });
     } catch (err) {
-      setServerError(err.message || "No se pudo conectar con el servidor");
+      setServerError(
+        err.message || "No se pudo conectar con el servidor"
+      );
     } finally {
       setLoading(false);
     }
@@ -61,12 +85,15 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      title="Iniciar sesión"
-      subtitle="Bienvenido de nuevo. Nos alegra verte."
+      title="Bienvenido de vuelta"
+      subtitle="Inicia sesión para continuar tu ruta en LUWI."
       footer={
         <>
           ¿No tienes una cuenta?{" "}
-          <Link to="/register" className="font-semibold text-luwi-blue hover:underline">
+          <Link
+            to="/register"
+            className="rounded font-semibold text-luwi-medio transition hover:text-luwi-profundo hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
+          >
             Regístrate
           </Link>
         </>
@@ -74,7 +101,7 @@ export default function LoginPage() {
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <Input
-          icon="mail"
+          icon="user"
           type="email"
           name="email"
           placeholder="Correo electrónico"
@@ -83,6 +110,7 @@ export default function LoginPage() {
           onChange={handleChange}
           error={errors.email}
         />
+
         <Input
           icon="lock"
           type="password"
@@ -94,31 +122,26 @@ export default function LoginPage() {
           error={errors.password}
         />
 
-        <div className="flex items-center justify-between text-xs">
-          <label className="flex cursor-pointer items-center gap-2 text-luwi-ink">
-            <input
-              type="checkbox"
-              name="remember"
-              checked={form.remember}
-              onChange={handleChange}
-              className="h-4 w-4 rounded accent-luwi-blue"
-            />
-            Recordarme
-          </label>
-          <Link to="/forgot-password" className="font-medium text-luwi-blue hover:underline">
-            ¿Olvidaste tu contraseña?
-          </Link>
-        </div>
-
         <FormMessage type="error">{serverError}</FormMessage>
         <FormMessage type="success">{success}</FormMessage>
 
-        <Button type="submit" loading={loading}>
-          Iniciar sesión
-        </Button>
+        <div className="pt-1">
+          <Button type="submit" loading={loading} loadingText="Entrando…">
+            Entrar
+          </Button>
+        </div>
       </form>
 
       <SocialButtons />
+
+      <div className="mt-5 text-center">
+        <Link
+          to="/forgot-password"
+          className="rounded text-[14px] font-medium text-luwi-medio transition hover:text-luwi-profundo hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </div>
     </AuthLayout>
   );
 }

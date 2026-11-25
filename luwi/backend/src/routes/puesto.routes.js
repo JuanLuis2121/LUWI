@@ -8,10 +8,13 @@ import {
 } from "../controllers/puesto.Controller.js";
 import { validateSchema } from "../middlewares/validate.middleware.js";
 import { puestoSchema } from "../validators/puesto.validator.js";
-import { requireAuth } from "../middlewares/auth.middleware.js";
+import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+router.use(requireAuth);
+
+const gestionarPuestos = requireRol("ADMIN-EMPRESA", "RRHH");
 /**
  * @swagger
  * tags:
@@ -36,7 +39,7 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/", requireAuth, getPuestos);
+router.get("/", requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH"), getPuestos);
 /**
  * @swagger
  * /api/puestos/{id}:
@@ -62,7 +65,7 @@ router.get("/", requireAuth, getPuestos);
  *       404:
  *         description: Puesto no encontrado
  */
-router.get("/:id", requireAuth, getPuesto);
+router.get("/:id", gestionarPuestos, getPuesto);
 /**
  * @swagger
  * /api/puestos:
@@ -95,7 +98,7 @@ router.get("/:id", requireAuth, getPuesto);
  *       401:
  *         description: No autorizado
  */
-router.post("/", requireAuth, validateSchema(puestoSchema), createPuesto);
+router.post("/", validateSchema(puestoSchema), gestionarPuestos, createPuesto);
 /**
  * @swagger
  * /api/puestos/{id}:
@@ -140,7 +143,12 @@ router.post("/", requireAuth, validateSchema(puestoSchema), createPuesto);
  *       404:
  *         description: Puesto no encontrado
  */
-router.put("/:id", requireAuth, validateSchema(puestoSchema), updatePuesto);
+router.put(
+  "/:id",
+  validateSchema(puestoSchema),
+  gestionarPuestos,
+  updatePuesto,
+);
 /**
  * @swagger
  * /api/puestos/{id}:
@@ -164,6 +172,6 @@ router.put("/:id", requireAuth, validateSchema(puestoSchema), updatePuesto);
  *       404:
  *         description: Puesto no encontrado
  */
-router.delete("/:id", requireAuth, deletePuesto);
+router.delete("/:id", gestionarPuestos, deletePuesto);
 
 export default router;

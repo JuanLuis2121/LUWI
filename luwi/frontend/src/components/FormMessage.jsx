@@ -1,6 +1,6 @@
 const styles = {
   error: "border-red-200 bg-red-50 text-red-600",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  success: "border-luwi-fawn/55 bg-luwi-antique/70 text-luwi-profundo",
 };
 
 export default function FormMessage({ type = "error", children }) {

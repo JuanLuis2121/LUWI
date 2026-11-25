@@ -3,7 +3,7 @@ import ProcesoFormacion from "../models/ProcesoFormacion.js";
 import AsignacionRuta, { ACCESOS } from "../models/AsignacionRuta.js";
 import RutaAprendizaje from "../models/RutaAprendizaje.js";
 import ProgresoUnidad from "../models/ProgresoUnidad.js";
-import { perteneceAEmpresa } from "../middlewares/contexto.middleware.js";
+import { perteneceAEmpresa } from "../middlewares/auth.middleware.js";
 
 // Devuelve la asignación con cursos ordenados y la duración total calculada
 const formatearAsignacion = (asignacion) => {
@@ -52,7 +52,9 @@ export const crearAsignacion = async (req, res) => {
     const { rutaId } = req.body;
 
     if (!rutaId || !mongoose.isValidObjectId(rutaId)) {
-      return res.status(400).json({ message: "Debes indicar una ruta válida." });
+      return res
+        .status(400)
+        .json({ message: "Debes indicar una ruta válida." });
     }
 
     if (proceso.estado !== "ACTIVO") {
@@ -67,7 +69,9 @@ export const crearAsignacion = async (req, res) => {
     });
 
     if (!ruta) {
-      return res.status(404).json({ message: "Ruta de aprendizaje no encontrada" });
+      return res
+        .status(404)
+        .json({ message: "Ruta de aprendizaje no encontrada" });
     }
 
     if (String(ruta.puesto) !== String(proceso.puesto)) {
@@ -77,7 +81,9 @@ export const crearAsignacion = async (req, res) => {
     }
 
     if (ruta.cursos.length === 0) {
-      return res.status(400).json({ message: "La ruta no tiene cursos disponibles." });
+      return res
+        .status(400)
+        .json({ message: "La ruta no tiene cursos disponibles." });
     }
 
     // Todos los cursos deben estar publicados y ser globales o de la misma empresa
@@ -302,4 +308,3 @@ export const cambiarAcceso = async (req, res) => {
     });
   }
 };
-  

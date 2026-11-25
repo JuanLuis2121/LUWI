@@ -2,31 +2,47 @@
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: "Plus Jakarta Sans", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
-  --color-luwi-navy: #12306e;
-  --color-luwi-blue: #2f6bff;
-  --color-luwi-purple: #8b5cf6;
-  --color-luwi-teal: #14c9a5;
-  --color-luwi-ink: #1e2a4a;
-  --color-luwi-muted: #7a869f;
-  --color-luwi-border: #dfe6f3;
-  --color-luwi-bg: #f4f7fe;
+  /* Identidad visual LUWI 2.0 · Colonial Cobalt (suavizado) + Soft Fawn + Antique White */
+  --color-luwi-profundo: #111652;      /* Twilight Colonial Navy: encabezados y texto fuerte */
+  --color-luwi-medio: #222bb8;         /* Colonial Cobalt suavizado: acciones primarias */
+  --color-luwi-tecno: #3b45c9;         /* Cobalto suave vivo: acentos, foco e indicadores */
+  --color-luwi-fawn: #d1b17c;          /* Soft Fawn: acento cálido editorial */
+  --color-luwi-fawn-deep: #8c6a34;     /* Oro Arena: alto contraste sobre fondos claros */
+  --color-luwi-antique: #f8e6d2;       /* Antique White: acentos cálidos y superficies suaves */
+  --color-luwi-cristal: #ebecfe;       /* Tinte cobalto suave */
+  --color-luwi-cristal-fondo: #f6efe6; /* Superficie cálida derivada de Antique White */
+  --color-luwi-texto: #474b6e;         /* Texto secundario */
+  --color-luwi-linea: #efe2d1;         /* Bordes cálidos sutiles */
+  --color-luwi-noche: #0e1346;         /* Fondo oscuro profundo del menú lateral */
+  --color-luwi-panel: #fdf8f2;         /* Canvas cálido luminoso del panel */
 
-  /* Paleta de administración (formularios y listados) */
-  --color-admin-ink: #312e81;
-  --color-admin-blue: #1d4ed8;
-  --color-admin-purple: #7c3aed;
-  --color-admin-green: #10b981;
-  --color-admin-muted: #6b7280;
-  --color-admin-border: #e5e7eb;
-  --color-admin-bg: #f3f4f6;
-  --color-admin-soft: #e0e7ff;
-  --color-admin-line: #c7d2fe;
+  --color-luwi-navy: #111652;
+  --color-luwi-blue: #222bb8;
+  --color-luwi-purple: #3b45c9;
+  --color-luwi-teal: #d1b17c;
+  --color-luwi-ink: #111652;
+  --color-luwi-muted: #7a7d9b;
+  --color-luwi-border: #efe2d1;
+  --color-luwi-bg: #fdf8f2;
+
+  /* Paleta de administración (formularios y listados) alineada a Colonial Cobalt */
+  --color-admin-ink: #111652;
+  --color-admin-blue: #222bb8;
+  --color-admin-purple: #3b45c9;
+  --color-admin-green: #8c6a34;
+  --color-admin-muted: #585c7e;
+  --color-admin-border: #efe2d1;
+  --color-admin-bg: #fdf8f2;
+  --color-admin-soft: #f8e6d2;
+  --color-admin-line: #e5d5bf;
   --color-admin-danger: #b42318;
 
-  --shadow-card: 0 10px 30px -12px rgb(18 48 110 / 0.18);
+  --shadow-card: 0 12px 32px -16px rgb(17 22 82 / 0.14);
 
-  /* Nueva paleta de la landing */
+  /* Nueva paleta de la landing (intocable) */
   --color-fondo: #16131f;
   --color-superficie: #221e30;
   --color-teal: #2dc8b8;
@@ -74,6 +90,29 @@
   }
 }
 
+/* Degradados firma Colonial Cobalt -> Soft Fawn -> Antique White */
+.bg-colonial-hero {
+  background: linear-gradient(128deg, #0f144c 0%, #1e278e 46%, #5c5b94 76%, #c7a676 100%);
+}
+.bg-colonial-banner {
+  background: linear-gradient(108deg, #10154e 0%, #212b9c 48%, #6e6894 80%, #cbb084 100%);
+}
+.bg-colonial-sidebar {
+  background: linear-gradient(180deg, #0d1242 0%, #182070 68%, #3b375e 100%);
+}
+.bg-colonial-btn {
+  background: linear-gradient(102deg, #2028b2 0%, #333dc7 65%, #5b5fa8 100%);
+}
+.bg-colonial-fawn {
+  background: linear-gradient(102deg, #d1b17c 0%, #ebd2ae 100%);
+}
+.bg-colonial-progress {
+  background: linear-gradient(90deg, #222bb8 0%, #746fa8 55%, #d1b17c 100%);
+}
+.bg-colonial-auth {
+  background: linear-gradient(135deg, #e7e9fa 0%, #f6ede1 40%, #f8e6d2 74%, #ead6bc 100%);
+}
+
 @layer base {
   * {
     margin: 0;
@@ -84,6 +123,90 @@
 
 body {
   @apply bg-luwi-bg font-sans text-luwi-ink antialiased;
+}
+/* Barra de desplazamiento fina y discreta (menú lateral oscuro) */
+.scroll-oscuro {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.18) transparent;
+}
+.scroll-oscuro::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-oscuro::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-oscuro::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.18);
+  border-radius: 999px;
+}
+.scroll-oscuro::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 0.32);
+}
+
+/* Movimiento suave de las tarjetas flotantes del login */
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Autocompletado del navegador: mantiene el fondo blanco de los campos */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #111652;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  caret-color: #111652;
+  transition: background-color 9999s ease-out 0s;
+}
+
+/* Notificaciones (toast) */
+@keyframes entrar-toast {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes vaciar-toast {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Panel lateral (drawer) */
+@keyframes entrar-drawer {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Confeti de la celebración */
+@keyframes caer-confeti {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(540deg);
+    opacity: 0.6;
+  }
 }
 
 /* ---------- Cómo funciona: tarjetas con panel girado ----------

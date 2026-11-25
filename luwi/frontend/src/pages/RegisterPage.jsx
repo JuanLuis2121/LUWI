@@ -92,13 +92,16 @@ export default function RegisterPage() {
       footer={
         <>
           ¿Ya tienes una cuenta?{" "}
-          <Link to="/login" className="font-semibold text-luwi-blue hover:underline">
+          <Link
+            to="/login"
+            className="rounded font-semibold text-luwi-medio transition hover:text-luwi-profundo hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-luwi-tecno/40"
+          >
             Iniciar sesión
           </Link>
         </>
       }
     >
-      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-3">
         <Input
           icon="user"
           name="username"
@@ -140,13 +143,13 @@ export default function RegisterPage() {
         />
 
         <div>
-          <label className="flex cursor-pointer items-center gap-2 text-xs text-luwi-ink">
+          <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed text-luwi-texto">
             <input
               type="checkbox"
               name="terms"
               checked={form.terms}
               onChange={handleChange}
-              className="h-4 w-4 rounded accent-luwi-blue"
+              className="mt-0.5 h-4 w-4 shrink-0 rounded accent-luwi-medio"
             />
             <span>
               Acepto los{" "}
@@ -154,7 +157,7 @@ export default function RegisterPage() {
                 href="/terms"
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium text-luwi-blue hover:underline"
+                className="font-semibold text-luwi-medio hover:text-luwi-profundo hover:underline"
               >
                 Términos y Condiciones
               </a>{" "}
@@ -163,7 +166,7 @@ export default function RegisterPage() {
                 href="/privacy"
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium text-luwi-blue hover:underline"
+                className="font-semibold text-luwi-medio hover:text-luwi-profundo hover:underline"
               >
                 Política de Privacidad
               </a>
@@ -174,7 +177,7 @@ export default function RegisterPage() {
 
         <FormMessage type="error">{serverError}</FormMessage>
 
-        <Button type="submit" loading={loading}>
+        <Button type="submit" loading={loading} loadingText="Creando cuenta…">
           Registrarse
         </Button>
       </form>

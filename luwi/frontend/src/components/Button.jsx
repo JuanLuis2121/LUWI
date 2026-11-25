@@ -1,23 +1,56 @@
-export default function Button({ children, loading = false, className = "", ...props }) {
+function ChevronIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m9 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+function Spinner() {
+  return (
+    <span
+      aria-hidden="true"
+      className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white"
+    />
+  );
+}
+
+export default function Button({
+  children,
+  loading = false,
+  loadingText = "Cargando…",
+  className = "",
+  type = "button",
+  disabled,
+  ...props
+}) {
   return (
     <button
-      disabled={loading || props.disabled}
-      className={`flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-luwi-blue to-luwi-purple px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-luwi-blue/30 transition hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-blue/30 disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
+      type={type}
+      disabled={loading || disabled}
+      aria-busy={loading || undefined}
+      className={`group flex h-[50px] w-full items-center justify-center gap-3 rounded-2xl bg-colonial-btn px-6 text-[15px] font-semibold text-white shadow-[0_12px_28px_-8px_rgba(34,43,184,0.45)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-8px_rgba(34,43,184,0.52)] hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-luwi-medio/25 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 ${className}`}
       {...props}
     >
-      {loading ? "Cargando..." : children}
-      {!loading && (
-        <svg
-          viewBox="0 0 24 24"
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M5 12h14M13 6l6 6-6 6" />
-        </svg>
+      {loading ? (
+        <>
+          <Spinner />
+          {loadingText}
+        </>
+      ) : (
+        <>
+          {children}
+          <ChevronIcon />
+        </>
       )}
     </button>
   );

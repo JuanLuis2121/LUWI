@@ -44,7 +44,7 @@ export function SuccessBanner({ children }) {
   return (
     <div
       role="status"
-      className="flex items-start gap-3 rounded-2xl border-2 border-emerald-300 bg-emerald-50 px-5 py-3.5 text-sm font-semibold text-emerald-700"
+      className="flex items-start gap-3 rounded-2xl border-2 border-luwi-fawn/55 bg-luwi-antique/70 px-5 py-3.5 text-sm font-semibold text-luwi-profundo"
     >
       <Icon name="check" className="mt-0.5 h-[18px] w-[18px] shrink-0" />
       <span className="min-w-0 break-words">{children}</span>

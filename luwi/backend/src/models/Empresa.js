@@ -6,27 +6,23 @@ const empresaSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minlength: 2,
-      maxlength: 120,
     },
     sector: {
       type: String,
-      required: false,
-      trim: true,
-      maxlength: 80,
+      default: "No especificado",
     },
     correo: {
       type: String,
       required: true,
       unique: true,
-      trim: true,
       lowercase: true,
-      match: [/^\S+@\S+\.\S+$/, "El correo no tiene un formato válido."],
+      trim: true,
     },
     // Opcional: el formulario de empresas no la pide.
     password: {
       type: String,
-      required: false,
+      required: true,
+      select: false, // No incluir el password en las consultas por defecto
     },
     puestos: [
       {
@@ -37,7 +33,7 @@ const empresaSchema = new mongoose.Schema(
   },
   {
     timestamps: true, // agrega createdAt y updatedAt automáticamente
-  }
+  },
 );
 
 const Empresa = mongoose.model("Empresa", empresaSchema);

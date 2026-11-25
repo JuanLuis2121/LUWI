@@ -11,7 +11,11 @@ import { puestosConfig } from "../pages/puestos/puestosConfig";
 import CursosListPage from "../pages/cursos/CursosListPage";
 import CursoFormPage from "../pages/cursos/CursoFormPage";
 import CursoUnidadesPage from "../pages/cursos/CursoUnidadesPage";
+import EvaluacionesListPage from "../pages/evaluaciones/EvaluacionesListPage";
+import EvaluacionPreguntasPage from "../pages/evaluaciones/EvaluacionPreguntasPage";
+import RecomendacionesIAPage from "../pages/ia/RecomendacionesIAPage";
 import FichaPostulantePage from "../pages/postulantes/FichaPostulantePage";
+import PipelinePage from "../pages/candidatos/PipelinePage";
 import RutasListPage from "../pages/rutas/RutasListPage";
 import RutaFormPage from "../pages/rutas/RutaFormPage";
 import PostulanteLayout from "../layouts/PostulanteLayout";
@@ -51,7 +55,13 @@ export default function AppRoutes() {
           <Route path="/dashboard/cursos/:id/editar" element={<CursoFormPage mode="edit" />} />
           <Route path="/dashboard/cursos/:id/unidades" element={<CursoUnidadesPage />} />
           <Route path="/dashboard/cursos/:id" element={<CursoUnidadesPage />} />
+          <Route path="/dashboard/evaluaciones" element={<EvaluacionesListPage />} />
+          <Route path="/dashboard/evaluaciones/nuevo" element={<EvaluacionesListPage abrirNuevo />} />
+          <Route path="/dashboard/evaluaciones/:id/editar" element={<EvaluacionesListPage />} />
+          <Route path="/dashboard/evaluaciones/:id/preguntas" element={<EvaluacionPreguntasPage />} />
+          <Route path="/dashboard/postulantes" element={<PipelinePage />} />
           <Route path="/dashboard/postulantes/:procesoId" element={<FichaPostulantePage />} />
+          <Route path="/dashboard/recomendaciones-ia" element={<RecomendacionesIAPage />} />
           <Route path="/dashboard/rutas" element={<RutasListPage />} />
           <Route path="/dashboard/rutas/nuevo" element={<RutaFormPage mode="create" />} />
           <Route path="/dashboard/rutas/:id" element={<RutaFormPage mode="view" />} />

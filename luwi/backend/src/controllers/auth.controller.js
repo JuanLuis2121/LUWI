@@ -1,16 +1,20 @@
-import User from "../models/user.model.js";
-import Empresa from "../models/Empresa.js";
+import User, { ROLES } from "../models/user.model.js";
+import Invitacion from "../models/Invitacion.js";
 import bcrypt from "bcryptjs";
 import { CreateAccessToken } from "../utils/jwt.js";
 import mongoose from "mongoose";
 import crypto from "node:crypto";
+import {
+  ROLES_ACTIVABLES,
+  errorActivacion,
+} from "../validators/auth.validator.js";
 
 // FORMATEAR DATOS DEL USUARIO
 const getUserData = (user) => ({
   id: user._id,
-  nombre: user.username,
+  nombre: user.nombreCompleto || user.username,
   email: user.email,
-  rol: user.role,
+  role: user.role,
   empresa: user.empresa
     ? {
         id: user.empresa._id,
@@ -20,16 +24,16 @@ const getUserData = (user) => ({
 });
 
 // REGISTRAR USUARIO
-export const register = async (req, res) => {
+/* export const register = async (req, res) => {
   const { username, email, password, empresa: empresaId } = req.body;
 
   try {
     let role;
     let empresaAsignada = null;
 
-    if (req.user.role === "admin") {
+    if (req.user.role === "ADMIN") {
       // El administrador general crea administradores de empresa.
-      role = "empresa";
+      role = "ADMIN-EMPRESA";
 
       if (!empresaId || !mongoose.isValidObjectId(empresaId)) {
         return res.status(400).json({
@@ -46,13 +50,13 @@ export const register = async (req, res) => {
       }
 
       empresaAsignada = empresaId;
-    } else if (req.user.role === "empresa") {
+    } else if (req.user.role === "ADMIN-EMPRESA") {
       // El administrador de empresa crea usuarios RRHH.
-      role = "rrhh";
+      role = "RRHH";
       empresaAsignada = req.user.empresa._id;
-    } else if (req.user.role === "rrhh") {
+    } else if (req.user.role === "RRHH") {
       // RRHH crea cuentas de postulantes.
-      role = "postulante";
+      role = "POSTULANTE";
       empresaAsignada = req.user.empresa._id;
     } else {
       return res.status(403).json({
@@ -92,7 +96,7 @@ export const register = async (req, res) => {
       message: "Error interno al crear el usuario.",
     });
   }
-};
+}; */
 
 // INICIAR SESIÓN
 export const login = async (req, res) => {
@@ -105,7 +109,7 @@ export const login = async (req, res) => {
 
     if (!userFound) {
       return res.status(400).json({
-        message: "Credenciales incorrectas.",
+        message: "No existe una cuenta con ese correo.",
       });
     }
 
@@ -113,30 +117,36 @@ export const login = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({
-        message: "Credenciales incorrectas.",
+        message: "La contraseña es incorrecta.",
       });
     }
 
-    if (!["admin", "empresa", "rrhh", "postulante"].includes(userFound.role)) {
+    if (!ROLES.includes(userFound.role)) {
       return res.status(403).json({
         message: "El usuario no tiene un rol válido.",
       });
     }
 
     const user = await User.findById(userFound._id)
-      .select("_id username email role empresa")
+      .select("_id nombreCompleto username email role empresa")
       .populate("empresa", "_id nombre")
       .lean();
 
-    if (user.role !== "admin" && !user.empresa) {
+    if (user.role !== "ADMIN" && !user.empresa) {
       return res.status(403).json({
         message: "El usuario no tiene una empresa asociada válida.",
       });
     }
 
-    if (userFound.cuentaActiva === false) {
+    if (userFound.estadoCuenta === "PENDIENTE") {
       return res.status(403).json({
         message: "Debes activar tu cuenta desde el correo electrónico.",
+      });
+    }
+
+    if (userFound.estadoCuenta === "DESACTIVADA") {
+      return res.status(403).json({
+        message: "Tu cuenta está desactivada.",
       });
     }
 
@@ -185,64 +195,119 @@ export const logout = (req, res) => {
 
 // ACTIVAR CUENTA
 export const activarCuenta = async (req, res) => {
+  const { token, password, nombreCompleto, telefono } = req.body;
+  let session;
+
   try {
-    const { token, password } = req.body;
-
-    if (!token || typeof token !== "string") {
-      return res.status(400).json({
-        message: "Token de activación requerido.",
-      });
-    }
-
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
-
-    const usuario = await User.findOne({
-      activacionToken: tokenHash,
-      activacionExpira: { $gt: new Date() },
-      cuentaActiva: false,
-      role: "postulante",
-    }).select("+activacionToken");
-
-    if (!usuario) {
-      return res.status(400).json({
-        message: "El enlace es inválido o ha expirado.",
-      });
-    }
-
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const actualizado = await User.findOneAndUpdate(
-      {
-        _id: usuario._id,
-        activacionToken: tokenHash,
-        activacionExpira: { $gt: new Date() },
-        cuentaActiva: false,
-      },
-      {
-        $set: {
-          password: passwordHash,
-          cuentaActiva: true,
-        },
-        $unset: {
-          activacionToken: "",
-          activacionExpira: "",
-        },
-      },
-      { new: true },
-    );
+    session = await mongoose.startSession();
 
-    if (!actualizado) {
-      return res.status(400).json({
-        message: "El enlace ya fue utilizado o ha expirado.",
-      });
-    }
+    await session.withTransaction(async () => {
+      const invitacion = await Invitacion.findOne({
+        tokenHash,
+        estado: "PENDIENTE",
+        expiraEn: { $gt: new Date() },
+      }).session(session);
+
+      if (!invitacion) {
+        throw errorActivacion(
+          "El enlace es inválido, ha expirado o ya fue utilizado.",
+        );
+      }
+
+      const usuario = await User.findOne({
+        _id: invitacion.usuario,
+        role: { $in: ROLES_ACTIVABLES },
+        estadoCuenta: "PENDIENTE",
+      }).session(session);
+
+      if (!usuario) {
+        throw errorActivacion("La cuenta no existe o ya está activada.");
+      }
+
+      const cambios = {
+        password: passwordHash,
+        estadoCuenta: "ACTIVA",
+      };
+
+      if (usuario.role === "ADMIN-EMPRESA" || usuario.role === "RRHH") {
+        if (!nombreCompleto) {
+          throw errorActivacion("Escribe tu nombre completo.");
+        }
+
+        cambios.nombreCompleto = nombreCompleto;
+      }
+
+      if (usuario.role === "ADMIN-EMPRESA") {
+        if (!telefono) {
+          throw errorActivacion("Escribe tu teléfono de contacto.");
+        }
+
+        cambios.telefono = telefono;
+      }
+
+      const ahora = new Date();
+      const resultado = await Invitacion.updateOne(
+        {
+          _id: invitacion._id,
+          estado: "PENDIENTE",
+          expiraEn: { $gt: ahora },
+        },
+        {
+          $set: { estado: "USADA", usadaEn: ahora },
+        },
+        { session },
+      );
+
+      if (resultado.modifiedCount !== 1) {
+        throw errorActivacion("La invitación ya fue utilizada o ha expirado.");
+      }
+
+      const cuentaActualizada = await User.updateOne(
+        {
+          _id: usuario._id,
+          role: usuario.role,
+          estadoCuenta: "PENDIENTE",
+        },
+        {
+          $set: cambios,
+          $unset: {
+            activacionToken: "",
+            activacionExpira: "",
+          },
+        },
+        { session, runValidators: true },
+      );
+
+      if (cuentaActualizada.modifiedCount !== 1) {
+        throw errorActivacion("La cuenta no existe o ya está activada.");
+      }
+    });
 
     return res.status(200).json({
       message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
     });
-  } catch {
+  } catch (error) {
+    if (error.status === 400 || error.name === "ValidationError") {
+      return res.status(400).json({ message: error.message });
+    }
+
+    if (error.code === 112 || error.codeName === "WriteConflict") {
+      return res.status(409).json({
+        message: "Verifica si la cuenta ya fue activada antes de reintentar.",
+      });
+    }
+
+    console.error("Error al activar cuenta:", error);
+
     return res.status(500).json({
-      message: "Error al activar la cuenta.",
+      message: "Error interno al activar la cuenta.",
     });
+  } finally {
+    if (session) {
+      await session.endSession();
+    }
   }
 };

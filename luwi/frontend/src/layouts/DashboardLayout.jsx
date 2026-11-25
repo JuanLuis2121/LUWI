@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
+import CreateMenu from "../components/dashboard/CreateMenu";
+import CommandSearch from "../components/dashboard/CommandSearch";
+import NotificationBell from "../components/dashboard/NotificationBell";
 import useAuth from "../hooks/useAuth";
 
 /**
@@ -9,7 +12,7 @@ import useAuth from "../hooks/useAuth";
  * Las pantallas hijas se renderizan en <Outlet />.
  */
 export default function DashboardLayout() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -19,12 +22,25 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-luwi-bg">
-      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={handleLogout} />
+    <div className="min-h-screen bg-luwi-panel font-poppins">
+      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={handleLogout} mostrarIA />
 
       <div className="lg:pl-64">
-        <Topbar username={user?.nombre} onMenuClick={() => setMenuOpen(true)} />
-        <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 sm:py-8">
+        <Topbar
+          onMenuClick={() => setMenuOpen(true)}
+          left={
+            <>
+              <p className="truncate text-sm font-semibold text-luwi-profundo md:hidden">Panel de control</p>
+              <div className="hidden w-full md:block">
+                <CommandSearch />
+              </div>
+            </>
+          }
+        >
+          <NotificationBell />
+          <CreateMenu />
+        </Topbar>
+        <main className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8">
           <Outlet />
         </main>
       </div>
