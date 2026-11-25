@@ -44,7 +44,7 @@ const preguntaSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-preguntaSchema.pre("validate", function (next) {
+preguntaSchema.pre("validate", function () {
   if (this.tipo === "VERDADERO_FALSO") {
     this.opciones = [...OPCIONES_VERDADERO_FALSO];
   } else {
@@ -70,7 +70,7 @@ preguntaSchema.pre("validate", function (next) {
       "La respuesta correcta debe ser una de las opciones de la pregunta."
     );
   }
-  next();
+  
 });
 
 const evaluacionSchema = new mongoose.Schema(
@@ -119,7 +119,7 @@ const evaluacionSchema = new mongoose.Schema(
 );
 
 // No se puede publicar una evaluación sin al menos una pregunta vigente
-evaluacionSchema.pre("validate", function (next) {
+evaluacionSchema.pre("validate", function () {
   if (this.estado === "PUBLICADA") {
     const vigentes = this.preguntas.filter((p) => !p.retirada);
     if (vigentes.length === 0) {
@@ -129,7 +129,7 @@ evaluacionSchema.pre("validate", function (next) {
       );
     }
   }
-  next();
+  
 });
 
 // Puntos totales de las preguntas vigentes

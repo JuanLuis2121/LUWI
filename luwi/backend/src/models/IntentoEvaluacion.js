@@ -65,11 +65,16 @@ const intentoEvaluacionSchema = new mongoose.Schema(
     },
 
     numeroIntento: {
-  type: Number,
-  required: true,
-  min: 1,
-  max: [MAX_INTENTOS, `Solo se permiten ${MAX_INTENTOS} intentos por evaluación.`],
-},
+      type: Number,
+      required: true,
+      min: 1,
+      max: [MAX_INTENTOS, `Solo se permiten ${MAX_INTENTOS} intentos por evaluación.`],
+    },
+    estado: {
+      type: String,
+      enum: ESTADOS_INTENTO,
+      default: "EN_CURSO",
+    },
 
     respuestas: { type: [respuestaSchema], default: [] },
 
@@ -89,7 +94,7 @@ const intentoEvaluacionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-intentoEvaluacionSchema.pre("validate", function (next) {
+intentoEvaluacionSchema.pre("validate", function () {
   const ids = this.respuestas.map((r) => String(r.pregunta));
   if (new Set(ids).size !== ids.length) {
     this.invalidate("respuestas", "No puede haber dos respuestas para la misma pregunta.");
@@ -108,7 +113,7 @@ intentoEvaluacionSchema.pre("validate", function (next) {
     this.resultado =
       this.calificacion >= this.puntajeMinimoAprobar ? "APROBADO" : "REPROBADO";
   }
-  next();
+  
 });
 
 // Un solo intento con ese número por evaluación y asignación
