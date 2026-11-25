@@ -25,7 +25,9 @@ import {
 
 const router = Router();
 
-router.use(requireAuth, requireRol("RRHH"));
+router.use(requireAuth);
+const puedeLeer = requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH");
+const puedeGestionar = requireRol("ADMIN", "RRHH");
 
 /**
  * @swagger
@@ -92,8 +94,8 @@ router.use(requireAuth, requireRol("RRHH"));
  *       400: { description: Datos inválidos o competencia fuera del catálogo }
  *       409: { description: Ya existe un curso con ese título }
  */
-router.get("/", listarCursos);
-router.post("/", validateSchema(cursoValidator), crearCurso);
+router.get("/", puedeLeer, listarCursos);
+router.post("/", puedeGestionar, validateSchema(cursoValidator), crearCurso);
 
 /**
  * @swagger
@@ -133,8 +135,13 @@ router.post("/", validateSchema(cursoValidator), crearCurso);
  *       404: { description: El curso no existe }
  *       409: { description: El curso pertenece a una ruta }
  */
-router.get("/:id", obtenerCurso);
-router.put("/:id", validateSchema(cursoValidator), actualizarCurso);
+router.get("/:id", puedeLeer, obtenerCurso);
+router.put(
+  "/:id",
+  puedeGestionar,
+  validateSchema(cursoValidator),
+  actualizarCurso,
+);
 router.delete("/:id", eliminarCurso);
 
 /**
@@ -162,8 +169,8 @@ router.delete("/:id", eliminarCurso);
  *       404: { description: El curso no existe }
  *       409: { description: Ya estaba desactivado }
  */
-router.patch("/:id/publicar", publicarCurso);
-router.patch("/:id/desactivar", desactivarCurso);
+router.patch("/:id/publicar", puedeGestionar, publicarCurso);
+router.patch("/:id/desactivar", puedeGestionar, desactivarCurso);
 
 /**
  * @swagger
@@ -189,8 +196,13 @@ router.patch("/:id/desactivar", desactivarCurso);
  *       400: { description: Datos inválidos para el tipo de unidad }
  *       409: { description: El curso está desactivado }
  */
-router.get("/:id/unidades", listarUnidades);
-router.post("/:id/unidades", validateSchema(unidadValidator), crearUnidad);
+router.get("/:id/unidades", puedeLeer, listarUnidades);
+router.post(
+  "/:id/unidades",
+  puedeGestionar,
+  validateSchema(unidadValidator),
+  crearUnidad,
+);
 
 /**
  * @swagger
@@ -241,14 +253,16 @@ router.post("/:id/unidades", validateSchema(unidadValidator), crearUnidad);
  */
 router.put(
   "/:id/unidades/:unidadId",
+  puedeGestionar,
   validateSchema(unidadValidator),
   actualizarUnidad,
 );
 router.patch(
   "/:id/unidades/:unidadId/mover",
+  puedeGestionar,
   validateSchema(moverUnidadValidator),
   moverUnidad,
 );
-router.delete("/:id/unidades/:unidadId", retirarUnidad);
+router.delete("/:id/unidades/:unidadId", puedeGestionar, retirarUnidad);
 
 export default router;
