@@ -1,200 +1,289 @@
-import { useState } from "react";
+// components/Acercadenosotros.jsx
+//
+// Basada en la sección "People step in only when it matters" de Agentix (Dribbble):
+// paneles grandes apilados en horizontal. Al hacer scroll, el siguiente entra desde
+// la derecha y tapa al anterior, que queda como una franja a la izquierda donde se
+// sigue leyendo su título en vertical. Los que faltan esperan como franjas a la derecha.
+// En pantallas angostas (o con movimiento reducido) las tarjetas se deslizan con el dedo.
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "motion/react";
 
-const items = [
+const tarjetas = [
+  {
+    id: "nosotros",
+    titulo: "Nosotros",
+    tema: {
+      panel: "bg-canvas border border-amarillo-claro",
+      titulo: "text-azul",
+      texto: "text-marino/80",
+    },
+    contenido: (
+      <p>
+        Somos una plataforma que ayuda a las empresas a formar a las personas
+        según lo que cada cargo necesita. Medimos la distancia entre lo que sabe
+        un candidato y lo que pide el puesto, y armamos una ruta de aprendizaje
+        personalizada con apoyo de inteligencia artificial.
+      </p>
+    ),
+  },
   {
     id: "mision",
-    title: "Nuestra misión",
-    body: (
-      <>
-        <p>
-          Ayudar a las empresas a preparar a sus candidatos antes de que se
-          incorporen al trabajo, identificando qué les falta para ocupar un
-          puesto y acompañándolos con una ruta de capacitación hecha a su
-          medida.
-        </p>
-        <p>
-          Queremos que más personas tengan la oportunidad de desarrollar las
-          competencias que el mercado laboral les pide.
-        </p>
-      </>
+    titulo: "Misión",
+    tema: {
+      panel: "bg-amarillo",
+      titulo: "text-marino",
+      texto: "text-marino/85",
+    },
+    contenido: (
+      <p>
+        Ayudar a las empresas a preparar a sus candidatos antes de que se
+        incorporen al trabajo: identificamos qué les falta para ocupar un puesto
+        y los acompañamos con una ruta de capacitación hecha a su medida.
+      </p>
     ),
   },
   {
-    id: "significado",
-    title: "¿Qué significa LUWI?",
-    body: (
-      <>
-        <p>
-          Cada letra resume una parte del camino que acompañamos, desde el
-          primer aprendizaje hasta el crecimiento dentro del puesto.
-        </p>
-        <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-          {[
-            ["Learn", "Aprender lo que cada puesto realmente requiere."],
-            ["Upgrade", "Fortalecer las competencias que aún faltan."],
-            ["Work", "Llegar al trabajo con la preparación necesaria."],
-            ["Improve", "Seguir mejorando con seguimiento de tu progreso."],
-          ].map(([palabra, descripcion]) => (
-            <li key={palabra} className="rounded-xl bg-claro p-4">
-              <span className="inline-block rounded-full bg-lila px-3 py-1 text-sm font-bold text-tinta">
-                {palabra}
-              </span>
-              <span className="mt-2 block text-base text-tinta/75">
-                {descripcion}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </>
+    id: "vision",
+    titulo: "Visión",
+    tema: {
+      panel: "bg-azul",
+      titulo: "text-amarillo",
+      texto: "text-white/90",
+    },
+    contenido: (
+      <p>
+        Que llegar preparado a un empleo no dependa de la suerte. Queremos que
+        cada empresa forme a sus futuros colaboradores con rutas claras, y que
+        cada candidato sepa qué le falta para el puesto y cómo conseguirlo.
+      </p>
     ),
   },
   {
-    id: "empresas",
-    title: "Cómo ayudamos a las empresas",
-    body: (
-      <>
-        <p>
-          Cada empresa configura su propia academia dentro de la plataforma:
-          registra sus puestos, define las competencias que necesita y organiza
-          los contenidos de formación.
-        </p>
-        <p>
-          Su equipo puede consultar el avance de cada participante desde un
-          panel de seguimiento y generar reportes. La decisión final sobre la
-          contratación siempre es de la empresa.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "candidatos",
-    title: "Cómo ayudamos a los candidatos",
-    body: (
-      <>
-        <p>
-          Cada candidato se vincula a un puesto y realiza una evaluación para
-          conocer su nivel inicial. Luego comparamos sus competencias con las
-          que pide el cargo y detectamos las áreas por fortalecer.
-        </p>
-        <p>
-          Con apoyo de inteligencia artificial, recomendamos una ruta de
-          aprendizaje con cursos, actividades, evaluaciones y ejercicios
-          prácticos, y registramos sus avances en cada paso.
-        </p>
-      </>
+    id: "valores",
+    titulo: "Valores",
+    tema: {
+      panel: "bg-marino",
+      titulo: "text-amarillo",
+      texto: "text-white/85",
+    },
+    contenido: (
+      <ul className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        {[
+          ["Formación a la medida", "Cada ruta parte de lo que pide el puesto y de lo que el candidato ya sabe."],
+          ["Transparencia", "La empresa y el candidato ven el mismo avance y los mismos resultados."],
+          ["Igualdad de oportunidades", "Todo candidato vinculado a un puesto tiene la misma posibilidad de prepararse."],
+          ["Mejora continua", "Medimos cada avance para ajustar la ruta cuando hace falta."],
+        ].map(([nombre, texto]) => (
+          <li key={nombre}>
+            <span className="block font-extrabold text-amarillo">{nombre}</span>
+            <span className="mt-1 block">{texto}</span>
+          </li>
+        ))}
+      </ul>
     ),
   },
 ];
 
-function PlusIcon({ open }) {
+function Encabezado() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className={`h-5 w-5 transition-transform duration-300 motion-reduce:transition-none ${
-        open ? "rotate-45" : ""
-      }`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M12 5v14M5 12h14" />
-    </svg>
+    <div className="mx-auto max-w-3xl text-center">
+      <span className="inline-block rounded-full bg-amarillo-claro px-4 py-1.5 text-sm font-bold text-marino">
+        Acerca de nosotros
+      </span>
+      <h2
+        id="nosotros-titulo"
+        className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-marino sm:text-5xl"
+      >
+        LUWI prepara a los candidatos antes de que lleguen al puesto.
+      </h2>
+    </div>
   );
 }
 
-export default function AcercaDeNosotros() {
-  const [openId, setOpenId] = useState(items[0].id);
+// Título en vertical, se lee de abajo hacia arriba (donde la referencia tiene el número)
+function TituloVertical({ texto, clase, tamano, refTitulo }) {
+  return (
+    <h3
+      ref={refTitulo}
+      className={`select-none whitespace-nowrap font-extrabold uppercase leading-none tracking-tight ${clase}`}
+      style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontSize: tamano }}
+    >
+      {texto}
+    </h3>
+  );
+}
+
+/* ---------- escritorio: paneles apilados ligados al scroll ---------- */
+const FRANJA = 112; // ancho visible de un panel tapado (px)
+const TITULO_MAX = 80; // tamaño máximo del título vertical (px)
+const RELLENO = 28; // espacio libre arriba y abajo del título dentro del panel (px)
+const INICIO = 1.2; // pantallas de scroll antes del primer cambio
+const POR_CAMBIO = 0.9; // pantallas de scroll por cada panel que entra
+const PAUSA = 0.4;
+const ALTO = INICIO + (tarjetas.length - 1) * POR_CAMBIO + PAUSA;
+
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+const suave = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+
+function NosotrosApilado() {
+  const seccionRef = useRef(null);
+  const pilaRef = useRef(null);
+  const panelesRef = useRef([]);
+  const contenidosRef = useRef([]);
+  const titulosRef = useRef([]);
+
+  const { scrollYProgress } = useScroll({ target: seccionRef, offset: ["start end", "end end"] });
+  const progreso = useSpring(scrollYProgress, { stiffness: 140, damping: 28, restDelta: 0.0001 });
+
+  // Ajusta el tamaño de los títulos verticales para que el más largo quepa en el panel
+  const ajustarTitulos = useCallback(() => {
+    const pila = pilaRef.current;
+    const titulos = titulosRef.current.filter(Boolean);
+    if (!pila || !titulos.length) return;
+    titulos.forEach((t) => (t.style.fontSize = `${TITULO_MAX}px`));
+    const disponible = pila.clientHeight - RELLENO * 2;
+    const masLargo = Math.max(...titulos.map((t) => t.offsetHeight));
+    const tamano = Math.min(TITULO_MAX, Math.floor((TITULO_MAX * disponible) / masLargo));
+    titulos.forEach((t) => (t.style.fontSize = `${tamano}px`));
+  }, []);
+
+  const pintar = useCallback((p) => {
+    const pila = pilaRef.current;
+    if (!pila) return;
+    const n = tarjetas.length;
+    const W = pila.clientWidth;
+    const margen = Math.max(32, (W - 1152) / 2); // los paneles arrancan alineados al contenido
+
+    // k: panel activo (con decimales mientras uno entra)
+    const bruto = Math.min(n - 1, Math.max(0, (p * ALTO - INICIO) / POR_CAMBIO));
+    const base = Math.floor(bruto);
+    const k = base + suave(bruto - base);
+
+    panelesRef.current.forEach((el, i) => {
+      if (!el) return;
+      const reposo = W - (n - i) * FRANJA; // esperando como franja a la derecha
+      const destino = margen + i * FRANJA; // apilado a la izquierda
+      const x = i === 0 ? margen : reposo + (destino - reposo) * clamp01(k - i + 1);
+      el.style.transform = `translateX(${x}px)`;
+      el.style.width = `${W - margen - i * FRANJA}px`;
+      const c = contenidosRef.current[i];
+      if (c) c.style.opacity = String(clamp01(1 - Math.abs(k - i) * 1.4));
+    });
+  }, []);
+
+  useMotionValueEvent(progreso, "change", pintar);
+  useLayoutEffect(() => {
+    ajustarTitulos();
+    pintar(progreso.get());
+  }, [ajustarTitulos, pintar, progreso]);
+  useEffect(() => {
+    const alCambiar = () => {
+      ajustarTitulos();
+      pintar(progreso.get());
+    };
+    window.addEventListener("resize", alCambiar);
+    document.fonts?.ready.then(alCambiar); // remide cuando carga la fuente
+    return () => window.removeEventListener("resize", alCambiar);
+  }, [ajustarTitulos, pintar, progreso]);
+
+  // Clic en una franja: lleva el scroll hasta ese panel
+  const irA = (i) => {
+    const seccion = seccionRef.current;
+    const top = seccion.getBoundingClientRect().top + window.scrollY;
+    const s = INICIO + i * POR_CAMBIO;
+    window.scrollTo({ top: top + (s - 1) * window.innerHeight, behavior: "smooth" });
+  };
 
   return (
     <section
       id="nosotros"
-      className="bg-claro px-4 py-20 sm:px-8"
+      ref={seccionRef}
       aria-labelledby="nosotros-titulo"
+      className="relative bg-white"
+      style={{ height: `${ALTO * 100}vh` }}
     >
-      <div className="mx-auto max-w-5xl">
-        <h2
-          id="nosotros-titulo"
-          className="text-center text-4xl font-black tracking-tight text-tinta sm:text-6xl"
-        >
-          Acerca de{" "}
-          <span className="relative isolate ml-1 inline-block px-4 text-tinta">
-            <svg
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              className="absolute inset-0 -z-10 h-full w-full text-lila"
-              aria-hidden="true"
-            >
-              <polygon
-                points="0,10 2,3 100,0 98,86 100,96 3,100 1,90"
-                fill="currentColor"
-              />
-            </svg>
-            nosotros
-          </span>
-        </h2>
-
-        <div className="mx-auto mt-10 max-w-4xl space-y-5 rounded-[2rem] bg-teal px-6 py-10 text-center sm:px-14 sm:py-14">
-          <p className="text-xl font-extrabold leading-snug tracking-tight text-tinta sm:text-3xl">
-            LUWI prepara a los candidatos antes de que lleguen al puesto.
-          </p>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-tinta/80 sm:text-lg">
-            Somos una plataforma que ayuda a las empresas a formar a las
-            personas según lo que cada cargo realmente necesita. Identificamos
-            la distancia entre lo que sabe un candidato y lo que pide el puesto,
-            y armamos una ruta de aprendizaje personalizada con apoyo de
-            inteligencia artificial.
-          </p>
+      <div className="sticky top-0 flex h-screen flex-col gap-10 overflow-x-clip py-12">
+        <div className="flex-none px-8">
+          <Encabezado />
         </div>
 
-        <div className="mt-12 space-y-4">
-          {items.map((item) => {
-            const open = openId === item.id;
-            return (
+        {/* Los paneles ocupan todo el alto que queda libre en la pantalla */}
+        <div ref={pilaRef} className="relative max-h-[560px] min-h-[320px] w-full flex-1">
+          {tarjetas.map((t, i) => (
+            <article
+              key={t.id}
+              ref={(el) => (panelesRef.current[i] = el)}
+              onClick={() => irA(i)}
+              className={`absolute inset-y-0 left-0 flex cursor-pointer overflow-hidden rounded-[2rem] will-change-transform ${t.tema.panel} ${
+                i > 0 ? "shadow-[-28px_0_50px_-30px_rgb(15_20_76/0.45)]" : ""
+              }`}
+              style={{ zIndex: i + 1 }}
+            >
               <div
-                key={item.id}
-                className="rounded-2xl bg-white shadow-[0_8px_24px_-8px_rgba(60,20,110,0.18)]"
+                className="flex flex-none items-end justify-center"
+                style={{ width: FRANJA, paddingBottom: RELLENO }}
               >
-                <h3>
-                  <button
-                    type="button"
-                    onClick={() => setOpenId(open ? null : item.id)}
-                    aria-expanded={open}
-                    aria-controls={`panel-${item.id}`}
-                    id={`btn-${item.id}`}
-                    className="flex w-full items-center justify-between gap-4 rounded-2xl px-6 py-6 text-left text-lg font-extrabold tracking-tight text-tinta focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal sm:px-10 sm:text-2xl"
-                  >
-                    {item.title}
-                    <span
-                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-tinta transition-colors duration-300 motion-reduce:transition-none ${
-                        open ? "bg-teal" : "bg-lila"
-                      }`}
-                    >
-                      <PlusIcon open={open} />
-                    </span>
-                  </button>
-                </h3>
-
-                <div
-                  id={`panel-${item.id}`}
-                  role="region"
-                  aria-labelledby={`btn-${item.id}`}
-                  className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
-                    open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                  }`}
-                >
-                  <div className="overflow-hidden">
-                    <div className="mx-6 mb-8 space-y-4 border-t border-tinta/10 pt-6 text-base leading-relaxed text-tinta/75 sm:mx-10 sm:text-lg">
-                      {item.body}
-                    </div>
-                  </div>
-                </div>
+                <TituloVertical
+                  texto={t.titulo}
+                  clase={t.tema.titulo}
+                  tamano={`${TITULO_MAX}px`}
+                  refTitulo={(el) => (titulosRef.current[i] = el)}
+                />
               </div>
-            );
-          })}
+              <div
+                ref={(el) => (contenidosRef.current[i] = el)}
+                className={`flex flex-1 flex-col items-center justify-center text-center text-lg leading-relaxed [&>*]:max-w-2xl ${t.tema.texto}`}
+                // a la derecha se descuenta lo que tapan las franjas de los paneles siguientes
+                style={{ paddingBlock: RELLENO, paddingLeft: 16, paddingRight: (tarjetas.length - 1 - i) * FRANJA + 56 }}
+              >
+                {t.contenido}
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
   );
+}
+
+/* ---------- móvil / movimiento reducido: tarjetas deslizables ---------- */
+function NosotrosDeslizable() {
+  return (
+    <section id="nosotros" aria-labelledby="nosotros-titulo" className="bg-white py-20">
+      <div className="px-6">
+        <Encabezado />
+      </div>
+      <ul className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-6 [scrollbar-width:none]">
+        {tarjetas.map((t) => (
+          <li
+            key={t.id}
+            className={`flex min-h-[400px] w-[86%] max-w-md flex-none snap-center overflow-hidden rounded-[2rem] ${t.tema.panel}`}
+          >
+            <div className="flex w-16 flex-none items-end justify-center pb-6">
+              <TituloVertical texto={t.titulo} clase={t.tema.titulo} tamano="42px" />
+            </div>
+            <div className={`flex flex-1 flex-col items-center justify-center py-6 pr-6 text-center text-base leading-relaxed ${t.tema.texto}`}>
+              {t.contenido}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export default function AcercaDeNosotros() {
+  const reducir = useReducedMotion();
+  const [ancho, setAncho] = useState(
+    () => typeof window === "undefined" || window.matchMedia("(min-width: 1024px)").matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const alCambiar = () => setAncho(mq.matches);
+    mq.addEventListener("change", alCambiar);
+    return () => mq.removeEventListener("change", alCambiar);
+  }, []);
+
+  return ancho && !reducir ? <NosotrosApilado /> : <NosotrosDeslizable />;
 }

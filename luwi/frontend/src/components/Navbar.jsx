@@ -20,40 +20,40 @@ function irASeccion(e, href) {
   document.querySelector(href)?.scrollIntoView({ behavior });
 }
 
+// Fondo transparente: en la landing se ve el panel azul del hero detrás
 export default function Navbar() {
   return (
-    <header className="bg-[#F2FBF9]">
-      <nav className="mx-auto flex max-w-screen-2xl items-center justify-between px-8 py-5">
+    <header className="relative z-30">
+      <nav className="mx-auto flex max-w-screen-2xl items-center px-8 py-5 md:px-16">
         <a
           href="#inicio"
           onClick={(e) => irASeccion(e, "#inicio")}
           className="text-2xl font-extrabold"
         >
-          <span className="text-teal-500">LU</span>
-          <span className="text-purple-400">WI</span>
+          <span className="text-azul">LU</span>
+          <span className="text-marino">WI</span>
         </a>
 
-        <ul className="flex items-center gap-10">
+        <ul className="ml-12 hidden items-center gap-8 md:flex">
           {links.map((l) => (
-            <li key={l.label} className="hidden md:block">
+            <li key={l.label}>
               <a
                 href={l.href}
                 onClick={(e) => irASeccion(e, l.href)}
-                className="text-lg font-medium text-black hover:text-teal-600 transition-colors"
+                className="font-medium text-marino transition-colors hover:text-azul"
               >
                 {l.label}
               </a>
             </li>
           ))}
-          <li>
-            <a
-              href="/login"
-              className="rounded-full bg-purple-300 px-8 py-3 text-lg font-bold text-black hover:bg-purple-400 transition-colors"
-            >
-              Inicia sesión
-            </a>
-          </li>
         </ul>
+
+        <a
+          href="/login"
+          className="ml-auto rounded-full bg-amarillo px-7 py-2.5 font-bold text-marino transition-colors hover:bg-amarillo-claro"
+        >
+          Inicia sesión
+        </a>
       </nav>
     </header>
   );

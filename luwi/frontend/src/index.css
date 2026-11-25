@@ -50,6 +50,44 @@
   --color-morado: #9b7bde;
   --color-claro: #f6f3fc;
   --color-tinta: #1e1b2e;
+
+  /* Paleta oficial del grupo (landing). Se mantienen los nombres de los tokens
+     para no tocar cada componente:
+       azul          → Colonial Cobalt   #222BB8
+       azul-suave    → Cobalto Suave     #3B45C9 (hover / variaciones)
+       azul-oscuro   → hover del botón principal (cobalto un punto más hondo)
+       marino        → Twilight Navy     #0F144C
+       amarillo      → Soft Fawn         #D1B17C
+       amarillo-claro→ Antique White     #F8E6D2
+       oro           → Oro Arena         #8C6A34
+       canvas        → Canvas Cálido     #FDF8F2 */
+  --color-azul: #222bb8;
+  --color-azul-suave: #3b45c9;
+  --color-azul-oscuro: #1a2196;
+  --color-marino: #0f144c;
+  --color-amarillo: #d1b17c;
+  --color-amarillo-claro: #f8e6d2;
+  --color-oro: #8c6a34;
+  --color-canvas: #fdf8f2;
+
+  /* Cómo funciona: color del punto que se expande */
+  --color-arena: #c4ab88;
+  --color-arena-oscuro: #6f5a3a;
+
+  /* Fondo de la sección Cómo funciona (gris frío claro, contrasta con las tarjetas blancas) */
+  --color-gris-fondo: #e9edf3;
+
+  --animate-flotar: flotar 6s ease-in-out infinite;
+
+  @keyframes flotar {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
 }
 
 /* Degradados firma Colonial Cobalt -> Soft Fawn -> Antique White */
@@ -168,5 +206,44 @@ input:-webkit-autofill:focus {
   100% {
     transform: translateY(105vh) rotate(540deg);
     opacity: 0.6;
+  }
+}
+
+/* ---------- Cómo funciona: tarjetas con panel girado ----------
+   Tarjeta blanca al frente y panel azul girado detrás. La última tarjeta que cayó
+   (o la que tiene el cursor encima) se levanta y su panel azul gira un poco más. */
+.tarjeta-paso .frente {
+  box-shadow: 0 24px 48px -24px rgb(15 20 76 / 0.35);
+  transition: box-shadow 0.5s ease;
+}
+.tarjeta-paso .trasera {
+  transform: rotate(var(--giro));
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tarjeta-paso .caja {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+:is(.tarjeta-paso[data-activo="true"], .tarjeta-paso:hover, .tarjeta-paso:focus-within) .caja {
+  transform: translateY(-10px) scale(1.03);
+}
+:is(.tarjeta-paso[data-activo="true"], .tarjeta-paso:hover, .tarjeta-paso:focus-within) .trasera {
+  transform: rotate(calc(var(--giro) * 1.5));
+}
+:is(.tarjeta-paso[data-activo="true"], .tarjeta-paso:hover, .tarjeta-paso:focus-within) .frente {
+  box-shadow: 0 34px 60px -26px rgb(15 20 76 / 0.5);
+}
+/* Si el cursor está sobre otra tarjeta, la activa vuelve a su lugar */
+.pasos:hover .tarjeta-paso[data-activo="true"]:not(:hover) .caja {
+  transform: none;
+}
+.pasos:hover .tarjeta-paso[data-activo="true"]:not(:hover) .trasera {
+  transform: rotate(var(--giro));
+}
+.pasos:hover .tarjeta-paso[data-activo="true"]:not(:hover) .frente {
+  box-shadow: 0 24px 48px -24px rgb(15 20 76 / 0.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta-paso :is(.caja, .trasera, .frente) {
+    transition: none;
   }
 }
