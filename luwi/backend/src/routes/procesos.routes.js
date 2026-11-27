@@ -5,11 +5,12 @@ import {
   crearProceso,
   cambiarEstadoProceso,
 } from "../controllers/procesos.controller.js";
+import { adminAdminEmpresaORRHH as gestionarProcesos } from "../middlewares/permisos.middleware.js";
 
 // Se monta en /api/procesos-formacion junto al router de progreso (Marlon).
 // Express permite varios routers en el mismo prefijo: aquí solo están "/" y "/:id/estado".
 const router = Router();
-const gestionarProcesos = requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH");
+router.use(requireAuth);
 
 /**
  * @swagger
@@ -42,8 +43,8 @@ const gestionarProcesos = requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH");
  *       201: { description: "Proceso creado" }
  *       409: { description: "Ya existe un proceso vigente para ese puesto" }
  */
-router.get("/", requireAuth, gestionarProcesos, listarPipeline);
-router.post("/", requireAuth, gestionarProcesos, crearProceso);
+router.get("/", gestionarProcesos, listarPipeline);
+router.post("/", gestionarProcesos, crearProceso);
 
 /**
  * @swagger
@@ -65,11 +66,6 @@ router.post("/", requireAuth, gestionarProcesos, crearProceso);
  *       200: { description: "Proceso actualizado" }
  *       409: { description: "Cambio de estado no permitido" }
  */
-router.patch(
-  "/:procesoId/estado",
-  requireAuth,
-  gestionarProcesos,
-  cambiarEstadoProceso,
-);
+router.patch("/:procesoId/estado", gestionarProcesos, cambiarEstadoProceso);
 
 export default router;

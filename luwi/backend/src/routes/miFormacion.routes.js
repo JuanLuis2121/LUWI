@@ -14,11 +14,13 @@ import {
 import { validateSchema } from "../middlewares/validate.middleware.js";
 import { enviarRespuestasValidator } from "../validators/evaluacion.validator.js";
 
+import { soloPostulante } from "../middlewares/permisos.middleware.js";
+
 // Formación del postulante. El controlador verifica que el usuario sea POSTULANTE,
 // que la asignación sea suya, que el proceso esté activo y que el curso esté habilitado.
 const router = Router();
 
-router.use(requireAuth, requireRol("POSTULANTE")); // Todas las rutas requieren autenticación y rol POSTULANTE
+router.use(requireAuth, soloPostulante); // Todas las rutas requieren autenticación y rol POSTULANTE
 
 /**
  * @swagger
@@ -161,8 +163,14 @@ router.put("/:asignacionId/ultima-consulta", guardarUltimaConsulta);
  *       400: { description: "FALTAN_RESPUESTAS, PREGUNTA_INVALIDA, RESPUESTA_INVALIDA o RESPUESTA_DUPLICADA" }
  *       409: { description: "INTENTO_FINALIZADO" }
  */
-router.get("/:asignacionId/cursos/:cursoAsignadoId/evaluaciones", listarMisEvaluaciones);
-router.post("/:asignacionId/cursos/:cursoAsignadoId/evaluaciones/:evaluacionId/intentos", iniciarIntento);
+router.get(
+  "/:asignacionId/cursos/:cursoAsignadoId/evaluaciones",
+  listarMisEvaluaciones,
+);
+router.post(
+  "/:asignacionId/cursos/:cursoAsignadoId/evaluaciones/:evaluacionId/intentos",
+  iniciarIntento,
+);
 router.put(
   "/:asignacionId/cursos/:cursoAsignadoId/evaluaciones/:evaluacionId/intentos/:intentoId",
   validateSchema(enviarRespuestasValidator),

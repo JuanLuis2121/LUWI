@@ -8,12 +8,17 @@ import {
 } from "../controllers/empresa.Controller.js";
 import { validateSchema } from "../middlewares/validate.middleware.js";
 import { empresaSchema } from "../validators/empresa.validator.js";
-import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
+import { requireAuth } from "../middlewares/auth.middleware.js";
 import { invitarUsuarioValidator } from "../validators/email.validator.js";
 import {
   invitarAdminEmpresa,
   invitarRRHH,
 } from "../controllers/email.controller.js";
+import {
+  adminAdminEmpresaORRHH as puedenGestinarEmpresas,
+  soloAdminEmpresa,
+  soloAdmin,
+} from "../middlewares/permisos.middleware.js";
 
 const router = Router();
 /**
@@ -40,7 +45,7 @@ router.use(requireAuth); // Todas las rutas requieren autenticación
  *       500:
  *         description: Error al consultar las empresas
  */
-router.get("/", requireAuth, getEmpresas);
+router.get("/", puedenGestinarEmpresas, getEmpresas);
 /**
  * @swagger
  * /api/empresas/{id}:
@@ -69,7 +74,7 @@ router.get("/", requireAuth, getEmpresas);
  *       500:
  *         description: Error al consultar la empresa
  */
-router.get("/:id", requireAuth, requireRol("ADMIN-EMPRESA"), getEmpresa);
+router.get("/:id", puedenGestinarEmpresas, getEmpresa);
 /**
  * @swagger
  * /api/empresas:
@@ -116,7 +121,7 @@ router.get("/:id", requireAuth, requireRol("ADMIN-EMPRESA"), getEmpresa);
  *       500:
  *         description: Error al crear la empresa
  */
-router.post("/", requireAuth, validateSchema(empresaSchema), createEmpresa);
+router.post("/", soloAdmin, validateSchema(empresaSchema), createEmpresa);
 /**
  * @swagger
  * /api/empresas/{id}:
@@ -168,13 +173,7 @@ router.post("/", requireAuth, validateSchema(empresaSchema), createEmpresa);
  *       500:
  *         description: Error al actualizar la empresa
  */
-router.put(
-  "/:id",
-  requireAuth,
-  requireRol("ADMIN-EMPRESA"),
-  validateSchema(empresaSchema),
-  updateEmpresa,
-);
+router.put("/:id", soloAdmin, validateSchema(empresaSchema), updateEmpresa);
 /**
  * @swagger
  * /api/empresas/{id}:
@@ -205,20 +204,18 @@ router.put(
  *       500:
  *         description: Error al eliminar la empresa
  */
-router.delete("/:id", requireAuth, deleteEmpresa);
+router.delete("/:id", soloAdmin, deleteEmpresa);
 
 router.post(
   "/:id/invitaciones/admin-empresa",
-  requireAuth,
-  requireRol("ADMIN"),
+  soloAdmin,
   validateSchema(invitarUsuarioValidator),
   invitarAdminEmpresa,
 );
 
 router.post(
   "/invitaciones/rrhh",
-  requireAuth,
-  requireRol("ADMIN-EMPRESA"),
+  soloAdminEmpresa,
   validateSchema(invitarUsuarioValidator),
   invitarRRHH,
 );

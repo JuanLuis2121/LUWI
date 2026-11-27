@@ -9,9 +9,10 @@ import {
   obtenerOpciones,
 } from "../controllers/rutasAprendizaje.controller.js";
 
+import { adminORRHH as gestionarRutas } from "../middlewares/permisos.middleware.js";
 const router = Router();
 
-router.use(requireAuth, requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH"));
+router.use(requireAuth, gestionarRutas);
 
 router.get("/opciones", obtenerOpciones);
 router.get("/", listarRutas);

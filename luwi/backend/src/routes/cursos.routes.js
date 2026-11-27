@@ -23,11 +23,14 @@ import {
   retirarUnidad,
 } from "../controllers/unidades.controller.js";
 
+import {
+  adminORRHH as puedeGestionar,
+  adminAdminEmpresaORRHH as puedeLeer,
+} from "../middlewares/permisos.middleware.js";
+
 const router = Router();
 
 router.use(requireAuth);
-const puedeLeer = requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH");
-const puedeGestionar = requireRol("ADMIN", "RRHH");
 
 /**
  * @swagger

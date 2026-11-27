@@ -6,7 +6,17 @@ import bcrypt from "bcryptjs";
 // CONSULTAR TODAS LAS EMPRESAS
 export const getEmpresas = async (req, res) => {
   try {
-    const empresas = await Empresa.find()
+    const { role, empresa } = req.user;
+    const empresaId = empresa?._id ?? empresa?.id ?? empresa;
+
+    if (role !== "ADMIN" && !empresaId) {
+      return res.status(403).json({
+        message: "Tu usuario no tiene una empresa asociada.",
+      });
+    }
+
+    const filtro = role === "ADMIN" ? {} : { _id: empresaId };
+    const empresas = await Empresa.find(filtro)
       .select("-password")
       .populate("puestos");
 

@@ -19,12 +19,13 @@ import {
   retirarPregunta,
 } from "../controllers/evaluaciones.controller.js";
 
+import { adminAdminEmpresaORRHH as todosPuedenGestionar } from "../middlewares/permisos.middleware.js";
 // Administración de evaluaciones (entrega 5). El postulante las realiza desde /api/mi-formacion.
 // Permisos por curso en el controlador: RRHH/ADMIN-EMPRESA gestionan las de cursos de su empresa;
 // ADMIN gestiona todas; los cursos globales solo los gestiona ADMIN.
 const router = Router();
 
-router.use(requireAuth, requireRol("ADMIN", "ADMIN-EMPRESA", "RRHH"));
+router.use(requireAuth, todosPuedenGestionar); // Todas las rutas requieren autenticación y rol ADMIN, ADMIN-EMPRESA o RRHH
 
 /**
  * @swagger
@@ -122,7 +123,11 @@ router.post("/", validateSchema(crearEvaluacionValidator), crearEvaluacion);
  *       409: { description: Ya estaba desactivada }
  */
 router.get("/:id", obtenerEvaluacion);
-router.put("/:id", validateSchema(editarEvaluacionValidator), actualizarEvaluacion);
+router.put(
+  "/:id",
+  validateSchema(editarEvaluacionValidator),
+  actualizarEvaluacion,
+);
 router.patch("/:id/publicar", publicarEvaluacion);
 router.patch("/:id/desactivar", desactivarEvaluacion);
 
@@ -171,7 +176,11 @@ router.patch("/:id/desactivar", desactivarEvaluacion);
  */
 router.get("/:id/preguntas", listarPreguntas);
 router.post("/:id/preguntas", validateSchema(preguntaValidator), crearPregunta);
-router.put("/:id/preguntas/:preguntaId", validateSchema(preguntaValidator), actualizarPregunta);
+router.put(
+  "/:id/preguntas/:preguntaId",
+  validateSchema(preguntaValidator),
+  actualizarPregunta,
+);
 router.delete("/:id/preguntas/:preguntaId", retirarPregunta);
 
 export default router;

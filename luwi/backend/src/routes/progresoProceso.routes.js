@@ -6,6 +6,7 @@ import { obtenerProgresoProceso } from "../controllers/progresoProceso.controlle
 // con otro router; Express permite varios routers en el mismo prefijo sin chocar.
 const router = Router();
 
+router.use(requireAuth); // Todas las rutas requieren autenticación
 /**
  * @swagger
  * /api/procesos-formacion/{procesoId}/progreso:
@@ -21,6 +22,6 @@ const router = Router();
  *       200: { description: "{ data: { proceso, asignacion } } (asignacion es null si no hay ruta asignada)" }
  *       404: { description: "NO_ENCONTRADO" }
  */
-router.get("/:procesoId/progreso", requireAuth, obtenerProgresoProceso);
+router.get("/:procesoId/progreso", obtenerProgresoProceso);
 
 export default router;
