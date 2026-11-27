@@ -4,11 +4,11 @@ import {
   getAsignacion,
   cambiarAcceso,
 } from "../controllers/asignaciones.controller.js";
-import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
-
+import { requireAuth } from "../middlewares/auth.middleware.js";
+import { adminORRHH as puedeGestionarAsignaciones } from "../middlewares/permisos.middleware.js";
 const router = Router();
 
-router.use(requireAuth, requireRol("ADMIN", "RRHH")); // Todas las rutas requieren autenticación y rol ADMIN o RRHH
+router.use(requireAuth, puedeGestionarAsignaciones); // Todas las rutas requieren autenticación y rol ADMIN o RRHH
 /**
  * @swagger
  * tags:

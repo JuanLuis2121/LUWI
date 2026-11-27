@@ -7,14 +7,18 @@ import {
   deleteCandidato,
 } from "../controllers/candidato.Controller.js";
 
-import { requireAuth, requireRol } from "../middlewares/auth.middleware.js";
+import { requireAuth } from "../middlewares/auth.middleware.js";
+import {
+  adminORRHH as puedeGestionarCandidatos,
+  soloAdminEmpresa,
+} from "../middlewares/permisos.middleware.js";
 
 const router = Router();
 
-router.use(requireAuth, requireRol("RRHH")); // Solo RRHH puede acceder a estas rutas
+router.use(requireAuth, puedeGestionarCandidatos);
 
-router.get("/", getCandidatos);
-router.get("/:id", getCandidato);
+router.get("/", soloAdminEmpresa, getCandidatos);
+router.get("/:id", soloAdminEmpresa, getCandidato);
 router.post("/", createCandidato);
 router.put("/:id", updateCandidato);
 router.delete("/:id", deleteCandidato);
