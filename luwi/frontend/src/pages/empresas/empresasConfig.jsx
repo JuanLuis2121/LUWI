@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { empresasService } from "../../services/empresasService";
 import { puestosService } from "../../services/puestosService";
@@ -6,12 +5,14 @@ import { Badge, Bubble } from "../../components/AdminUI";
 import { BuildingIcon, BriefcaseIcon } from "../../components/dashboard/icons";
 import { DrawerField } from "../../components/ui/Drawer";
 
-const puestosDe = (empresa, lookups) => (lookups.puestos ?? []).filter((p) => p.empresaId === empresa.id);
+const puestosDe = (empresa, lookups) =>
+  (lookups.puestos ?? []).filter((p) => p.empresaId === empresa.id);
 
 // Sector con más empresas (para las cifras del encabezado).
 const sectorPrincipal = (items) => {
   const conteo = {};
-  for (const i of items) if (i.sector) conteo[i.sector] = (conteo[i.sector] ?? 0) + 1;
+  for (const i of items)
+    if (i.sector) conteo[i.sector] = (conteo[i.sector] ?? 0) + 1;
   return Object.entries(conteo).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—";
 };
 
@@ -44,7 +45,9 @@ export const empresasConfig = {
       label: "Sector",
       value: (i) => i.sector ?? "",
       options: (items) =>
-        [...new Set(items.map((i) => i.sector).filter(Boolean))].sort().map((s) => ({ value: s, label: s })),
+        [...new Set(items.map((i) => i.sector).filter(Boolean))]
+          .sort()
+          .map((s) => ({ value: s, label: s })),
     },
   ],
 
@@ -66,10 +69,15 @@ export const empresasConfig = {
       <>
         <dl>
           <DrawerField label="Nombre">{i.nombre}</DrawerField>
-          <DrawerField label="Sector">{i.sector && <Badge>{i.sector}</Badge>}</DrawerField>
+          <DrawerField label="Sector">
+            {i.sector && <Badge>{i.sector}</Badge>}
+          </DrawerField>
           <DrawerField label="Correo">
             {i.correo && (
-              <a href={`mailto:${i.correo}`} className="font-medium text-luwi-medio hover:underline">
+              <a
+                href={`mailto:${i.correo}`}
+                className="font-medium text-luwi-medio hover:underline"
+              >
                 {i.correo}
               </a>
             )}
@@ -77,12 +85,16 @@ export const empresasConfig = {
         </dl>
 
         <div className="mt-5">
-          <p className="mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.1em] text-luwi-texto/60">
+          <p className="mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-widest text-luwi-texto/60">
             Puestos de la empresa
-            <span className="rounded-md bg-luwi-cristal-fondo px-1.5 py-0.5 text-luwi-medio">{puestos.length}</span>
+            <span className="rounded-md bg-luwi-cristal-fondo px-1.5 py-0.5 text-luwi-medio">
+              {puestos.length}
+            </span>
           </p>
           {puestos.length === 0 ? (
-            <p className="rounded-xl bg-luwi-panel px-4 py-5 text-center text-xs text-luwi-texto/80">Esta empresa aún no tiene puestos.</p>
+            <p className="rounded-xl bg-luwi-panel px-4 py-5 text-center text-xs text-luwi-texto/80">
+              Esta empresa aún no tiene puestos.
+            </p>
           ) : (
             <ul className="space-y-2">
               {puestos.map((p) => (
@@ -107,7 +119,10 @@ export const empresasConfig = {
 
   stats: (items) => [
     { label: "Empresas registradas", value: items.length },
-    { label: "Sectores distintos", value: new Set(items.map((i) => i.sector).filter(Boolean)).size },
+    {
+      label: "Sectores distintos",
+      value: new Set(items.map((i) => i.sector).filter(Boolean)).size,
+    },
     { label: "Sector principal", value: sectorPrincipal(items) },
   ],
 

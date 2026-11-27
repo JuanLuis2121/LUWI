@@ -13,8 +13,7 @@ function validate(fields, values) {
     const value = String(values[field.name] ?? "").trim();
 
     if (field.required && !value) {
-      errors[field.name] =
-        field.requiredMsg || "Este campo es obligatorio.";
+      errors[field.name] = field.requiredMsg || "Este campo es obligatorio.";
       continue;
     }
 
@@ -53,7 +52,7 @@ function getOptions(field, lookups) {
       : {
           value: option,
           label: option,
-        }
+        },
   );
 }
 
@@ -65,7 +64,7 @@ export default function ModuleFormPage({ config, mode }) {
   const readOnly = mode === "view";
 
   const [values, setValues] = useState(() =>
-    Object.fromEntries(fields.map((field) => [field.name, ""]))
+    Object.fromEntries(fields.map((field) => [field.name, ""])),
   );
 
   const [lookups, setLookups] = useState({});
@@ -83,9 +82,7 @@ export default function ModuleFormPage({ config, mode }) {
     async function load() {
       try {
         const [item, ...extra] = await Promise.all([
-          mode === "create"
-            ? Promise.resolve(null)
-            : service.get(id),
+          mode === "create" ? Promise.resolve(null) : service.get(id),
 
           ...lookupEntries.map(([, fn]) => fn()),
         ]);
@@ -94,11 +91,8 @@ export default function ModuleFormPage({ config, mode }) {
 
         setLookups(
           Object.fromEntries(
-            lookupEntries.map(([key], index) => [
-              key,
-              extra[index],
-            ])
-          )
+            lookupEntries.map(([key], index) => [key, extra[index]]),
+          ),
         );
 
         if (mode !== "create") {
@@ -107,11 +101,8 @@ export default function ModuleFormPage({ config, mode }) {
           } else {
             setValues(
               Object.fromEntries(
-                fields.map((field) => [
-                  field.name,
-                  item[field.name] ?? "",
-                ])
-              )
+                fields.map((field) => [field.name, item[field.name] ?? ""]),
+              ),
             );
           }
         }
@@ -119,9 +110,7 @@ export default function ModuleFormPage({ config, mode }) {
         if (active) {
           console.error("Error al cargar el formulario:", error);
 
-          setSaveError(
-            error?.message || "No se pudieron cargar los datos."
-          );
+          setSaveError(error?.message || "No se pudieron cargar los datos.");
         }
       } finally {
         if (active) {
@@ -137,9 +126,7 @@ export default function ModuleFormPage({ config, mode }) {
     };
   }, [config, mode, id, service, fields]);
 
-  const errors = submitted
-    ? validate(fields, values)
-    : {};
+  const errors = submitted ? validate(fields, values) : {};
 
   const errorCount = Object.keys(errors).length;
 
@@ -166,7 +153,7 @@ export default function ModuleFormPage({ config, mode }) {
       fields.map((field) => [
         field.name,
         String(values[field.name] ?? "").trim(),
-      ])
+      ]),
     );
 
     console.log("Datos enviados al backend:", payload);
@@ -185,9 +172,7 @@ export default function ModuleFormPage({ config, mode }) {
       console.error("Error al guardar:", error);
       console.error("Respuesta del servidor:", error?.data);
 
-      setSaveError(
-        error?.message || "No se pudo guardar. Intenta de nuevo."
-      );
+      setSaveError(error?.message || "No se pudo guardar. Intenta de nuevo.");
 
       setSaving(false);
     }
@@ -207,8 +192,8 @@ export default function ModuleFormPage({ config, mode }) {
 
       <div className="mb-6 flex items-center gap-4">
         {IconoModulo && (
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(34,43,184,0.7)]">
-            <IconoModulo className="h-[22px] w-[22px]" />
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-luwi-profundo to-luwi-tecno text-white shadow-[0_10px_20px_-8px_rgba(34,43,184,0.7)]">
+            <IconoModulo className="h-5.5 w-5.5" />
           </span>
         )}
         <div>
@@ -216,7 +201,8 @@ export default function ModuleFormPage({ config, mode }) {
             {config.formTitles[mode]}
           </h1>
           <p className="mt-0.5 text-sm text-luwi-texto">
-            {mode === "create" && "Completa los datos para crear un nuevo registro."}
+            {mode === "create" &&
+              "Completa los datos para crear un nuevo registro."}
             {mode === "edit" && "Modifica los datos del registro."}
             {mode === "view" && "Consulta los detalles del registro."}
           </p>
@@ -226,7 +212,10 @@ export default function ModuleFormPage({ config, mode }) {
       {loading ? (
         <div className="space-y-4 rounded-[28px] border border-white bg-white/90 p-7 shadow-[0_14px_40px_-28px_rgba(17,22,82,0.6)]">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-12 animate-pulse rounded-2xl bg-luwi-cristal-fondo" />
+            <div
+              key={i}
+              className="h-12 animate-pulse rounded-2xl bg-luwi-cristal-fondo"
+            />
           ))}
         </div>
       ) : notFound ? (
@@ -262,9 +251,7 @@ export default function ModuleFormPage({ config, mode }) {
 
               <p className="mt-1 text-xs text-admin-danger/80">
                 Hay {errorCount}{" "}
-                {errorCount === 1
-                  ? "campo con error."
-                  : "campos con errores."}
+                {errorCount === 1 ? "campo con error." : "campos con errores."}
               </p>
             </div>
           )}
@@ -277,9 +264,7 @@ export default function ModuleFormPage({ config, mode }) {
                 value={values[field.name]}
                 error={errors[field.name]}
                 options={
-                  field.type === "select"
-                    ? getOptions(field, lookups)
-                    : []
+                  field.type === "select" ? getOptions(field, lookups) : []
                 }
                 disabled={readOnly}
                 onChange={handleChange}
@@ -296,11 +281,7 @@ export default function ModuleFormPage({ config, mode }) {
             </Link>
 
             {!readOnly && (
-              <ActionButton
-                type="submit"
-                variant="primary"
-                disabled={saving}
-              >
+              <ActionButton type="submit" variant="primary" disabled={saving}>
                 {saving
                   ? "Guardando..."
                   : mode === "edit"
